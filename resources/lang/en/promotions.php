@@ -1,0 +1,23 @@
+<?php
+	return [
+		'promotions'=>'promotions',
+		'title'=>'Title',
+		'description'=>'Description',
+		'type'=>'Type',
+		'value_for_egp'=>'value_for_egp',
+		'value_for_other_currencies'=>'value_for_other_currencies',
+		'code'=>'code',
+		'start_date'=>'start_date',
+		'expiration_date'=>'expiration_date',
+		'active'=>'active',
+		'No'=>'No',
+		'Yes'=>'Yes',
+		'promotion_limit'=>'promotion_limit',
+		'promotion_usage'=>'promotion_usage',
+		'publish_as_notification'=>'publish_as_notification',
+		'notification_message'=>'notification_message',
+		'include_courses'=>'include_courses',
+		'edit'=>'Edit',
+		'show'=>'Show',
+		'delete'=>'Delete',
+	];

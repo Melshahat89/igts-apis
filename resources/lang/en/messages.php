@@ -1,0 +1,21 @@
+<?php
+	return [
+		'deleteMessageSuccess'=>'Your Item  Has Been Deleted Success',
+		'deleteMessageError'=>'Error In Delete this Item',
+		'error'=>'Error',
+		'success'=>'Success',
+		'updateMessageSuccess'=>'Your Item  Has Been Updated Success',
+		'updateMessageError'=>'Error In Update this Item',
+		'storeMessageSuccess'=>'Your Item  Has Been Add Success',
+		'storeMessageError'=>'Error In Store this Item',
+		'notificationPurchaseTitle'=>'you have new order',
+		'notificationPurchaseDescription'=>'you have new order',
+		'notificationNewQuestionTite'=>'You have a new question on ',
+		'notificationNewQuestionDescription'=>'New lecture question',
+		'notificationNewAnswerTitle'=>'You have a reply to your question on ',
+		'notificationNewAnswerDescription'=>'notificationNewAnswerDescription',
+		'notificationNewCertificateTitle'=>'notificationNewCertificateTitle',
+		'notificationNewCertificateDescription'=>'notificationNewCertificateDescription',
+		'notificationInstuctorNewEnrollmentTitle'=>'You Have New Enrollment',
+		'notificationInstuctorNewEnrollmentDescription'=>'You Have New Enrollment',
+	];

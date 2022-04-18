@@ -1,0 +1,27 @@
+<?php
+	return [
+		'categories'=>'categories',
+		'name'=>'Name',
+		'slug'=>'Slug',
+		'desc'=>'Description',
+		'parent_id'=>'Parent',
+		'sort'=>'Sort',
+		'status'=>'Status',
+		'No'=>'No',
+		'Yes'=>'Yes',
+		'show_home'=>'Show Home',
+		'show_menu'=>'Show Menu',
+		'm_image'=>'Image Mobile',
+		'd_image'=>'Image Desktop',
+		'image'=>'Image',
+		'edit'=>'Edit',
+		'show'=>'Show',
+		'delete'=>'Delete',
+		'class'=>'class',
+		'other_categories'=>'Other categories',
+		'most viewed' => 'Most Viewed',
+		'enable_free' => 'Enable Free Course',
+		'Free Course' => 'Free Course',
+		'color_code' => 'Color Code',
+
+	];

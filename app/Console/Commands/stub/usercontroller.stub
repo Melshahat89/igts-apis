@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Application\Controllers\Website;
+
+use App\Application\Controllers\AbstractController;
+use Alert;
+use App\Application\Model\DummyClass;
+use App\Application\Requests\Website\DummyClass\AddRequestDummyClass;
+use App\Application\Requests\Website\DummyClass\UpdateRequestDummyClass;
+
+class DummyClassController extends AbstractController
+{
+
+     public function __construct(DummyClass $model)
+     {
+        parent::__construct($model);
+     }
+
+     public function index(){
+        $items = $this->model;
+
+        if(request()->has('from') && request()->get('from') != ''){
+            $items = $items->whereDate('created_at' , '>=' , request()->get('from'));
+        }
+
+        if(request()->has('to') && request()->get('to') != ''){
+            $items = $items->whereDate('created_at' , '<=' , request()->get('to'));
+        }
+
+DummyRequestFilter
+
+        $items = $items->paginate(env('PAGINATE'));
+        return view('website.DummyView.index' , compact('items'));
+     }
+
+     public function show($id = null){
+         return $this->createOrEdit('website.DummyView.edit' , $id);
+     }
+
+     public function store(AddRequestDummyClass $request){
+          $item =  $this->storeOrUpdate($request , null , true);
+          return redirect('DummyView');
+     }
+
+     public function update($id , UpdateRequestDummyClass $request){
+          DummyUpdateFunction
+     }
+
+     public function getById($id){
+         $fields = $this->model->findOrFail($id);
+         return $this->createOrEdit('website.DummyView.show' , $id , ['fields' =>  $fields]);
+     }
+
+     public function destroy($id){
+         return $this->deleteItem($id , 'DummyView')->with('sucess' , 'Done Delete DummyClass From system');
+     }
+
+
+}

@@ -1,0 +1,21 @@
+<?php
+	return [
+		'deleteMessageSuccess'=>'تم حذف العنصر بنجاح',
+		'deleteMessageError'=>'خطأ في حذف العنصر',
+		'error'=>'خطأ',
+		'success'=>'تم',
+		'updateMessageSuccess'=>'تم التعديل علي العنصر بنجاح',
+		'updateMessageError'=>'خطأ في التعديل علي العنصر',
+		'storeMessageSuccess'=>'تم اضافة العنصر بنجاح',
+		'storeMessageError'=>'خطأ في اضافة العنصر',
+		'notificationPurchaseTitle'=>'لديك طلب شراء جديد',
+		'notificationPurchaseDescription'=>'لديك طلب شراء جديد',
+		'notificationNewQuestionTite'=>'لديك سؤال جديد',
+		'notificationNewQuestionDescription'=>'لديك سؤال جديد',
+		'notificationNewAnswerTitle'=>'لديك رد على سؤال لك في ',
+		'notificationNewAnswerDescription'=>'لديك رد على سؤال لك',
+		'notificationNewCertificateTitle'=>'لديك شهادة جديدة',
+		'notificationNewCertificateDescription'=>'لديك شهادة جديدة',
+		'notificationInstuctorNewEnrollmentTitle'=>'لديك اشتراك جديد',
+		'notificationInstuctorNewEnrollmentDescription'=>'لديك اشتراك جديد',
+	];

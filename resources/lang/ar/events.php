@@ -1,0 +1,28 @@
+<?php 
+
+return [
+    'events' => 'المناسبات',
+    'event' => 'حدث',
+    'title' => 'العنوان',
+    'description' => 'الوصف',
+    'image' => 'الصورة',
+    'is_free' => 'مجاني',
+    'No' => 'لا',
+    'Yes' => 'نعم',
+    'price_egp' => 'السعر بالجنية',
+    'price_usd' => 'السعر بالدولار',
+    'type' => 'النوع',
+    'status' => 'الحالة',
+    'location' => 'الموقع',
+    'live_link' => 'الرابط البث المباشر',
+    'recorded_link' => 'رابط البث المسجل',
+    'edit' => 'تعديل',
+    'show' => 'عرض',
+    'delete' => 'حذف',
+    'instructor_per' => '',
+    'To Complete your registration, kindly fill in your details from the button below' => 'لتأكيد تسجيلك, الرجاء استكمال بياناتك عن طريق الضغط علي الزر التالي',
+    'Back to Event' => 'الرجوع الى الحدث',
+    'type your name in english' => 'ادخل اسمك باللغه الانجليزية ليظهر علي الشهادة',
+    'Start Date' => 'تاريخ البداية',
+    'Details' => 'التفاصيل',
+];

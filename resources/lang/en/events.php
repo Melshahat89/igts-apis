@@ -1,0 +1,28 @@
+<?php 
+
+return [
+    'events' => 'Events',
+    'event' => 'Event',
+    'title' => 'Title',
+    'description' => 'Description',
+    'image' => 'Image',
+    'is_free' => 'Free',
+    'No' => 'No',
+    'Yes' => 'Yes',
+    'price_egp' => 'Price Egp',
+    'price_usd' => 'Price Usd',
+    'type' => 'Type',
+    'status' => 'Status',
+    'location' => 'Location',
+    'live_link' => 'Live Link',
+    'recorded_link' => 'Recorded Link',
+    'edit' => 'Edit',
+    'show' => 'Show',
+    'delete' => 'Delete',
+    'instructor_per' => '',
+    'To Complete your registration, kindly fill in your details from the button below' => 'To Complete your registration, kindly fill in your details from the button below',
+    'Back to Event' => 'Back to Event',
+    'type your name in english' => 'Type in your name in English to be shown on the certificate',
+    'Start Date' => 'Start Date',
+    'Details' => 'Details',
+];

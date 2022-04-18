@@ -1,0 +1,7 @@
+<?php
+	return [
+		'logo'=>[
+			'height'=>'100',
+			'width'=>'100',
+		],
+	];

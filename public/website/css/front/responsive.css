@@ -1,0 +1,993 @@
+
+
+/* SMARTPHONE POTRAIT to TABLET POTRAITS */
+@media only screen and (min-width:300px) and (max-width:767px) {
+
+    /* Typography */
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    h3 {
+        font-size: 22px;
+    }
+
+    h4 {
+        font-size: 18px;
+    }
+
+    h5 {
+        /* font-size: 12px; */
+    }
+
+    blockquote {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    /* Generals */
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .show-mobile {
+        display: block !important;
+    }
+   
+    .mobile-filter{
+        
+    position: absolute;
+    background: #fff;
+    right: 0;
+    left: 0;
+    top: -540px;
+    z-index: 999;
+
+    }
+    .mobile-header{
+        background: #fff;
+        padding: 20px 0;
+        position: relative;
+        height: 83px;
+    }
+    .m-logo{width: 40%; display: inline-block;}
+    .actions-m a{ margin: 0 0 0 15px;}
+    .hero-content h1{
+        font-size: 45px;
+    }
+    .hero-section {
+        position: relative;
+        /* height: 55vh; */
+        margin-top: 80px;
+    }
+    .slide-menu{
+        padding: 15px;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+    }
+    .slide-menu .login-signin a{ color: #115879;}
+   .user-tab{
+       margin-left: 0;
+   }
+   .user-tab > a{
+       color: #a7a7a7;
+   }
+   .mini-cart i {
+    color: #a7a7a7;
+    }
+    .hidden-m-menu{
+        position: absolute;
+        background: #fff;
+        right: 0;
+        left: 0;
+        top: -600px;
+        z-index: 10;
+    }
+    .arrow-action i {
+        margin: 0px 5px;}
+    .hamburger{
+        cursor: pointer;
+    }
+    .custom-tab{     width: 100% !important;
+        border-radius: 16px;}
+    .tabs-container .nav-item{
+        width: 100% !important; margin-bottom: 10px;
+    }
+    .tabs-container .nav-item:last-child{ margin-bottom: 0;}
+    .tabs-container .nav-pills .nav-link{width: 100%;     text-align: center;}
+    .latest-item img{ margin-bottom: 10px;}
+    .megamenu > li > a{
+        color: #000;
+    }
+    .mobile-menu{
+        padding: 0 15px;
+    }
+    .megamenu > li{
+        border-bottom: 1px solid #eeeeee;
+    }
+    .navbar-nav .nav-link {
+        width: 100%;
+        display: block;
+    }
+    .megamenu > li > a.dropdown-toggle {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cat-container div{
+        margin-bottom: 15px;
+    }
+    .cat-container a{ color: #2699ba;}
+    .cat-container span {
+
+        font-size: 12px;
+        line-height: 15px;
+    }
+    .flip-box{
+        height: 315px;
+    }
+    .card-item img {
+        height: 180px;
+        object-fit: cover;
+    }
+    .section_title_1 span { font-size: 46px; margin-right: 6px;
+    }
+    .meet_our {
+        padding-bottom: 25px;
+        background-size: 80%;
+    }
+    .our_partners {
+        padding: 30px 0;
+    }
+    .meet_our img{border-bottom: 9px solid #d8d8d8;}
+    .instructor-item h3 {
+        margin-top: 25px;
+    }
+    .our_partners h4{
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+    .latest-release {
+       
+        background-size: 80%;
+    }
+        .G-specialties-ico{
+        background: url(../images/M-general.svg) center center no-repeat;
+      }
+      .H-siences-ico{
+        background: url(../images/M-hs.svg) center center no-repeat;
+      }
+      .P-surgeries-ico{
+        background: url(../images/M-PS.svg) center center no-repeat;
+      }
+      .N-therapy-ico{
+        background: url(../images/M-NH.svg) center center no-repeat;
+      }
+      .V-medicine-ico{
+        background: url(../images/M-VM.svg) center center no-repeat;
+      }
+      .pharmacy-ico{
+        background: url(../images/M-PH.svg) center center no-repeat;
+      }
+      .science-ico{
+        background: url(../images/M-SC.svg) center center no-repeat;
+      }
+      .dentistry-ico{
+        background: url(../images/M-DE.svg) center center no-repeat;
+      }
+      .nursing-ico{
+        background: url(../images/M-NU.svg) center center no-repeat;
+      }
+
+    .nutrition-ico{
+        background: url(../images/M-Nutrition.svg) center center no-repeat;
+    }
+    .mentalhealth-ico{
+        background: url(../images/M-mentalhealth.svg) center center no-repeat;
+    }
+     .healthpublic-ico{
+        background: url(../images/M-healthpublic.svg) center center no-repeat;
+    }
+    .physcialtherapy-ico {
+        background: url(../images/M-physcialtherapy.svg) center center no-repeat;
+    }
+    .management-ico{
+        background: url(../images/M-management.svg) center center no-repeat;
+
+    }
+
+
+      footer ul li {
+       
+        /* width: 100%; */
+        float: unset;
+    }
+    footer p {
+        margin-bottom: 25px;
+    }
+    .search-form-popup-wrapper {
+        background-color: #f7f7f7;
+        min-width: 100%;
+        margin-bottom: 25px;
+        margin-top: 3px;
+    }
+    .m-search-modal{
+        margin: 0 10px;
+    }
+    .apus-search {       
+        font-size: 12px;
+        padding-left: 15px;
+        border-radius: 50px;
+        border: 2px solid #1e8fbb;
+    }
+    .inner-page .flaticon-magnifying-glass {
+        color: unset;
+    }
+    .mobile-menu .nav-item:last-child{
+        border-bottom: 0;
+    }
+    .hamburger {
+        padding: 10px 0 0 20px !important;}
+
+    .back-bg{
+        width: 100%;
+        display: block;
+    }
+    .progress-level{
+        border-radius: 0;
+        width: 100%;
+    }
+    .lecture-content {
+        padding: 30px 0px;
+    }
+    .lecturePlayer .custom-tab {
+        width: 100%;
+    }
+    .lecturePlayer .acco-title span{ font-size: 12px;}
+    .lecturePlayer .card-header p {
+        font-size: 10px;
+    }
+    .lecturePlayer  .course-line div{
+        font-size: 12px;
+    }
+    .progress-level .progress {
+
+        margin-top: 0;
+        margin-bottom: 12px;
+    }
+    .course-page .instructor-area{
+        text-align: center;
+    }
+    .course-page .instructor-area img {
+        border-radius: 500px;
+        width: 200px !important;
+        height: 200px;
+        object-fit: cover;
+        margin: 0 auto;
+    }
+    .course-page .instructor-data .card-data span {
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+    }
+    .course-page .instructor-data .card-data{
+        display: block;
+        text-align: left;
+        padding: 15px 15px 5px 15px;
+
+    }
+    .course-page .instructor-data {
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    .M-course-bar{
+        background: #fff;
+        border-radius: 5px;
+    }
+    .regular-data ul li{width: 100%;}
+    .share-course p {
+        color: #333333 !important;}
+    .fixed-info .card-price span{
+        font-size: 12px;
+    }  
+    
+    .course-accordion .acco-title span {
+        font-size: 12px;
+    }
+    .course-accordion .card-header{
+        padding: 5px 10px;
+    }
+    .course-accordion .acco-title span{ font-size: 12px;    text-align: left;}
+    .course-accordion .card-header p {
+        font-size: 10px;
+    }
+    .course-accordion  .course-line div{
+        font-size: 12px;
+    }
+    .comments-list  .card-rating{
+        margin-top: 15px;
+    }
+    .fixed-buttons{
+        position: fixed !important;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        z-index: 20;
+        background: #fff;
+        padding: 15px;
+        border-top: 1px solid #ddd;
+    }
+    .cat-list span {
+        font-size: 10px;
+    }
+    .best-seller-badge{
+        font-size: 9px;
+    }
+    .global-pagenation{
+        width: 100%;
+    }
+    .st-block {
+      
+        margin: 10px 0;
+    }
+    .re-block {
+      
+        margin: 10px 0;
+    }
+    .rn-block {
+      
+        margin: 10px 0;
+    }
+    .border-custom div{
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);;
+        padding: 15px 15px;
+    }
+    .border-custom div:last-child{
+        border-bottom: 0;
+    }
+    .purchasing .list-card {
+        background: #fff;
+        border: 0;
+        padding: 0px;
+    }
+
+    /* new */
+    .coupon .input-group{
+        display: block;
+    }
+
+    .interest-card .G-specialties-ico{
+        background: url(../images/general.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card    .H-siences-ico{
+        background: url(../images/hs.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card  .P-surgeries-ico{
+        background: url(../images/PS.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .N-therapy-ico{
+        background: url(../images/NH.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .V-medicine-ico{
+        background: url(../images/VM.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .pharmacy-ico{
+        background: url(../images/PH.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .science-ico{
+        background: url(../images/SC.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .dentistry-ico{
+        background: url(../images/DE.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .nursing-ico{
+        background: url(../images/NU.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+    .interest-card .nutrition-ico{
+        background: url(../images/M-Nutrition.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .interest-card .mentalhealth-ico{
+        background: url(../images/M-mentalhealth.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .interest-card .healthpublic-ico{
+        background: url(../images/M-healthpublic.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .interest-card .physcialtherapy-ico {
+        background: url(../images/M-physcialtherapy.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+
+    .interest-card .management-ico{
+        background: url(../images/M-management.svg) center center no-repeat;
+
+    }
+}
+
+/* TABLET LANDSCAPE SMALLER DESKTOP */
+@media only screen and (min-width:992px) and (max-width:1440px) {
+
+    .progress-level{
+        width: 60%;
+    }
+}
+
+/* TABLETS PORTRAIT to SMALLER DESKTOP */
+@media only screen and (min-width:991px) and (max-width:1024px) {
+
+    .search-form-popup-wrapper{
+        min-width: 330px;
+    }
+    .custom-tab{
+        width: 35%;
+    }
+    footer ul li a {
+        color: #fff;
+        font-size: 11px;
+    }
+    .flip-box {
+       
+        height: 345px;
+    }
+    .card-item img {
+        height: 180px;
+        object-fit: cover;
+    }
+    .lecturePlayer .custom-tab {
+        width: 60%;
+    }
+    .progress-level {
+        width: 73%;
+    }
+    .back-bg {
+    
+        width: 25%;
+        font-size: 12px;
+    }
+    .course-accordion .acco-title span{ font-size: 12px;    text-align: left;}
+    .instructor-data .card-data span {
+        font-size: 10px;
+    }
+/* new */
+    .cat-list span {
+        font-size: 11px;
+    }
+    .best-seller-badge{
+        padding: 0px 4px 0px 5px;
+        font-size: 8px;
+    }
+    .course-data-info ul li {
+        display: inline;
+        margin: 0 5px;
+    }
+    .regular-data ul li {
+        width: 100%;
+     
+    }
+    #preview {
+            
+        width: 150px !important;
+        height: 150px;
+        
+    }
+    .browse {
+        padding: 10px 13px;
+    }
+  .purchasing .price{
+    font-size: 20px;
+  }  
+}
+
+
+/* TABLETS PORTRAIT to LANDSCAPE */
+@media only screen and (min-width:768px) and (max-width:990px) {
+
+    /* Typography */
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    h3 {
+        font-size: 22px;
+    }
+
+    h4 {
+        font-size: 18px;
+    }
+
+    h5 {
+        /* font-size: 12px; */
+    }
+
+    blockquote {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    /* Generals */
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .show-mobile {
+        display: block !important;
+    }
+
+    .mobile-header{
+        background: #fff;
+        padding: 20px 0;
+        position: relative;
+        height: 85px;
+    }
+    .m-logo{width: 22%;display: inline-block;}
+    .actions-m a{ margin: 0 0 0 15px;}
+    .hero-content h1{
+        font-size: 45px;
+    }
+    .hero-section {
+        position: relative;
+        /* height: 90vh; */
+        margin-top: 80px;
+    }
+    .slide-menu{
+        padding: 15px;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+    }
+    .slide-menu .login-signin a{ color: #115879;}
+   .user-tab{
+       margin-left: 0;
+   }
+   .user-tab > a{
+       color: #a7a7a7;
+   }
+   .mini-cart i {
+    color: #a7a7a7;
+    }
+    .hidden-m-menu{
+        position: absolute;
+        background: #fff;
+        right: 0;
+        left: 0;
+        top: -600px;
+        z-index: 10;
+    }
+    .arrow-action i {
+        margin: 0px 5px;}
+    .hamburger{
+        cursor: pointer;
+    }
+    .custom-tab{     width: 100% !important;
+        border-radius: 16px;}
+    .tabs-container .nav-item{
+        width: 100%; margin-bottom: 10px;
+    }
+    .tabs-container .nav-item:last-child{ margin-bottom: 0;}
+    .tabs-container .nav-pills .nav-link{width: 100%;     text-align: center;}
+    .latest-item img{ margin-bottom: 10px;}
+    .megamenu > li > a{
+        color: #000;
+    }
+    .mobile-menu{
+        padding: 0 15px;
+    }
+    .megamenu > li{
+        border-bottom: 1px solid #eeeeee;
+        float: none !important;
+        margin: 0 !important;
+    }
+    .navbar-nav .nav-link {
+        width: 100%;
+        display: block;
+    }
+    .megamenu > li > a.dropdown-toggle {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cat-container div{
+        margin-bottom: 15px;
+    }
+    .cat-container a{ color: #2699ba;}
+    .cat-container span {
+        font-size: 17px;
+        line-height: 25px;
+    }
+    .flip-box{
+        height: 350px;
+    }
+    .section_title_1 span { font-size: 46px; margin-right: 6px;
+    }
+    .meet_our {
+        padding-bottom: 25px;
+        background-size: 80%;
+    }
+    .our_partners {
+        padding: 30px 0;
+    }
+    .meet_our img{border-bottom: 9px solid #d8d8d8;}
+    .instructor-item h3 {
+        margin-top: 25px;
+    }
+    .our_partners h4{
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+    .latest-release {
+       
+        background-size: 80%;
+    }
+        .G-specialties-ico{
+        background: url(../images/M-general.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .H-siences-ico{
+        background: url(../images/M-hs.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .P-surgeries-ico{
+        background: url(../images/M-PS.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .N-therapy-ico{
+        background: url(../images/M-NH.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .V-medicine-ico{
+        background: url(../images/M-VM.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .pharmacy-ico{
+        background: url(../images/M-PH.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .science-ico{
+        background: url(../images/M-SC.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .dentistry-ico{
+        background: url(../images/M-DE.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .nursing-ico{
+        background: url(../images/M-NU.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+     .nutrition-ico{
+        background: url(../images/M-Nutrition.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .mentalhealth-ico{
+        background: url(../images/M-mentalhealth.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+     .healthpublic-ico{
+        background: url(../images/M-healthpublic.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .physcialtherapy-ico {
+        background: url(../images/M-physcialtherapy.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .management-ico{
+        background: url(../images/M-management.svg) center center no-repeat;
+
+    }
+
+      footer ul li {
+       
+        /* width: 100%; */
+        float: unset;
+    }
+    footer p {
+        margin-bottom: 25px;
+    }
+    .search-form-popup-wrapper {
+        background-color: #f7f7f7;
+        min-width: 100%;
+        margin-bottom: 25px;
+        margin-top: 3px;
+    }
+    .m-search-modal{
+        margin: 0 10px;
+    }
+    .apus-search {       
+        font-size: 12px;
+        padding-left: 15px;
+        border-radius: 50px;
+        border: 2px solid #1e8fbb;
+    }
+    .inner-page .flaticon-magnifying-glass {
+        color: unset;
+    }
+    .mobile-menu .nav-item:last-child{
+        border-bottom: 0;
+    }
+    .hamburger {
+        padding: 10px 0 0 20px !important;}
+        .testimonials .owl-nav{top: -140px;}
+        
+        .progress-level {
+            
+            border-radius: 0;
+            width: 100%;
+            padding: 9px 20px;
+        }
+        .progress-level .progress {
+            margin-top: 0;
+        }
+        .lecturePlayer .acco-title span{ font-size: 12px;}
+        .lecturePlayer .card-header p {
+            font-size: 10px;
+        }
+        .lecturePlayer  .course-line div{
+            font-size: 12px;
+        }
+        .lecturePlayer .custom-tab {
+            width: 100%;
+        }
+        .lecture-content {
+            padding: 30px 0px;
+        }
+        .lecturePlayer .course-line {
+            padding: 10px 5px;
+        }
+        .M-course-bar{
+            background: #fff;
+            border-radius: 5px;
+            margin-top: 50px;
+        }
+        .st-block {
+      
+            margin: 10px 0;
+        }
+        .re-block {
+          
+            margin: 10px 0;
+        }
+        .rn-block {
+          
+            margin: 10px 0;
+        }
+         /*-- NEW --*/
+
+    .chairman-img img {
+       
+        width: 150px;
+        height: 150px;
+        margin: 30px auto;
+       
+    }
+
+    .back-bg{
+        width: 70%;
+    }
+
+    .back-bg-buy{
+        width: 70%;
+    }
+
+    .cat-list span {
+        font-size: 12px;
+    }
+    .show-tablet{
+        display: block !important;
+    }
+    .hide-tablet{
+        display: none !important;
+    }
+    .rating-filter .card-rating {
+        padding: 0 5px;
+    }
+    .list-courses .list-card .card-data {
+        margin-top: 0;
+        display: block;
+        width: 100%;
+    }
+    .list-card .badges{
+        display: block;
+    }
+    .list-card  .add-to-cart{
+        padding: 0px 10px 0px 10px;
+    }
+    .list-card .card-rating {
+        padding: 0 0px;
+    }
+    .list-card .card-price {
+        padding: 0px;
+    }
+    .mycart-container .list-card .card-price {
+        padding: 33px 0px 0px 0px;
+    }
+    .total h1 {
+        padding: 15px 0;
+        font-size: 25px;
+    }
+    .coupon input {
+        padding-left: 15px;
+    }
+    .profile-area img{
+        width: 60px;
+        height: 60px;
+       
+        margin: 20px auto;
+    }
+    .profile-area .border-custom span{
+        font-size: 14px;
+    }
+    .interest-card .G-specialties-ico{
+        background: url(../images/general.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card    .H-siences-ico{
+        background: url(../images/hs.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card  .P-surgeries-ico{
+        background: url(../images/PS.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .N-therapy-ico{
+        background: url(../images/NH.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .V-medicine-ico{
+        background: url(../images/VM.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card  .pharmacy-ico{
+        background: url(../images/PH.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .science-ico{
+        background: url(../images/SC.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .dentistry-ico{
+        background: url(../images/DE.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+      .interest-card .nursing-ico{
+        background: url(../images/NU.svg) center center no-repeat;
+        width: 80px;
+    height: 80px;
+      }
+    .interest-card .nutrition-ico{
+        background: url(../images/M-Nutrition.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .interest-card .mentalhealth-ico{
+        background: url(../images/M-mentalhealth.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .interest-card .healthpublic-ico{
+        background: url(../images/M-healthpublic.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+    .interest-card .physcialtherapy-ico {
+        background: url(../images/M-physcialtherapy.svg) center center no-repeat;
+        width: 80px;
+        height: 80px;
+    }
+
+    .interest-card .management-ico{
+        background: url(../images/M-management.svg) center center no-repeat;
+
+    }
+
+    .step-label {
+        padding: 0 15px;
+        font-size: 15px;
+    }
+    .step-label span {    
+        left: 3px;
+        top: 3px;     
+            width: 20px;
+            height: 20px;
+            font-size: 13px;
+            line-height: 23px;
+        }
+
+        #preview {
+            
+            width: 150px !important;
+            height: 150px;
+            
+        }
+        .browse {
+            padding: 10px 13px;
+        }
+      .purchasing .price{
+        font-size: 20px;
+      }  
+      .instructor-talks .white-color.card-rating {
+
+        padding: 3px 10px;
+
+    }
+    .talk-course-content .card-rating {
+        padding: 0 4px !important;
+    }
+}
+
+/* ALL DEVICES SMALLER THAN TABLET LANDSCAPE */
+@media only screen and (max-width:991px) {
+
+.flexRight{
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.mr-10{
+    margin-right: 0;
+}
+.ml-10{
+    margin-left: 0;
+}
+    
+}
