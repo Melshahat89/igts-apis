@@ -30,14 +30,14 @@ Route::get('categories/getById/{id}', 'CategoriesApi@getById');
 Route::get('categories/delete/{id}', 'CategoriesApi@delete');
 Route::post('categories/add', 'CategoriesApi@add');
 Route::post('categories/update/{id}', 'CategoriesApi@update');
-Route::get('categories', 'CategoriesApi@index');
+
 
 #courses
 Route::get('courses/getById/{id}', 'CoursesApi@getById');
 Route::get('courses/delete/{id}', 'CoursesApi@delete');
 Route::post('courses/add', 'CoursesApi@add');
 Route::post('courses/update/{id}', 'CoursesApi@update');
-Route::get('courses', 'CoursesApi@index');
+
 
 #talks
 Route::get('talks/getById/{id}', 'TalksApi@getById');
@@ -71,12 +71,12 @@ Route::post('coursewishlist/add', 'CoursewishlistApi@add');
 Route::post('coursewishlist/update/{id}', 'CoursewishlistApi@update');
 Route::get('coursewishlist', 'CoursewishlistApi@index');
 
-#coursereviews
-Route::get('coursereviews/getById/{id}', 'CoursereviewsApi@getById');
-Route::get('coursereviews/delete/{id}', 'CoursereviewsApi@delete');
-Route::post('coursereviews/add', 'CoursereviewsApi@add');
-Route::post('coursereviews/update/{id}', 'CoursereviewsApi@update');
-Route::get('coursereviews', 'CoursereviewsApi@index');
+//#coursereviews
+//Route::get('coursereviews/getById/{id}', 'CoursereviewsApi@getById');
+//Route::get('coursereviews/delete/{id}', 'CoursereviewsApi@delete');
+//Route::post('coursereviews/add', 'CoursereviewsApi@add');
+//Route::post('coursereviews/update/{id}', 'CoursereviewsApi@update');
+
 
 #coursereviews
 Route::get('coursereviews/getById/{id}', 'CoursereviewsApi@getById');

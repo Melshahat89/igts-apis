@@ -5,9 +5,11 @@ namespace App\Application\Controllers\Api;
 
 use App\Application\Controllers\Controller;
 use App\Application\Model\Categories;
+use App\Application\Transformers\CategoriesCoursesTransformers;
 use App\Application\Transformers\CategoriesTransformers;
 use App\Application\Requests\Website\Categories\ApiAddRequestCategories;
 use App\Application\Requests\Website\Categories\ApiUpdateRequestCategories;
+use App\Application\Transformers\InstructorsTransformers;
 
 class CategoriesApi extends Controller
 {
@@ -35,6 +37,22 @@ class CategoriesApi extends Controller
             return response(apiReturn(CategoriesTransformers::transformAr($data) + $paginate), $status_code);
         }
         return response(apiReturn(CategoriesTransformers::transform($data) + $paginate), $status_code);
+    }
+
+
+    public function categoriesInHome(){
+
+        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
+        $data = Categories::where('status',1)->where('show_home',1)->orderBy('id' , 'desc')->paginate($limit);
+
+        if ($data) {
+            if (request()->has('lang') && request()->get('lang') == 'ar') {
+                return response(apiReturn(CategoriesCoursesTransformers::transformAr($data) + $this->paginateArray($data)), 200);
+            }
+            return response(apiReturn(CategoriesCoursesTransformers::transform($data) + $this->paginateArray($data)), 200);
+        }
+        return response(apiReturn('', '', 'No Data Found'), 404);
+
     }
 
 }

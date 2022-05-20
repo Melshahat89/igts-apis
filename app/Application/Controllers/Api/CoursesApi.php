@@ -4,6 +4,7 @@ namespace App\Application\Controllers\Api;
 
 
 use App\Application\Controllers\Controller;
+use App\Application\Model\Categories;
 use App\Application\Model\Courses;
 use App\Application\Transformers\CoursesTransformers;
 use App\Application\Requests\Website\Courses\ApiAddRequestCourses;

@@ -4,14 +4,13 @@ namespace App\Application\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
 
- class UsersTransformers extends AbstractTransformer
+ class InstructorsTransformers extends AbstractTransformer
 {
      public function transformModel(Model $modelOrCollection)
      {
          return [
              'id' => $modelOrCollection->id,
              'slug' => $modelOrCollection->slug,
-             'group_id' => $modelOrCollection->group_id,
              'name' => $modelOrCollection->name,
              'email' => $modelOrCollection->email,
              'mobile' => $modelOrCollection->mobile,
@@ -23,10 +22,6 @@ use Illuminate\Database\Eloquent\Model;
              'description' => $modelOrCollection->{lang("description" , "en")},
              'image' => $modelOrCollection->image,
              'cover' => $modelOrCollection->cover,
-             'token' => $modelOrCollection->api_token,
-             'businessdata_id' => $modelOrCollection->businessdata_id,
-             'facebook_identifier' => $modelOrCollection->facebook_identifier,
-             'otp' => $modelOrCollection->otp,
          ];
      }
      public function transformModelAr(Model $modelOrCollection)
@@ -34,7 +29,6 @@ use Illuminate\Database\Eloquent\Model;
          return [
              'id' => $modelOrCollection->id,
              'slug' => $modelOrCollection->slug,
-             'group_id' => $modelOrCollection->group_id,
              'name' => $modelOrCollection->name,
              'email' => $modelOrCollection->email,
              'mobile' => $modelOrCollection->mobile,
@@ -46,10 +40,6 @@ use Illuminate\Database\Eloquent\Model;
              'description' => $modelOrCollection->{lang("description" , "ar")},
              'image' => $modelOrCollection->image,
              'cover' => $modelOrCollection->cover,
-             'token' => $modelOrCollection->api_token,
-             'businessdata_id' => $modelOrCollection->businessdata_id,
-             'facebook_identifier' => $modelOrCollection->facebook_identifier,
-             'otp' => $modelOrCollection->otp,
          ];
      }
-}
+ }

@@ -21,7 +21,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::group(array('prefix' => 'v1'), function () {
+
+    //Home
+    Route::get('categories', 'CategoriesApi@index');
+    Route::get('courses', 'CoursesApi@index');
+    Route::get('categoriesInHome', 'CategoriesApi@categoriesInHome');
+    Route::get('instructors', 'UserApi@instructors');
+    Route::get('countersHome', 'HomeApi@countersHome');
+    Route::get('reviews', 'CoursereviewsApi@index');
+
+
     require __DIR__.'/appendApi.php';
 });

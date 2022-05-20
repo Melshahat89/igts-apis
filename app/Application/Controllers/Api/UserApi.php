@@ -8,6 +8,7 @@ use App\Application\Model\User;
 use App\Application\Requests\Website\User\ApiAddRequestUser;
 use App\Application\Requests\Website\User\ApiLoginRequest;
 use App\Application\Requests\Website\User\ApiUpdateRequestUser;
+use App\Application\Transformers\InstructorsTransformers;
 use App\Application\Transformers\UsersTransformers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -75,6 +76,20 @@ class UserApi extends Controller
 
     public function generateToken(){
        return str_random(60);
+    }
+
+
+    public function instructors(){
+        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
+        $data = $this->model->where('group_id',User::TYPE_INSTRUCTOR)->orderBy('id' , 'desc')->paginate($limit);
+
+        if ($data) {
+            if (request()->has('lang') && request()->get('lang') == 'ar') {
+                return response(apiReturn(InstructorsTransformers::transformAr($data) + $this->paginateArray($data)), 200);
+            }
+            return response(apiReturn(InstructorsTransformers::transform($data) + $this->paginateArray($data)), 200);
+        }
+        return response(apiReturn('', '', 'No Data Found'), 200);
     }
 
     protected function checkLanguageBeforeReturn($data , $status_code = 200,  $paginate = [])
