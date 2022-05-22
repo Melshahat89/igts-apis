@@ -32,9 +32,9 @@ class CoursereviewsApi extends Controller
     protected function checkLanguageBeforeReturn($data , $status_code = 200, $paginate = [])
     {
        if (request()->has('lang') && request()->get('lang') == 'ar') {
-            return response(apiReturn(CoursereviewsTransformers::transformAr($data) + $paginate), $status_code);
+            return response(apiReturn(array_values(CoursereviewsTransformers::transformAr($data) + $paginate)), $status_code);
         }
-        return response(apiReturn(CoursereviewsTransformers::transform($data) + $paginate), $status_code);
+        return response(apiReturn(array_values(CoursereviewsTransformers::transform($data) + $paginate)), $status_code);
     }
 
 }

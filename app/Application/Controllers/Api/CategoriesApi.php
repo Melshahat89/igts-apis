@@ -23,6 +23,19 @@ class CategoriesApi extends Controller
         /// $this->middleware('authApi')->only();
     }
 
+    public function index()
+    {
+        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
+        $data = $this->model->orderBy('id' , 'desc')->get();
+        if ($data) {
+            if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
+                return response(apiReturn(CategoriesTransformers::transformAr($data) ), 200);
+            }
+            return response(apiReturn(CategoriesTransformers::transform($data) ), 200);
+        }
+        return response(apiReturn('', '', 'No Data Found'), 200);
+    }
+
     public function add(ApiAddRequestCategories $validation){
          return $this->addItem($validation);
     }
@@ -46,10 +59,10 @@ class CategoriesApi extends Controller
         $data = Categories::where('status',1)->where('show_home',1)->orderBy('id' , 'desc')->paginate($limit);
 
         if ($data) {
-            if (request()->has('lang') && request()->get('lang') == 'ar') {
-                return response(apiReturn(CategoriesCoursesTransformers::transformAr($data) + $this->paginateArray($data)), 200);
+            if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
+                return response(apiReturn(CategoriesCoursesTransformers::transformAr($data) ), 200);
             }
-            return response(apiReturn(CategoriesCoursesTransformers::transform($data) + $this->paginateArray($data)), 200);
+            return response(apiReturn(CategoriesCoursesTransformers::transform($data) ), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 404);
 

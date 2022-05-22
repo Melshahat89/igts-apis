@@ -21,6 +21,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::prefix('auth')->group(function () {
+    Route::post('/register', 'AuthControllerApi@register');
+    Route::post('/login', 'AuthControllerApi@login');
+    Route::post('/confirm', 'AuthControllerApi@confirm');
+    Route::post('/resetPasswordRequest', 'AuthControllerApi@resetPasswordRequest');
+    Route::post('/resetPasswordConfirm', 'AuthControllerApi@resetPasswordConfirm');
+    Route::post('/resetPassword',  'AuthControllerApi@resetPassword');
+    Route::post('/resendotp',  'AuthControllerApi@resendotp');
+});
 Route::group(array('prefix' => 'v1'), function () {
 
     //Home
@@ -30,6 +39,8 @@ Route::group(array('prefix' => 'v1'), function () {
     Route::get('instructors', 'UserApi@instructors');
     Route::get('countersHome', 'HomeApi@countersHome');
     Route::get('reviews', 'CoursereviewsApi@index');
+
+
 
 
     require __DIR__.'/appendApi.php';
