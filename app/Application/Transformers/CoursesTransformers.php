@@ -41,6 +41,9 @@ class CoursesTransformers extends AbstractTransformer
 			"seo_keys[]" => $modelOrCollection->{lang("seo_keys[]" , "en")},
 			"search_keys[]" => $modelOrCollection->{lang("search_keys[]" , "en")},
 			"poster" => $modelOrCollection->poster,
+            "rating" => $modelOrCollection->CourseRating,
+            "courseCountRating" => $modelOrCollection->CourseCountRating,
+            "priceBase" => $modelOrCollection->PriceBase,
 
         ];
     }
@@ -84,7 +87,9 @@ class CoursesTransformers extends AbstractTransformer
 			"seo_keys[]" => $modelOrCollection->{lang("seo_keys[]" , "ar")},
 			"search_keys[]" => $modelOrCollection->{lang("search_keys[]" , "ar")},
 			"poster" => $modelOrCollection->poster,
-
+            "rating" => $modelOrCollection->CourseRating,
+            "courseCountRating" => $modelOrCollection->CourseCountRating,
+            "priceBase" => $modelOrCollection->PriceBase,
         ];
     }
 
