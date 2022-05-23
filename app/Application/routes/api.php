@@ -34,7 +34,7 @@ Route::group(array('prefix' => 'v1'), function () {
 
     //Home
     Route::get('categories', 'CategoriesApi@index');
-    Route::get('courses', 'CoursesApi@index');
+    Route::post('courses', 'CoursesApi@index');
     Route::get('categoriesInHome', 'CategoriesApi@categoriesInHome');
     Route::get('instructors', 'UserApi@instructors');
     Route::get('countersHome', 'HomeApi@countersHome');
