@@ -39,6 +39,8 @@ Route::group(array('prefix' => 'v1'), function () {
     Route::get('instructors', 'UserApi@instructors');
     Route::get('countersHome', 'HomeApi@countersHome');
     Route::get('reviews', 'CoursereviewsApi@index');
+    Route::get('topSearches', 'HomeApi@topSearches');
+    Route::get('quickLinks', 'HomeApi@quickLinks');
 
 
 

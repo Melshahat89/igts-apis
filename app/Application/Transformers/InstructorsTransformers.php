@@ -22,6 +22,9 @@ use Illuminate\Database\Eloquent\Model;
              'description' => $modelOrCollection->{lang("description" , "en")},
              'image' => $modelOrCollection->image,
              'cover' => $modelOrCollection->cover,
+             'coursesViews' => $modelOrCollection->instructorCoursesViews,
+             'enrolledCountStudents' => $modelOrCollection->EnrolledCountStudents,
+             'instructorRating' => $modelOrCollection->InstructorRating,
          ];
      }
      public function transformModelAr(Model $modelOrCollection)

@@ -317,6 +317,9 @@ use Kreait\Firebase\ServiceAccount;
     }
      public function getEnrolledCountStudentsAttribute()
     {
+
+        return 23;  //ToDO
+
         return $this->instructorCourses->sum('CourseCountStudents');
     }
     public function getinstructorCoursesViewsAttribute()
