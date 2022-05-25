@@ -39,8 +39,8 @@ class AuthControllerApi extends Controller
     protected function validatorLogin(array $data)
     {
         return Validator::make($data, [
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'email' => 'required|email|max:255',
+            'password' => 'required',
         ]);
     }
 
@@ -283,158 +283,80 @@ class AuthControllerApi extends Controller
 
         $this->validatorLogin($request->all())->validate();
 
-//dd(222);
-        $validator = Validator::make($request->all(), [
-            'password' => 'required|string|min:6',
-            'email' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11',
-        ],[
-                'password.required' => [
-                    'ErrorCode' =>  1007,
-                    'ErrorMessage' =>  [
-                        'ar' => trans('errors.1007',[],'ar'),
-                        'en' => trans('errors.1007',[],'en'),
-                        'ku' => trans('errors.1007',[],'ku')
-                    ]
-                ],
-                'password.string' => [
-                    'ErrorCode' =>  1008,
-                    'ErrorMessage' =>  [
-                        'ar' => trans('errors.1008',[],'ar'),
-                        'en' => trans('errors.1008',[],'en'),
-                        'ku' => trans('errors.1008',[],'ku')
-                    ]
-                ],
-                'password.min' => [
-                    'string' => [
-                        'ErrorCode' =>  1009,
-                        'ErrorMessage' =>  [
-                            'ar' => trans('errors.1009',[],'ar'),
-                            'en' => trans('errors.1009',[],'en'),
-                            'ku' => trans('errors.1009',[],'ku')
-                        ]
-                    ]
-                ],
-                'phone.required' => [
-                    'ErrorCode' =>  1010,
-                    'ErrorMessage' =>  [
-                        'ar' => trans('errors.1010',[],'ar'),
-                        'en' => trans('errors.1010',[],'en'),
-                        'ku' => trans('errors.1010',[],'ku')
-                    ]
-                ],
-                'phone.min' => [
-                    'string' => [
-                        'ErrorCode' =>  1011,
-                        'ErrorMessage' =>  [
-                            'ar' => trans('errors.1011',[],'ar'),
-                            'en' => trans('errors.1011',[],'en'),
-                            'ku' => trans('errors.1011',[],'ku')
-                        ]
-                    ]
-                ],
-                'phone.regex' => [
-                    'ErrorCode' =>  1017,
-                    'ErrorMessage' =>  [
-                        'ar' => trans('errors.1017',[],'ar'),
-                        'en' => trans('errors.1017',[],'en'),
-                        'ku' => trans('errors.1017',[],'ku')
-                    ]
-                ],
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+            $user = Auth::user();
+            $success['token'] =  $user->createToken('MyApp')->accessToken;
+            return response()->json(['success' => $success], $this->successStatus);
+        }
+        else{
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
 
-            ]
-        );
 
-        if($validator->fails()){
-            if(is_array(array_values($validator->errors()->getMessages())[0][0])){
-                $response = array_merge(array_values($validator->errors()->getMessages())[0][0], [
-                    'Success' => false,
-                    'response' => []
-                ]);
-                return Response::make($response);
-            }else{
-                return Response::make([
-                    'Success' => false,
-                    'ErrorMessage' => array_values($validator->errors()->getMessages())[0][0],
-                    'ErrorCode' => null,
-                    'response' => []
-                ]);
-            }
-        }else{
-            $user = User::where('phone', $request->phone)->first();
-            if (!$user || !Hash::check($request['password'], $user->password)) {
+//        if (Auth::attempt(['email' => $email, 'password' => $password, 'active' => 1])) {
+//            // The user is active, not suspended, and exists.
+//        }
+//dd($request);
+
+        if($user->banned == 1){
+            return Response::make([
+                'Success' => false,
+                'ErrorMessage' => [
+                    'ar' => trans('errors.1033',[],'ar'),
+                    'en' => trans('errors.1033',[],'en'),
+                    'ku' => trans('errors.1033',[],'ku')
+                ],
+                'ErrorCode' => 1033,
+                'response' => []
+            ]);
+        }
+        if($user->customer){
+            if($user->customer->is_active == 0){
                 return Response::make([
                     'Success' => false,
                     'ErrorMessage' => [
-                        'ar' => trans('errors.1019',[],'ar'),
-                        'en' => trans('errors.1019',[],'en'),
-                        'ku' => trans('errors.1019',[],'ku')
+                        'ar' => trans('errors.1023',[],'ar'),
+                        'en' => trans('errors.1023',[],'en'),
+                        'ku' => trans('errors.1023',[],'ku')
                     ],
-                    'ErrorCode' => 1019,
+                    'ErrorCode' => 1023,
                     'response' => []
                 ]);
-            }else{
-                if($user->banned == 1){
-                    return Response::make([
-                        'Success' => false,
-                        'ErrorMessage' => [
-                            'ar' => trans('errors.1033',[],'ar'),
-                            'en' => trans('errors.1033',[],'en'),
-                            'ku' => trans('errors.1033',[],'ku')
-                        ],
-                        'ErrorCode' => 1033,
-                        'response' => []
-                    ]);
-                }
-                if($user->customer){
-                    if($user->customer->is_active == 0){
-                        return Response::make([
-                            'Success' => false,
-                            'ErrorMessage' => [
-                                'ar' => trans('errors.1023',[],'ar'),
-                                'en' => trans('errors.1023',[],'en'),
-                                'ku' => trans('errors.1023',[],'ku')
-                            ],
-                            'ErrorCode' => 1023,
-                            'response' => []
-                        ]);
-                    }
-                    elseif ($user->customer->is_verified == 0){
-                        return Response::make([
-                            'Success' => false,
-                            'ErrorMessage' => [
-                                'ar' => trans('errors.1024',[],'ar'),
-                                'en' => trans('errors.1024',[],'en'),
-                                'ku' => trans('errors.1024',[],'ku')
-                            ],
-                            'ErrorCode' => 1024,
-                            'response' => []
-                        ]);
-
-                    }
-                    elseif ($user->customer->is_deleted == 1){
-                        return Response::make([
-                            'Success' => false,
-                            'ErrorMessage' => [
-                                'ar' => trans('errors.1025',[],'ar'),
-                                'en' => trans('errors.1025',[],'en'),
-                                'ku' => trans('errors.1025',[],'ku')
-                            ],
-                            'ErrorCode' => 1025,
-                            'response' => []
-                        ]);
-
-                    }
-                }
-
-                return Response::make([
-                    'Success' => true,
-                    'ErrorMessage' => null,
-                    'ErrorCode' => null,
-                    'response' => (array (new UserCollection([$user]))[0])
-                ]);
             }
+            elseif ($user->customer->is_verified == 0){
+                return Response::make([
+                    'Success' => false,
+                    'ErrorMessage' => [
+                        'ar' => trans('errors.1024',[],'ar'),
+                        'en' => trans('errors.1024',[],'en'),
+                        'ku' => trans('errors.1024',[],'ku')
+                    ],
+                    'ErrorCode' => 1024,
+                    'response' => []
+                ]);
 
+            }
+            elseif ($user->customer->is_deleted == 1){
+                return Response::make([
+                    'Success' => false,
+                    'ErrorMessage' => [
+                        'ar' => trans('errors.1025',[],'ar'),
+                        'en' => trans('errors.1025',[],'en'),
+                        'ku' => trans('errors.1025',[],'ku')
+                    ],
+                    'ErrorCode' => 1025,
+                    'response' => []
+                ]);
+
+            }
         }
+
+        return Response::make([
+            'Success' => true,
+            'ErrorMessage' => null,
+            'ErrorCode' => null,
+            'response' => (array (new UserCollection([$user]))[0])
+        ]);
     }
 
     public function resetPasswordRequest(Request $request){

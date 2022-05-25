@@ -9,6 +9,7 @@ use App\Application\Model\Courses;
 use App\Application\Transformers\CoursesTransformers;
 use App\Application\Requests\Website\Courses\ApiAddRequestCourses;
 use App\Application\Requests\Website\Courses\ApiUpdateRequestCourses;
+use Illuminate\Support\Facades\Auth;
 
 class CoursesApi extends Controller
 {
@@ -40,6 +41,8 @@ class CoursesApi extends Controller
 
     public function index()
     {
+
+//        dd(Auth::check());
         $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
 
         $data = $this->model;

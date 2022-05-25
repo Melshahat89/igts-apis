@@ -47,6 +47,7 @@ return array(
     'Svg\\' => array($vendorDir . '/phenx/php-svg-lib/src/Svg'),
     'Superbalist\\Flysystem\\GoogleStorage\\' => array($vendorDir . '/superbalist/flysystem-google-storage/src'),
     'SuperClosure\\' => array($vendorDir . '/jeremeamia/superclosure/src'),
+    'StellaMaris\\Clock\\' => array($vendorDir . '/stella-maris/clock/src'),
     'Sinergi\\BrowserDetector\\' => array($vendorDir . '/sinergi/browser-detector/src'),
     'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
     'Seld\\PharUtils\\' => array($vendorDir . '/seld/phar-utils/src'),
