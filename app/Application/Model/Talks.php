@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\DB;
          'instructor_id'
    ];
   public function getTitleLangAttribute(){
-  return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->{getCurrentLang()}  : $this->title;
+  return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->{app()->getLocale()}  : $this->title;
  }
  public function getTitleEnAttribute(){
   return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->en  : $this->title;
@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\DB;
   return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->ar  : $this->title;
  }
  public function getSubtitleLangAttribute(){
-  return is_json($this->subtitle) && is_object(json_decode($this->subtitle)) ?  json_decode($this->subtitle)->{getCurrentLang()}  : $this->subtitle;
+  return is_json($this->subtitle) && is_object(json_decode($this->subtitle)) ?  json_decode($this->subtitle)->{app()->getLocale()}  : $this->subtitle;
  }
  public function getSubtitleEnAttribute(){
   return is_json($this->subtitle) && is_object(json_decode($this->subtitle)) ?  json_decode($this->subtitle)->en  : $this->subtitle;
@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\DB;
   return is_json($this->subtitle) && is_object(json_decode($this->subtitle)) ?  json_decode($this->subtitle)->ar  : $this->subtitle;
  }
  public function getDescriptionLangAttribute(){
-  return is_json($this->description) && is_object(json_decode($this->description)) ?  json_decode($this->description)->{getCurrentLang()}  : $this->description;
+  return is_json($this->description) && is_object(json_decode($this->description)) ?  json_decode($this->description)->{app()->getLocale()}  : $this->description;
  }
  public function getDescriptionEnAttribute(){
   return is_json($this->description) && is_object(json_decode($this->description)) ?  json_decode($this->description)->en  : $this->description;
@@ -56,7 +56,7 @@ use Illuminate\Support\Facades\DB;
   return is_json($this->description) && is_object(json_decode($this->description)) ?  json_decode($this->description)->ar  : $this->description;
  }
  public function getDoctor_nameLangAttribute(){
-  return is_json($this->doctor_name) && is_object(json_decode($this->doctor_name)) ?  json_decode($this->doctor_name)->{getCurrentLang()}  : $this->doctor_name;
+  return is_json($this->doctor_name) && is_object(json_decode($this->doctor_name)) ?  json_decode($this->doctor_name)->{app()->getLocale()}  : $this->doctor_name;
  }
  public function getDoctor_nameEnAttribute(){
   return is_json($this->doctor_name) && is_object(json_decode($this->doctor_name)) ?  json_decode($this->doctor_name)->en  : $this->doctor_name;
@@ -65,7 +65,7 @@ use Illuminate\Support\Facades\DB;
   return is_json($this->doctor_name) && is_object(json_decode($this->doctor_name)) ?  json_decode($this->doctor_name)->ar  : $this->doctor_name;
  }
  public function getSeo_descLangAttribute(){
-  return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ?  json_decode($this->seo_desc)->{getCurrentLang()}  : $this->seo_desc;
+  return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ?  json_decode($this->seo_desc)->{app()->getLocale()}  : $this->seo_desc;
  }
  public function getSeo_descEnAttribute(){
   return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ?  json_decode($this->seo_desc)->en  : $this->seo_desc;
@@ -74,7 +74,7 @@ use Illuminate\Support\Facades\DB;
   return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ?  json_decode($this->seo_desc)->ar  : $this->seo_desc;
  }
  public function getSeo_keysLangAttribute(){
-  return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ?  json_decode($this->seo_keys)->{getCurrentLang()}  : $this->seo_keys;
+  return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ?  json_decode($this->seo_keys)->{app()->getLocale()}  : $this->seo_keys;
  }
  public function getSeo_keysEnAttribute(){
   return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ?  json_decode($this->seo_keys)->en  : $this->seo_keys;

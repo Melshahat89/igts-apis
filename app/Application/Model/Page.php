@@ -12,7 +12,7 @@
     ];
      public function getTitleLangAttribute()
     {
-        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{getCurrentLang()} : $this->title;
+        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{app()->getLocale()} : $this->title;
     }
      public function getTitleEnAttribute()
     {
@@ -24,7 +24,7 @@
     }
      public function getBodyLangAttribute()
     {
-        return is_json($this->body) && is_object(json_decode($this->body)) ? json_decode($this->body)->{getCurrentLang()} : $this->body;
+        return is_json($this->body) && is_object(json_decode($this->body)) ? json_decode($this->body)->{app()->getLocale()} : $this->body;
     }
      public function getBodyEnAttribute()
     {

@@ -72,10 +72,12 @@ trait ApiTrait{
 
     protected function paginateArray($data){
         return [
-            "total_count" => $data->total(),
-            "total_pages" => ceil($data->total() / $data->perPage()),
-            "current_page" => $data->currentPage(),
-            "limit" => $data->perPage()
+            "paginate" => [
+                "total_count" => $data->total(),
+                "total_pages" => ceil($data->total() / $data->perPage()),
+                "current_page" => $data->currentPage(),
+                "limit" => $data->perPage()
+                ]
         ];
     }
 

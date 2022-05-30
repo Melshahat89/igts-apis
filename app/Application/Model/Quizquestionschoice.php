@@ -15,7 +15,7 @@
         'choice','is_correct'
    ];
   public function getChoiceLangAttribute(){
-  return is_json($this->choice) && is_object(json_decode($this->choice)) ?  json_decode($this->choice)->{getCurrentLang()}  : $this->choice;
+  return is_json($this->choice) && is_object(json_decode($this->choice)) ?  json_decode($this->choice)->{app()->getLocale()}  : $this->choice;
  }
  public function getChoiceEnAttribute(){
   return is_json($this->choice) && is_object(json_decode($this->choice)) ?  json_decode($this->choice)->en  : $this->choice;

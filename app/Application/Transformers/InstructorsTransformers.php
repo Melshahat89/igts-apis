@@ -14,35 +14,17 @@ use Illuminate\Database\Eloquent\Model;
              'name' => $modelOrCollection->name,
              'email' => $modelOrCollection->email,
              'mobile' => $modelOrCollection->mobile,
-             'first_name' => $modelOrCollection->{lang("first_name" , "en")},
-             'last_name' => $modelOrCollection->{lang("last_name" , "en")},
+             'first_name' => $modelOrCollection->first_name_lang,
+             'last_name' => $modelOrCollection->last_name_lang,
              'birthdate' => $modelOrCollection->birthdate,
-             'title' => $modelOrCollection->{lang("title" , "en")},
-             'about' => $modelOrCollection->{lang("about" , "en")},
-             'description' => $modelOrCollection->{lang("description" , "en")},
+             'title' => $modelOrCollection->title_lang,
+             'about' => $modelOrCollection->about_lang,
+             'description' => $modelOrCollection->about_lang,
              'image' => $modelOrCollection->image,
              'cover' => $modelOrCollection->cover,
              'coursesViews' => $modelOrCollection->instructorCoursesViews,
              'enrolledCountStudents' => $modelOrCollection->EnrolledCountStudents,
              'instructorRating' => $modelOrCollection->InstructorRating,
-         ];
-     }
-     public function transformModelAr(Model $modelOrCollection)
-     {
-         return [
-             'id' => $modelOrCollection->id,
-             'slug' => $modelOrCollection->slug,
-             'name' => $modelOrCollection->name,
-             'email' => $modelOrCollection->email,
-             'mobile' => $modelOrCollection->mobile,
-             'first_name' => $modelOrCollection->{lang("first_name" , "ar")},
-             'last_name' => $modelOrCollection->{lang("last_name" , "ar")},
-             'birthdate' => $modelOrCollection->birthdate,
-             'title' => $modelOrCollection->{lang("title" , "ar")},
-             'about' => $modelOrCollection->{lang("about" , "ar")},
-             'description' => $modelOrCollection->{lang("description" , "ar")},
-             'image' => $modelOrCollection->image,
-             'cover' => $modelOrCollection->cover,
          ];
      }
  }

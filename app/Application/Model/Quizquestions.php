@@ -21,7 +21,7 @@
         'question','type','mark'
    ];
   public function getQuestionLangAttribute(){
-  return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->{getCurrentLang()}  : $this->question;
+  return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->{app()->getLocale()}  : $this->question;
  }
  public function getQuestionEnAttribute(){
   return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->en  : $this->question;

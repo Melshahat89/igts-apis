@@ -27,9 +27,10 @@ final class AbstractChunkOutputBuilderTest extends TestCase
      * @param string $from
      * @param string $to
      * @param int    $lineThreshold
+     *
      * @dataProvider provideGetCommonChunks
      */
-    public function testGetCommonChunks(array $expected, string $from, string $to, int $lineThreshold = 5)
+    public function testGetCommonChunks(array $expected, string $from, string $to, int $lineThreshold = 5): void
     {
         $output = new class extends AbstractChunkOutputBuilder {
             public function getDiff(array $diff): string

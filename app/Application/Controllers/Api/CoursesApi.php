@@ -11,6 +11,8 @@ use App\Application\Requests\Website\Courses\ApiAddRequestCourses;
 use App\Application\Requests\Website\Courses\ApiUpdateRequestCourses;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class CoursesApi extends Controller
 {
     use ApiTrait;
@@ -33,20 +35,21 @@ class CoursesApi extends Controller
 
     protected function checkLanguageBeforeReturn($data , $status_code = 200, $paginate = [])
     {
+
+//        dd(request()->hasHeader("Accept-Language"));
        if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
+
            return response(apiReturn(array_values(CoursesTransformers::transformAr($data) + $paginate)), $status_code);
         }
+//        dd(22);
         return response(apiReturn(array_values(CoursesTransformers::transform($data) + $paginate)), $status_code);
     }
 
     public function index()
     {
-
-//        dd(Auth::check());
+//        dd(auth('api')->check());
         $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
-
         $data = $this->model;
-
         if (request()->has("search_keys") && request()->get("search_keys") != "") {
             $data = $data->where("search_keys", "like", "%" . request()->get("search_keys") . "%");
         }
@@ -58,7 +61,7 @@ class CoursesApi extends Controller
         $data = $data->where('published', 1)->orderBy('id' , 'desc')->paginate($limit);
 
         if ($data AND count($data) > 0) {
-            return $this->checkLanguageBeforeReturn($data , 200 , $this->paginateArray($data));
+            return response(apiReturn(array_values(CoursesTransformers::transform($data) + $this->paginateArray($data))), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 200);
     }

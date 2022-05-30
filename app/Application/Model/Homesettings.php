@@ -17,7 +17,7 @@ class Homesettings extends Model
 
    public function getSeotitleLangAttribute()
    {
-       return is_json($this->seo_title) && is_object(json_decode($this->seo_title)) ? json_decode($this->seo_title)->{getCurrentLang()} : $this->seo_title;
+       return is_json($this->seo_title) && is_object(json_decode($this->seo_title)) ? json_decode($this->seo_title)->{app()->getLocale()} : $this->seo_title;
    }
    public function getSeotitleEnAttribute()
    {
@@ -30,7 +30,7 @@ class Homesettings extends Model
    
    public function getSeodescLangAttribute()
    {
-       return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ? json_decode($this->seo_desc)->{getCurrentLang()} : $this->seo_desc;
+       return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ? json_decode($this->seo_desc)->{app()->getLocale()} : $this->seo_desc;
    }
    public function getSeodescEnAttribute()
    {
@@ -42,7 +42,7 @@ class Homesettings extends Model
    }
    public function getSeo_keysLangAttribute()
    {
-       return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ? json_decode($this->seo_keys)->{getCurrentLang()} : $this->seo_keys;
+       return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ? json_decode($this->seo_keys)->{app()->getLocale()} : $this->seo_keys;
    }
    public function getSeo_keysEnAttribute()
    {

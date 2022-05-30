@@ -3,7 +3,6 @@
 A Laravel package for the [Firebase PHP Admin SDK](https://github.com/kreait/firebase-php).
 
 [![Current version](https://img.shields.io/packagist/v/kreait/laravel-firebase.svg?logo=composer)](https://packagist.org/packages/kreait/laravel-firebase)
-[![Firebase Admin SDK version](https://img.shields.io/badge/Firebase%20Admin%20SDK-%5E4.30.0-blue)](https://packagist.org/packages/kreait/firebase-php)
 [![Discord](https://img.shields.io/discord/523866370778333184.svg?color=7289da&logo=discord)](https://discord.gg/nbgVfty)
 
 * [Installation](#installation)
@@ -13,16 +12,20 @@ A Laravel package for the [Firebase PHP Admin SDK](https://github.com/kreait/fir
 
 ## Installation
 
+This package requires Laravel 5.8 and higher or Lumen 5.8 and higher.
+
 ```bash
-composer require kreait/laravel-firebase ^1.0
+composer require kreait/laravel-firebase
 ```
 
-If you don't use package auto-discovery, add the following service provider in `config/app.php`
+If you use Lumen or don't use Laravel's package auto-discovery, add the following service provider in 
+`config/app.php` (Laravel) or `bootstrap/app.php` (Lumen):
+
+### Laravel
 
 ```php
-// config/app.php
 <?php
-
+// config/app.php
 return [
     // ...
     'providers' => [
@@ -31,6 +34,15 @@ return [
     ]
     // ...   
 ];
+```
+
+### Lumen
+
+```php
+<?php
+// bootstrap/app.php
+
+$app->register(Kreait\Laravel\Firebase\ServiceProvider::class);
 ```
 
 ## Configuration
@@ -54,24 +66,34 @@ FIREBASE_CREDENTIALS=relative/path/to/firebase_credentials.json
 ```
 
 For further configuration, please see [config/firebase.php](config/firebase.php). You can modify the configuration
-by copying it to your local `config` directory with the publish command:
+by copying it to your local `config` directory:
 
 ```bash
+# Laravel
 php artisan vendor:publish --provider="Kreait\Laravel\Firebase\ServiceProvider" --tag=config
+
+# Lumen
+mkdir -p config
+cp vendor/kreait/firebase-laravel/config/firebase.php config/firebase.php
 ```
 
 ## Usage
 
 | Component | [Automatic Injection](https://laravel.com/docs/5.8/container#automatic-injection) | [Facades](https://laravel.com/docs/facades) | [`app()`](https://laravel.com/docs/helpers#method-app) |
 | --- | --- | --- | --- |
-| [Authentication](https://firebase-php.readthedocs.io/en/latest/authentication.html) | `\Kreait\Firebase\Auth` | `FirebaseAuth` | `app('firebase.auth')` |
-| [Cloud&nbsp;Messaging&nbsp;(FCM)](https://firebase-php.readthedocs.io/en/latest/cloud-messaging.html) | `\Kreait\Firebase\Messaging` | `FirebaseMessaging` | `app('firebase.messaging')` |
-| [Realtime Database](https://firebase-php.readthedocs.io/en/latest/realtime-database.html) | `\Kreait\Firebase\Database` | `FirebaseDatabase` | `app('firebase.database')` |
-| [Remote Config](https://firebase-php.readthedocs.io/en/latest/remote-config.html) | `\Kreait\Firebase\RemoteConfig` | `FirebaseRemoteConfig` | `app('firebase.remote_config')` |
-| [Storage](https://firebase-php.readthedocs.io/en/latest/storage.html) | `\Kreait\Firebase\Storage` | `FirebaseStorage` | `app('firebase.storage')` |
+| [Authentication](https://firebase-php.readthedocs.io/en/stable/authentication.html) | `\Kreait\Firebase\Auth` | `FirebaseAuth` | `app('firebase.auth')` |
+| [Cloud Firestore](https://firebase-php.readthedocs.io/en/stable/cloud-firestore.html) | `\Kreait\Firebase\Firestore` | `FirebaseFirestore` | `app('firebase.firestore')` |
+| [Cloud&nbsp;Messaging&nbsp;(FCM)](https://firebase-php.readthedocs.io/en/stable/cloud-messaging.html) | `\Kreait\Firebase\Messaging` | `FirebaseMessaging` | `app('firebase.messaging')` |
+| [Dynamic&nbsp;Links](https://firebase-php.readthedocs.io/en/stable/dynamic-links.html) | `\Kreait\Firebase\DynamicLinks` | `FirebaseDynamicLinks` | `app('firebase.dynamic_links')` |
+| [Realtime Database](https://firebase-php.readthedocs.io/en/stable/realtime-database.html) | `\Kreait\Firebase\Database` | `FirebaseDatabase` | `app('firebase.database')` |
+| [Remote Config](https://firebase-php.readthedocs.io/en/stable/remote-config.html) | `\Kreait\Firebase\RemoteConfig` | `FirebaseRemoteConfig` | `app('firebase.remote_config')` |
+| [Storage](https://firebase-php.readthedocs.io/en/stable/storage.html) | `\Kreait\Firebase\Storage` | `FirebaseStorage` | `app('firebase.storage')` |
 
 Once you have retrieved a component, please refer to the [documentation of the Firebase PHP Admin SDK](https://firebase-php.readthedocs.io) 
 for further information on how to use it.
+
+**You don't need and should not use the `new Factory()` pattern described in the SDK documentation, this is already
+done for you with the Laravel Service Provider. Use Dependency Injection, the Facades or the `app()` helper instead**
 
 ## License
 

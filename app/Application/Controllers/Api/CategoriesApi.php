@@ -28,9 +28,6 @@ class CategoriesApi extends Controller
 //        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
         $data = $this->model->orderBy('id' , 'desc')->get();
         if ($data) {
-            if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
-                return response(apiReturn(CategoriesTransformers::transformAr($data) ), 200);
-            }
             return response(apiReturn(CategoriesTransformers::transform($data) ), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 200);
@@ -57,9 +54,6 @@ class CategoriesApi extends Controller
 //        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
         $data = Categories::where('status',1)->where('show_home',1)->orderBy('id' , 'desc')->get();
         if ($data) {
-            if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
-                return response(apiReturn(CategoriesCoursesTransformers::transformAr($data) ), 200);
-            }
             return response(apiReturn(CategoriesCoursesTransformers::transform($data) ), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 404);

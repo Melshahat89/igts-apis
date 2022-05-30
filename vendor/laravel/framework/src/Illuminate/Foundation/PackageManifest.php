@@ -97,6 +97,8 @@ class PackageManifest
             $this->build();
         }
 
+        $this->files->get($this->manifestPath);
+
         return $this->manifest = file_exists($this->manifestPath) ?
             $this->files->getRequire($this->manifestPath) : [];
     }
@@ -159,6 +161,7 @@ class PackageManifest
      *
      * @param  array  $manifest
      * @return void
+     *
      * @throws \Exception
      */
     protected function write(array $manifest)
@@ -167,7 +170,7 @@ class PackageManifest
             throw new Exception('The '.dirname($this->manifestPath).' directory must be present and writable.');
         }
 
-        $this->files->put(
+        $this->files->replace(
             $this->manifestPath, '<?php return '.var_export($manifest, true).';'
         );
     }

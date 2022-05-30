@@ -18,7 +18,7 @@
         'title','will_do_at_the_end','position'
    ];
   public function getTitleLangAttribute(){
-  return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->{getCurrentLang()}  : $this->title;
+  return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->{app()->getLocale()}  : $this->title;
  }
  public function getTitleEnAttribute(){
   return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->en  : $this->title;
@@ -27,7 +27,7 @@
   return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->ar  : $this->title;
  }
  public function getWill_do_at_the_endLangAttribute(){
-  return is_json($this->will_do_at_the_end) && is_object(json_decode($this->will_do_at_the_end)) ?  json_decode($this->will_do_at_the_end)->{getCurrentLang()}  : $this->will_do_at_the_end;
+  return is_json($this->will_do_at_the_end) && is_object(json_decode($this->will_do_at_the_end)) ?  json_decode($this->will_do_at_the_end)->{app()->getLocale()}  : $this->will_do_at_the_end;
  }
  public function getWill_do_at_the_endEnAttribute(){
   return is_json($this->will_do_at_the_end) && is_object(json_decode($this->will_do_at_the_end)) ?  json_decode($this->will_do_at_the_end)->en  : $this->will_do_at_the_end;

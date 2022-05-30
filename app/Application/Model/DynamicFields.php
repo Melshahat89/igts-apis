@@ -13,7 +13,7 @@ class DynamicFields extends Model
 
     public function getTitleLangAttribute()
     {
-        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{getCurrentLang()} : $this->title;
+        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{app()->getLocale()} : $this->title;
     }
 
     public function getTitleEnAttribute()
@@ -28,7 +28,7 @@ class DynamicFields extends Model
 
     public function getDescriptionLangAttribute()
     {
-        return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{getCurrentLang()} : $this->description;
+        return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{app()->getLocale()} : $this->description;
     }
 
     public function getDescriptionEnAttribute()

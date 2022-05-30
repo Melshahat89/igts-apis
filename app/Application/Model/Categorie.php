@@ -13,7 +13,7 @@ class Categorie extends Model
 
     public function getTitleLangAttribute()
     {
-        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{getCurrentLang()} : $this->title;
+        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{app()->getLocale()} : $this->title;
     }
 
     public function getTitleEnAttribute()

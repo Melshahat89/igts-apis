@@ -46,7 +46,7 @@ class Businessdata extends Model
   ];
   public function getNameLangAttribute()
   {
-    return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->{getCurrentLang()}  : $this->name;
+    return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->{app()->getLocale()}  : $this->name;
   }
   public function getNameEnAttribute()
   {

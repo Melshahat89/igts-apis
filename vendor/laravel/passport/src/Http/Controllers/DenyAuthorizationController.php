@@ -2,9 +2,9 @@
 
 namespace Laravel\Passport\Http\Controllers;
 
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class DenyAuthorizationController
 {
@@ -44,7 +44,7 @@ class DenyAuthorizationController
             $uri = Arr::first($clientUris);
         }
 
-        $separator = $authRequest->getGrantTypeId() === 'implicit' ? '#' : '?';
+        $separator = $authRequest->getGrantTypeId() === 'implicit' ? '#' : (strstr($uri, '?') ? '&' : '?');
 
         return $this->response->redirectTo(
             $uri.$separator.'error=access_denied&state='.$request->input('state')

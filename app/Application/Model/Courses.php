@@ -134,7 +134,7 @@ use Illuminate\Support\Facades\View;
     ];
          public function getTitleLangAttribute()
     {
-        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{getCurrentLang()} : $this->title;
+        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{app()->getLocale()} : $this->title;
     }
     public function getTitleEnAttribute()
     {
@@ -146,7 +146,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getDescriptionLangAttribute()
     {
-        return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{getCurrentLang()} : $this->description;
+        return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{app()->getLocale()} : $this->description;
     }
     public function getDescriptionEnAttribute()
     {
@@ -158,7 +158,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getWelcome_messageLangAttribute()
     {
-        return is_json($this->welcome_message) && is_object(json_decode($this->welcome_message)) ? json_decode($this->welcome_message)->{getCurrentLang()} : $this->welcome_message;
+        return is_json($this->welcome_message) && is_object(json_decode($this->welcome_message)) ? json_decode($this->welcome_message)->{app()->getLocale()} : $this->welcome_message;
     }
     public function getWelcome_messageEnAttribute()
     {
@@ -170,7 +170,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getCongratulation_messageLangAttribute()
     {
-        return is_json($this->congratulation_message) && is_object(json_decode($this->congratulation_message)) ? json_decode($this->congratulation_message)->{getCurrentLang()} : $this->congratulation_message;
+        return is_json($this->congratulation_message) && is_object(json_decode($this->congratulation_message)) ? json_decode($this->congratulation_message)->{app()->getLocale()} : $this->congratulation_message;
     }
     public function getCongratulation_messageEnAttribute()
     {
@@ -182,7 +182,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getDoctornameLangAttribute()
     {
-        return is_json($this->doctor_name) && is_object(json_decode($this->doctor_name)) ? json_decode($this->doctor_name)->{getCurrentLang()} : $this->doctor_name;
+        return is_json($this->doctor_name) && is_object(json_decode($this->doctor_name)) ? json_decode($this->doctor_name)->{app()->getLocale()} : $this->doctor_name;
     }
     public function getDoctornameEnAttribute()
     {
@@ -194,7 +194,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getSeodescLangAttribute()
     {
-        return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ? json_decode($this->seo_desc)->{getCurrentLang()} : $this->seo_desc;
+        return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ? json_decode($this->seo_desc)->{app()->getLocale()} : $this->seo_desc;
     }
     public function getSeodescEnAttribute()
     {
@@ -204,9 +204,9 @@ use Illuminate\Support\Facades\View;
     {
         return is_json($this->seo_desc) && is_object(json_decode($this->seo_desc)) ? json_decode($this->seo_desc)->ar : $this->seo_desc;
     }
-    public function getSeo_keysLangAttribute()
+    public function getSeokeysLangAttribute()
     {
-        return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ? json_decode($this->seo_keys)->{getCurrentLang()} : $this->seo_keys;
+        return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ? json_decode($this->seo_keys)->{app()->getLocale()} : $this->seo_keys;
     }
     public function getSeo_keysEnAttribute()
     {
@@ -216,9 +216,9 @@ use Illuminate\Support\Facades\View;
     {
         return is_json($this->seo_keys) && is_object(json_decode($this->seo_keys)) ? json_decode($this->seo_keys)->ar : $this->seo_keys;
     }
-    public function getSearch_keysLangAttribute()
+    public function getSearchkeysLangAttribute()
     {
-        return is_json($this->search_keys) && is_object(json_decode($this->search_keys)) ? json_decode($this->search_keys)->{getCurrentLang()} : $this->search_keys;
+        return is_json($this->search_keys) && is_object(json_decode($this->search_keys)) ? json_decode($this->search_keys)->{app()->getLocale()} : $this->search_keys;
     }
     public function getSearch_keysEnAttribute()
     {
@@ -230,7 +230,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getwilllearnLangAttribute()
     {
-        return is_json($this->will_learn) && is_object(json_decode($this->will_learn)) ? json_decode($this->will_learn)->{getCurrentLang()} : $this->will_learn;
+        return is_json($this->will_learn) && is_object(json_decode($this->will_learn)) ? json_decode($this->will_learn)->{app()->getLocale()} : $this->will_learn;
     }
     public function getwilllearnEnAttribute()
     {
@@ -242,7 +242,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getrequirmentsLangAttribute()
     {
-        return is_json($this->requirments) && is_object(json_decode($this->requirments)) ? json_decode($this->requirments)->{getCurrentLang()} : $this->requirments;
+        return is_json($this->requirments) && is_object(json_decode($this->requirments)) ? json_decode($this->requirments)->{app()->getLocale()} : $this->requirments;
     }
     public function getrequirmentsEnAttribute()
     {
@@ -254,7 +254,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getdescriptionlargeLangAttribute()
     {
-        return is_json($this->description_large) && is_object(json_decode($this->description_large)) ? json_decode($this->description_large)->{getCurrentLang()} : $this->description_large;
+        return is_json($this->description_large) && is_object(json_decode($this->description_large)) ? json_decode($this->description_large)->{app()->getLocale()} : $this->description_large;
     }
     public function getdescriptionlargeEnAttribute()
     {
@@ -267,7 +267,7 @@ use Illuminate\Support\Facades\View;
 
     public function getaccreditationtextLangAttribute()
     {
-        return is_json($this->accreditation_text) && is_object(json_decode($this->accreditation_text)) ? json_decode($this->accreditation_text)->{getCurrentLang()} : $this->accreditation_text;
+        return is_json($this->accreditation_text) && is_object(json_decode($this->accreditation_text)) ? json_decode($this->accreditation_text)->{app()->getLocale()} : $this->accreditation_text;
     }
     public function getaccreditationtextEnAttribute()
     {
@@ -280,7 +280,7 @@ use Illuminate\Support\Facades\View;
 
     public function gettargetstudentsLangAttribute()
     {
-        return is_json($this->target_students) && is_object(json_decode($this->target_students)) ? json_decode($this->target_students)->{getCurrentLang()} : $this->target_students;
+        return is_json($this->target_students) && is_object(json_decode($this->target_students)) ? json_decode($this->target_students)->{app()->getLocale()} : $this->target_students;
     }
     public function gettargetstudentsEnAttribute()
     {

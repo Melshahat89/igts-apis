@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Mail;
 use Kreait\Firebase\Database;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
+use Laravel\Passport\HasApiTokens;
+
     class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
     const TYPE_ADMIN = 1;
     const TYPE_USER = 2;
     const TYPE_INSTRUCTOR = 3;
@@ -223,7 +225,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getTitleLangAttribute()
     {
-        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{getCurrentLang()} : $this->title;
+        return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{app()->getLocale()} : $this->title;
     }
     public function getTitleEnAttribute()
     {
@@ -235,7 +237,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getDescriptionLangAttribute()
     {
-        return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{getCurrentLang()} : $this->description;
+        return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{app()->getLocale()} : $this->description;
     }
     public function getDescriptionEnAttribute()
     {
@@ -247,7 +249,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getAboutLangAttribute()
     {
-        return is_json($this->about) && is_object(json_decode($this->about)) ? json_decode($this->about)->{getCurrentLang()} : $this->about;
+        return is_json($this->about) && is_object(json_decode($this->about)) ? json_decode($this->about)->{app()->getLocale()} : $this->about;
     }
     public function getAboutEnAttribute()
     {
@@ -259,7 +261,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getInstructornameLangAttribute()
     {
-        return is_json($this->instructorname) && is_object(json_decode($this->instructorname)) ? json_decode($this->instructorname)->{getCurrentLang()} : $this->instructorname;
+        return is_json($this->instructorname) && is_object(json_decode($this->instructorname)) ? json_decode($this->instructorname)->{app()->getLocale()} : $this->instructorname;
     }
     public function getInstructornameEnAttribute()
     {
@@ -271,7 +273,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getAdditional_infoLangAttribute()
     {
-        return is_json($this->additional_info) && is_object(json_decode($this->additional_info)) ? json_decode($this->additional_info)->{getCurrentLang()} : $this->additional_info;
+        return is_json($this->additional_info) && is_object(json_decode($this->additional_info)) ? json_decode($this->additional_info)->{app()->getLocale()} : $this->additional_info;
     }
     public function getAdditional_infoEnAttribute()
     {
@@ -283,7 +285,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getFirstnameLangAttribute()
     {
-        return is_json($this->first_name) && is_object(json_decode($this->first_name)) ? json_decode($this->first_name)->{getCurrentLang()} : $this->first_name;
+        return is_json($this->first_name) && is_object(json_decode($this->first_name)) ? json_decode($this->first_name)->{app()->getLocale()} : $this->first_name;
     }
     public function getFirstnameEnAttribute()
     {
@@ -295,7 +297,7 @@ use Kreait\Firebase\ServiceAccount;
     }
     public function getLastnameLangAttribute()
     {
-        return is_json($this->last_name) && is_object(json_decode($this->last_name)) ? json_decode($this->last_name)->{getCurrentLang()} : $this->last_name;
+        return is_json($this->last_name) && is_object(json_decode($this->last_name)) ? json_decode($this->last_name)->{app()->getLocale()} : $this->last_name;
     }
     public function getLastnameEnAttribute()
     {

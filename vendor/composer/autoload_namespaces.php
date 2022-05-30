@@ -6,12 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'UpdateHelper\\' => array($vendorDir . '/kylekatarnls/update-helper/src'),
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
-    'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
-    'Mpociot\\ApiDoc' => array($vendorDir . '/mpociot/laravel-apidoc-generator/src'),
     'Mpociot' => array($vendorDir . '/mpociot/reflection-docblock/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Mcamara\\LaravelLocalization' => array($vendorDir . '/mcamara/laravel-localization/src'),
-    'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
+    'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
 );

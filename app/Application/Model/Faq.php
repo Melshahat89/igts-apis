@@ -19,7 +19,7 @@ class Faq extends Model
 	}
 
 	public function getQuestionLangAttribute(){
-		return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->{getCurrentLang()}  : $this->question;
+		return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->{app()->getLocale()}  : $this->question;
 	}
 	public function getQuestionEnAttribute(){
 		return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->en  : $this->question;
@@ -28,7 +28,7 @@ class Faq extends Model
 		return is_json($this->question) && is_object(json_decode($this->question)) ?  json_decode($this->question)->ar  : $this->question;
 	}
 	public function getAnswerLangAttribute(){
-		return is_json($this->answer) && is_object(json_decode($this->answer)) ?  json_decode($this->answer)->{getCurrentLang()}  : $this->answer;
+		return is_json($this->answer) && is_object(json_decode($this->answer)) ?  json_decode($this->answer)->{app()->getLocale()}  : $this->answer;
 	}
 	public function getAnswerEnAttribute(){
 		return is_json($this->answer) && is_object(json_decode($this->answer)) ?  json_decode($this->answer)->en  : $this->answer;

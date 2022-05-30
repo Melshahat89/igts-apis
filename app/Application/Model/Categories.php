@@ -18,7 +18,7 @@
        ,'color_code', 'end_time', 'enable_free', 'courses_id'
    ];
   public function getNameLangAttribute(){
-  return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->{getCurrentLang()}  : $this->name;
+  return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->{app()->getLocale()}  : $this->name;
  }
  public function getNameEnAttribute(){
   return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->en  : $this->name;
@@ -27,7 +27,7 @@
   return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->ar  : $this->name;
  }
  public function getDescLangAttribute(){
-  return is_json($this->desc) && is_object(json_decode($this->desc)) ?  json_decode($this->desc)->{getCurrentLang()}  : $this->desc;
+  return is_json($this->desc) && is_object(json_decode($this->desc)) ?  json_decode($this->desc)->{app()->getLocale()}  : $this->desc;
  }
  public function getDescEnAttribute(){
   return is_json($this->desc) && is_object(json_decode($this->desc)) ?  json_decode($this->desc)->en  : $this->desc;

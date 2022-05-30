@@ -177,14 +177,15 @@ return [
          */
 
         App\Providers\InterFaceBind::class,
-        Yajra\Datatables\DatatablesServiceProvider::class,
+//        Yajra\Datatables\DatatablesServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         ConsoleTVs\Links\LinksServiceProvider::class,
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
-        Barryvdh\Cors\ServiceProvider::class,
+//        Barryvdh\Cors\ServiceProvider::class,
         Themsaid\Langman\LangmanServiceProvider::class,
         Chumper\Zipper\ZipperServiceProvider::class,
 
@@ -276,6 +277,7 @@ return [
         //Socialite
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Datatables' => Yajra\DataTables\Facades\DataTables::class,
 
 
 

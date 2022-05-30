@@ -18,7 +18,7 @@
         'name','email','logo','website','about','status','documentation', 'phone'
    ];
   public function getNameLangAttribute(){
-  return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->{getCurrentLang()}  : $this->name;
+  return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->{app()->getLocale()}  : $this->name;
  }
  public function getNameEnAttribute(){
   return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->en  : $this->name;
@@ -27,7 +27,7 @@
   return is_json($this->name) && is_object(json_decode($this->name)) ?  json_decode($this->name)->ar  : $this->name;
  }
  public function getAboutLangAttribute(){
-  return is_json($this->about) && is_object(json_decode($this->about)) ?  json_decode($this->about)->{getCurrentLang()}  : $this->about;
+  return is_json($this->about) && is_object(json_decode($this->about)) ?  json_decode($this->about)->{app()->getLocale()}  : $this->about;
  }
  public function getAboutEnAttribute(){
   return is_json($this->about) && is_object(json_decode($this->about)) ?  json_decode($this->about)->en  : $this->about;
