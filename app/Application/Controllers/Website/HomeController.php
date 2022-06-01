@@ -181,9 +181,9 @@ class HomeController extends Controller
 
         if(isset($order)){
 
-            $postAffPro = new PostAffiliateProIntegration;
-            $order->aff_id = $postAffPro->getAffiliateId($request);
-    
+//            $postAffPro = new PostAffiliateProIntegration;
+//            $order->aff_id = $postAffPro->getAffiliateId($request);
+
             if ($order->accept_status) {
                 //new Order
                 $order = $this->dublicateOrderPositions($order->id);

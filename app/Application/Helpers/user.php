@@ -24,15 +24,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 function getShoppingCart($userId=null, $order=null){
-    
     $orderPosition = null;
-    $userId = ($userId) ? $userId : Auth::user()->id;
+    $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
     $order = ($order) ? $order : getCurrentOrder();
     // Ceck if the order position found:
     if($order){
         $orderPosition = Ordersposition::where('orders_id',$order->id)->get();
     }
-        
+
         return ($orderPosition) ? $orderPosition : [];
     
 }
@@ -40,8 +39,8 @@ function getShoppingCartDetailsCount($userId=null){
       if(!Auth::check()){
           return [];
       }
-          $userId = ($userId) ? $userId : Auth::user()->id;
-          $order = Orders::where('user_id', Auth::user()->id)->
+          $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
+          $order = Orders::where('user_id', Auth::guard('api')->user()->id)->
               where(function ($query) {
                   $query->where('status', Orders::STATUS_PENDING)
                       //   ->orWhere('status', Orders::STATUS_VODAFONE)
@@ -73,8 +72,8 @@ function getShoppingCartCost($userId=null){
     if(!Auth::check()){
         return 0;
     }
-        $userId = ($userId) ? $userId : Auth::user()->id;
-        $order = Orders::where('user_id', Auth::user()->id)->
+        $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
+        $order = Orders::where('user_id', Auth::guard('api')->user()->id)->
         where(function ($query) {
             $query->where('status', Orders::STATUS_PENDING)
                 //   ->orWhere('status', Orders::STATUS_VODAFONE)
@@ -94,7 +93,7 @@ function getCurrentPromoCode($userId=null){
     if(!Auth::check() AND !($userId)){
         return FALSE;
     }   
-        $userId = ($userId) ? $userId : Auth::user()->id;
+        $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
         $promo = Promotionactive::where('user_id', $userId)->where('status',1)->orderBy('id', 'ASC')->first();
         if(!$promo){
             return  FALSE;
@@ -111,7 +110,7 @@ function connectPromoWithOrder($promotionObj, $order_id, $userId=null){
 
     $promotionUser = new Promotionusers;
     $promotionUser->promotions_id = $promotionObj->id;
-    $promotionUser->user_id = ($userId) ? $userId : Auth::user()->id;
+    $promotionUser->user_id = ($userId) ? $userId : Auth::guard('api')->user()->id;
     $promotionUser->used = 1;
     $promotionUser->orders_id = $order_id;
     $promotionUser->save();
@@ -328,7 +327,7 @@ function updatePromoUsage($itemsArr, $order){
             }
 
             if ($promoCousesIncluded) {
-                $existPromoUser = Promotionusers::where('promotions_id', $promoRow->id)->where('user_id', Auth::user()->id)->first();
+                $existPromoUser = Promotionusers::where('promotions_id', $promoRow->id)->where('user_id', Auth::guard('api')->user()->id)->first();
                 if ($existPromoUser && $existPromoUser->used == 0) {
                     //flag the user as he used the promo code in this order
                     $existPromoUser->used = 1;
@@ -348,7 +347,7 @@ function updatePromoUsage($itemsArr, $order){
 
 function getCurrentOrder($userId=null){
 
-    $order = Orders::where('user_id', ($userId) ? $userId : Auth::user()->id)->
+    $order = Orders::where('user_id', ($userId) ? $userId : Auth::guard('api')->user()->id)->
     where(function ($query) {
         $query->where('status', Orders::STATUS_PENDING);
     })->orderBy('id', 'DESC')->first();
@@ -360,7 +359,7 @@ function extractOrderItemTypes($order=null, $userId=null){
     if(!$order && getCurrentOrder()){
         $order = getCurrentOrder();
     }
-  $itemsArr = getShoppingCart(($userId) ? $userId : Auth::user()->id, $order);
+  $itemsArr = getShoppingCart(($userId) ? $userId : Auth::guard('api')->user()->id, $order);
   $array = array();
 
   foreach($itemsArr as $item){
@@ -468,7 +467,7 @@ function enrollCourse($id, $userId=null, $subscriptionType=null, $endDate=null){
     
     if (!$enrolled) {
         $enroll = new Courseenrollment();
-        $enroll->user_id = ($userId) ? $userId : Auth::user()->id;
+        $enroll->user_id = ($userId) ? $userId : Auth::guard('api')->user()->id;
         $enroll->courses_id = $id;
         $enroll->start_time = $startEndDates["start_date"];
         $enroll->end_time = ($endDate) ? $endDate : $startEndDates["end_date"];
@@ -486,7 +485,7 @@ function enrollCourse($id, $userId=null, $subscriptionType=null, $endDate=null){
                     $startEndDates = calculateCourseEnrollmentDates($Course->id, $userId, $subscriptionType);
 
                     $enroll = new Courseenrollment();
-                    $enroll->user_id = ($userId) ? $userId : Auth::user()->id;
+                    $enroll->user_id = ($userId) ? $userId : Auth::guard('api')->user()->id;
                     $enroll->courses_id = $insideCourse->includedCourse->id;
 
                     $enroll->start_time = $startEndDates["start_date"];
@@ -508,7 +507,7 @@ function enrollEvent($id, $userId=null){
     if (!$enrolled) {
         
         $enroll = new Eventsenrollment();
-        $enroll->user_id = ($userId) ? $userId : Auth::user()->id;
+        $enroll->user_id = ($userId) ? $userId : Auth::guard('api')->user()->id;
         $enroll->events_id = $id;
         $enroll->save();
 
@@ -531,7 +530,7 @@ function enrollCertificate($courses_id, $certificate_id, $userId=null){
     if(!$enrolled){
 
         $enroll = new Certificatesenrollment();
-        $enroll->user_id = ($userId) ? $userId : Auth::user()->id;
+        $enroll->user_id = ($userId) ? $userId : Auth::guard('api')->user()->id;
         $enroll->courses_id = $courses_id;
         $enroll->certificate_id = $certificate_id;
         $enroll->save();
@@ -589,7 +588,7 @@ function createDirectPayOrder($course){
 
     $order = new Orders();
     $order->status = Orders::STATUS_DIRECTBUY;
-    $order->user_id = Auth::user()->id;
+    $order->user_id = Auth::guard('api')->user()->id;
     $order->save();
 
     //Save the item in the cart
@@ -600,7 +599,7 @@ function createDirectPayOrder($course){
     $orderPosition->currency = getCurrency();
     $orderPosition->orders_id = $order->id;
     $orderPosition->courses_id = $course->id;
-    $orderPosition->user_id = Auth::user()->id;
+    $orderPosition->user_id = Auth::guard('api')->user()->id;
     $orderPosition->type = Ordersposition::TYPE_Course;
     $orderPosition->save();
 
@@ -611,13 +610,13 @@ function newDirectPayOrder($amount, $currency){
 
     $order = new Orders();
     $order->status = Orders::STATUS_DIRECTBUY;
-    $order->user_id = Auth::user()->id;
+    $order->user_id = Auth::guard('api')->user()->id;
     $order->save();
 
     $orderPosition = new Ordersposition();
     $orderPosition->amount = $amount;
     $orderPosition->orders_id = $order->id;
-    $orderPosition->user_id = Auth::user()->id;
+    $orderPosition->user_id = Auth::guard('api')->user()->id;
     $orderPosition->unit_price = $amount;
     $orderPosition->type = Ordersposition::TYPE_DIRECT_PAY;
     $orderPosition->currency = $currency;
@@ -635,7 +634,7 @@ function saveFreeOrder($paymentsData){
      $payment->operation = Payments::OPERATION_DEPOSIT;
      $payment->amount = (int) $paymentsData->amount / 100;
      $payment->currency_id = ($paymentsData->currency == 'EGP') ? 34 : 2;
-     $payment->user_id = Auth::user()->id;
+     $payment->user_id = Auth::guard('api')->user()->id;
      $payment->receiver_id = 1;
      $payment->status = Payments::STATUS_SUCCEEDED;
      $payment->orders_id = $paymentsData->order->id;
@@ -793,7 +792,7 @@ function hideIncludedCourses(){
     
     $now = date('Y-m-d');
     $courses = Courses::whereHas('courseenrollment', function($query) use ($now){
-        return $query->where('user_id',Auth::user()->id)->whereDate('start_time', '<=', $now)
+        return $query->where('user_id',Auth::guard('api')->user()->id)->whereDate('start_time', '<=', $now)
         ->whereDate('end_time', '>=', $now)
         ->where('status', 1)->with('courses');
     })->get();

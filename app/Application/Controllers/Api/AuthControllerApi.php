@@ -69,9 +69,6 @@ class AuthControllerApi extends Controller
         if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'banned' => 0])){
             $user = Auth::user();
             if ($user) {
-                if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
-                    return response(apiReturn((UserTransformers::transformAr($user))), 200);
-                }
                 return response(apiReturn((UserTransformers::transform($user))), 200);
             }
         }

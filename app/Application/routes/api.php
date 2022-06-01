@@ -17,9 +17,7 @@ Route::any('site/FawryConfirmationCallback' , 'PaymentsApi@actionFawryConfirmati
 
 Route::middleware("localization")->group(function () {
 
-    Route::middleware('authApi:api')->get('/user', function (Request $request) {
-        return $request->user();
-    });
+
 
     Route::prefix('auth')->group(function () {
         Route::post('/register', 'AuthControllerApi@register');
@@ -31,6 +29,15 @@ Route::middleware("localization")->group(function () {
         Route::post('/resendotp',  'AuthControllerApi@resendotp');
     });
     Route::group(array('prefix' => 'v1'), function () {
+
+        Route::middleware('authApi:api')->group( function () {
+            Route::get('cart', 'UserApi@cart');
+            Route::get('whishlist', 'UserApi@whishlist');
+            Route::post('addToCart', 'UserApi@addToCart');
+            Route::post('removeFromCart', 'UserApi@removeFromCart');
+            Route::post('toggleFavourite', 'UserApi@toggleFavourite');
+        });
+
         //Home
         Route::get('categories', 'CategoriesApi@index');
         Route::post('courses', 'CoursesApi@index');

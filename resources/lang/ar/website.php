@@ -180,7 +180,7 @@ return [
     'A payment error has occurred' => 'حدث خطأ في عملية الدفع',
     'Back to cart' => 'الذهاب الى عربة التسوق',
     'Please try again' => 'الرجاء المحاولة مرة أخرى',
-    'Error Message' => 'Error Message:',
+    'Error Message' => 'رسالة خطأ : ',
     'Do you need help?' => 'هل تحتاج الى مساعدة؟ <a href="https://igtsservice.com/contactus/index.php"> اضغط هنا للتواصل معنا </a>',
     'Thank you! Your request was successfully submitted!' => 'شكراً لك , لقد تم تنفيذ الطلب بنجاح',
     'Your order number is' => 'رقم طلبكم هو',
