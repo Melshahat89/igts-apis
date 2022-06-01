@@ -386,15 +386,11 @@ use Laravel\Passport\HasApiTokens;
 
      public function getOtpMailAttribute()
     {
-
         $user = User::findOrFail(Auth::user()->id);
         $otp= $this->generateRandomString(6);
-
         // update User
         $user->otp = $otp;
         $user->save();
-
-
         Mail::to($user->email)->send(new Otp($user,$otp));
         // alert()->success(trans('website.We sent you an Otp code. Check your email and click on the link to verify.'), trans('website.Success'));
         return true;
@@ -414,6 +410,25 @@ use Laravel\Passport\HasApiTokens;
 
         return $this->hasMany(Quizstudentsstatus::class, 'user_id')->where('status', 4)->where('passed', 1)->whereNotNull('certificate');
     }
+
+        public function getLastcourseAttribute()
+        {
+            return [
+                'title' => 'Comprehensive Legal Diploma',
+                'description' => 'This diploma targets basic legal information in general for all groups, whether they are law students or not',
+                'image' => '25495_1649936490.jpg',
+                'slug' => 'الدبلومة-القانونية-الشاملة',
+                'progress' => 80,
+            ];
+        }
+        public function getUserreviewsAttribute()
+        {
+            return  count($this->coursereviews);
+        }
+        public function getCartcountAttribute()
+        {
+            return  count(getShoppingCart());
+        }
 
 
 

@@ -90,12 +90,10 @@ function medium($image= ''){
 }
 
 function CourseWishlisted($Course_id,$User_id = null){
-    if (Auth::check())
-    {
-        $User_id = $User_id ? $User_id : Auth::user()->id;
+
+        $User_id = Auth::guard('api')->user()->id;
         $Wishlist = Coursewishlist::where('user_id',$User_id)->where('courses_id',$Course_id)->exists();
         return $Wishlist;
-    }
 }
 
 function getCurrency(){

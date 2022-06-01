@@ -11,8 +11,8 @@
   return $this->belongsTo(User::class, "user_id");
   }
      protected $fillable = [
-     'courses_id',
-   'user_id',
-        'note'
+         'courses_id',
+         'user_id',
+         'note'
    ];
   }

@@ -622,7 +622,10 @@ use Illuminate\Support\Facades\View;
     }
     public static function removeItemFromCart($id)
     {
-        $orderPosition = Ordersposition::findOrfail($id);
+        $orderPosition = Ordersposition::find($id);
+        if(!$orderPosition){
+        return false;
+        }
         $order = $orderPosition->orders;
         if (!$order) {
             return false;

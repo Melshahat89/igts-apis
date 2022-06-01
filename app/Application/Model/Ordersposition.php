@@ -46,7 +46,9 @@
 
       public static function removeItemFromCart($id)
       {
-          $orderPosition = Ordersposition::findOrfail($id);
+          $orderPosition = Ordersposition::find($id);
+
+          dd($orderPosition);
           $order = $orderPosition->orders;
           if (!$order) {
               return false;
