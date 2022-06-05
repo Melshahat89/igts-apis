@@ -92,7 +92,9 @@ class UserApi extends Controller
         $data = $this->model->where('group_id',User::TYPE_INSTRUCTOR)->orderBy('id' , 'desc')->paginate($limit);
 
         if ($data) {
-            return response(apiReturn(array_values(InstructorsTransformers::transform($data) + $this->paginateArray($data))), 200);
+//            return response(apiReturn(array_values(InstructorsTransformers::transform($data) + $this->paginateArray($data))), 200);
+            return response(apiReturn(['items' => array_values(InstructorsTransformers::transform($data))] + $this->paginateArray($data)), 200);
+
         }
         return response(apiReturn('', '', 'No Data Found'), 200);
     }

@@ -61,7 +61,7 @@ class CoursesApi extends Controller
         $data = $data->where('published', 1)->orderBy('id' , 'desc')->paginate($limit);
 
         if ($data AND count($data) > 0) {
-            return response(apiReturn(array_values(CoursesTransformers::transform($data) + $this->paginateArray($data))), 200);
+            return response(apiReturn(['items' => array_values(CoursesTransformers::transform($data))] + $this->paginateArray($data)), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 200);
     }

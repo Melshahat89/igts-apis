@@ -25,8 +25,8 @@ use Illuminate\Support\Facades\Mail;
 
 function getShoppingCart($userId=null, $order=null){
     $orderPosition = null;
-    $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
-    $order = ($order) ? $order : getCurrentOrder();
+    $userId =  Auth::guard('api')->user() ?Auth::guard('api')->user()->id: Auth::user()->id;
+    $order = ($order) ? $order : getCurrentOrder($userId);
     // Ceck if the order position found:
     if($order){
         $orderPosition = Ordersposition::where('orders_id',$order->id)->get();
