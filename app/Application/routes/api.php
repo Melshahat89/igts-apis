@@ -36,6 +36,8 @@ Route::middleware("localization")->group(function () {
             Route::post('addToCart', 'UserApi@addToCart');
             Route::post('removeFromCart', 'UserApi@removeFromCart');
             Route::post('toggleFavourite', 'UserApi@toggleFavourite');
+            Route::post('myLearning', 'AccountControllerApi@myLearning');
+            Route::get('myCertifications', 'AccountControllerApi@myCertifications');
         });
 
         //Home

@@ -1,16 +1,16 @@
 <?php
- namespace App\Application\Model;
- use Illuminate\Database\Eloquent\Model;
+namespace App\Application\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
- class Courses extends Model
+class Courses extends Model
 {
     public $table = "courses";
     public function progress(){
-		return $this->hasMany(Progress::class, "courses_id");
-		}
+        return $this->hasMany(Progress::class, "courses_id");
+    }
     public function businesscourses()
     {
         return $this->hasMany(Businesscourses::class, "courses_id");
@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\View;
     }
 
     public function businesscourseenrollments(){
-       // return $this->belongsToMany(Courses::class, 'courseenrollment')->whereIn('user_id', Business);
+        // return $this->belongsToMany(Courses::class, 'courseenrollment')->whereIn('user_id', Business);
     }
     public function quiz()
     {
@@ -43,11 +43,11 @@ use Illuminate\Support\Facades\View;
     {
         return $this->hasMany(Courseincludes::class, "courses_id")->orderBy('position', 'ASC');;
     }
-     public function coursesincluded()
+    public function coursesincluded()
     {
         return $this->belongsToMany(Courses::class, 'courseincludes','courses_id','included_course');
     }
-       public function promotioncourses()
+    public function promotioncourses()
     {
         return $this->hasMany(Promotioncourses::class, "courses_id");
     }
@@ -62,7 +62,7 @@ use Illuminate\Support\Facades\View;
     public function courserelatedsync(){
         return $this->belongsToMany(Courses::class, 'courserelated','courses_id','related_course_id');
     }
-    
+
     public function courseresources()
     {
         return $this->hasMany(Courseresources::class, "courses_id")->orderBy('position', 'ASC');
@@ -80,7 +80,7 @@ use Illuminate\Support\Facades\View;
 
         return Courseenrollment::where('courses_id', $this->id)->where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->first();
     }
-  
+
 
     public function activeCourseEnrollment()
     {
@@ -132,7 +132,7 @@ use Illuminate\Support\Facades\View;
         'will_learn', 'requirments', 'description_large', 'target_students', 'is_partnership',
         'other_categories','lectures_link','videosready','sales_count','start_date', 'certificates', 'accreditation_text', 'vdocipher_tag', 'webinar_url',
     ];
-         public function getTitleLangAttribute()
+    public function getTitleLangAttribute()
     {
         return is_json($this->title) && is_object(json_decode($this->title)) ? json_decode($this->title)->{app()->getLocale()} : $this->title;
     }
@@ -372,9 +372,9 @@ use Illuminate\Support\Facades\View;
             if (auth()->user()->businessdata_id) {
                 $businessdata = Businessdata::where('status', 1)->find(auth()->user()->businessdata_id);
                 if ($businessdata) {
-                     //Check if Course in business
+                    //Check if Course in business
                     $businessCourses = Businesscourses::where('courses_id', $this->id)->where('businessdata_id', $businessdata->id)->first();
-                     if ($businessCourses) {
+                    if ($businessCourses) {
                         $discountValueBusiness = (getCurrency() == "EGP") ? (int) $businessdata->discount_value : (int) $businessdata->discount_value_dollar;
                         if ($businessdata->discount_type == Businessdata::TYPE_PERCENTAGE) {
                             $discountPriceBusiness = ($discountValueBusiness * $promoPrice / 100);
@@ -445,22 +445,22 @@ use Illuminate\Support\Facades\View;
         }
         return $priceText;
     }
-     public function getBundleDiscountPriceTextAttribute()
+    public function getBundleDiscountPriceTextAttribute()
     {
-          $BasePrice = $this->getPriceBaseAttribute();
+        $BasePrice = $this->getPriceBaseAttribute();
         $discount = Setting::where('id', 9)->get()[0]->body_setting;
         $price = $BasePrice['price'] - ($BasePrice['price'] * $discount / 100);
         $currency = $BasePrice['currency'];
         ////////////////////////////////////////////
-                 // $priceText = "<span class='before-discount'>" . $currency . "
+        // $priceText = "<span class='before-discount'>" . $currency . "
         // " . number_format($price) . "</span>" . "<span class='price'>" . $currency . "
         //  " . number_format($promoPrice) . "</span>";
-                             $priceText = "<span class='before-discount'>" . $currency . "
+        $priceText = "<span class='before-discount'>" . $currency . "
         " . number_format($BasePrice['price']) . "</span>" . "<br> <span class='price'>" . $currency . "
          " . number_format($price) . "</span>";
-                 return $priceText;
+        return $priceText;
     }
-     public function getPriceTextH1Attribute()
+    public function getPriceTextH1Attribute()
     {
         $BasePrice = $this->getPriceBaseAttribute();
         $discount = $BasePrice['discount'];
@@ -478,7 +478,7 @@ use Illuminate\Support\Facades\View;
         // $priceText = "<h1 class=\"price\">" . $currency . "" . number_format($promoPrice) . "</h1>
         //             <span class=\"before-discount\">" .
         // $currency . " " . number_format($price) . "</span>";
-                   if ($promoPrice == 0) {
+        if ($promoPrice == 0) {
             $priceText = "<h1 class=\"price\">" .  trans('courses.Free'). "</h1>
             <span class=\"before-discount\">" . " " . number_format($price) . "</span>";
         } else {
@@ -501,7 +501,7 @@ use Illuminate\Support\Facades\View;
     }
     public function getBundleHours(){
         $sum = 0;
-        
+
         foreach($this->courseincludes as $includedCourse){
 
             $sum += $includedCourse->includedCourse->length;
@@ -542,14 +542,14 @@ use Illuminate\Support\Facades\View;
     }
     public static function isEnrolledCourse($id, $userId = null)
     {
-         if (!$userId AND !isset(Auth::user()->id)) {
+        if (!$userId AND !isset(Auth::user()->id)) {
             return false;
         }
-                 $userId = ($userId) ? $userId : Auth::user()->id;
-         if (!$userId) {
+        $userId = ($userId) ? $userId : Auth::user()->id;
+        if (!$userId) {
             return false;
         }
-         $dateNow = date('Y-m-d H:i:s');
+        $dateNow = date('Y-m-d H:i:s');
         $registeredCourse = Courseenrollment::where('user_id', $userId)->where('courses_id', $id)->whereDate('start_time', '<=', $dateNow)
             ->whereDate('end_time', '>=', $dateNow)
             ->where('status', 1)->first();
@@ -565,7 +565,7 @@ use Illuminate\Support\Facades\View;
             $isBusinessCourse = (count(Businesscourses::where('businessdata_id', $businessdata_id)->where('courses_id', $course_id)->get()) > 0) ? 1 : 0;
 
             if($isBusinessCourse) {
-                
+
                 return 1;
 
             }else {
@@ -587,14 +587,14 @@ use Illuminate\Support\Facades\View;
             $businessInputFields = Businessinputfields::where('businessdata_id', $businessdata_id)->get();
 
             if(count($businessInputFields) > 0) {
-    
+
                 foreach($businessInputFields as $businessInputField) {
 
                     $response = Businessinputfieldsresponses::where('businessinputfields_id', $businessInputField->id)->where('user_id', Auth::user()->id)->get();
 
                     if(count($response) == 0) {
                         return 1;
-                    break;
+                        break;
                     }
                 }
 
@@ -624,7 +624,7 @@ use Illuminate\Support\Facades\View;
     {
         $orderPosition = Ordersposition::find($id);
         if(!$orderPosition){
-        return false;
+            return false;
         }
         $order = $orderPosition->orders;
         if (!$order) {
@@ -654,11 +654,11 @@ use Illuminate\Support\Facades\View;
             $order = Orders::where('user_id', $user_id)->where('id', $order_id)->orderBy('id', 'DESC')->first();
         } else {
             $order = Orders::where('user_id', $user_id)->where(function ($query) {
-                    $query->where('status', Orders::STATUS_PENDING)
-                        //   ->orWhere('status', Orders::STATUS_VODAFONE)
-                        //   ->orWhere('status', Orders::STATUS_KIOSK)
-                    ;
-                })->orderBy('id', 'DESC')->first();
+                $query->where('status', Orders::STATUS_PENDING)
+                    //   ->orWhere('status', Orders::STATUS_VODAFONE)
+                    //   ->orWhere('status', Orders::STATUS_KIOSK)
+                ;
+            })->orderBy('id', 'DESC')->first();
         }
         if ($order && $order->ordersposition) {
             foreach ($order->ordersposition as $item) {
@@ -690,11 +690,11 @@ use Illuminate\Support\Facades\View;
         $totalCost = 0;
         //check the current pending order and remove the related positions from the database:
         $order = Orders::where('user_id', Auth::user()->id)->where(function ($query) {
-                $query->where('status', Orders::STATUS_PENDING)
-                    //   ->orWhere('status', Orders::STATUS_VODAFONE)
-                    //   ->orWhere('status', Orders::STATUS_KIOSK)
-                ;
-            })->orderBy('id', 'DESC')->first();
+            $query->where('status', Orders::STATUS_PENDING)
+                //   ->orWhere('status', Orders::STATUS_VODAFONE)
+                //   ->orWhere('status', Orders::STATUS_KIOSK)
+            ;
+        })->orderBy('id', 'DESC')->first();
         if ($order && $order->ordersposition) {
             foreach ($order->ordersposition as $item) {
                 $itemCourse = (int) $item->courses_id;
@@ -763,10 +763,10 @@ use Illuminate\Support\Facades\View;
         // file_put_contents(public_path(env('UPLOAD_PATH_1')) . '/certificate/' . $fileName . '.jpg', $image);
 
         $webinarEnrollment = Courseenrollment::where('user_id', Auth::user()->id)->where('courses_id', $webinar->id)->first();
-        
+
         $webinarEnrollment->certificate = $fileName . '.pdf';
         $webinarEnrollment->save();
-            
+
         return $webinarEnrollment->certificate;
 
     }
@@ -837,7 +837,7 @@ use Illuminate\Support\Facades\View;
     public static function getAllVdocipherCourses($Course_slug, $pageNumber) {
         $Course_slug = str_replace('-', '_', $Course_slug);
         $curl = curl_init();
-         curl_setopt_array($curl, array(
+        curl_setopt_array($curl, array(
             CURLOPT_URL => "https://dev.vdocipher.com/api/videos?tags=$Course_slug&limit=200&page=$pageNumber",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
@@ -851,17 +851,17 @@ use Illuminate\Support\Facades\View;
                 "Content-Type: application/json"
             ),
         ));
-         $response = curl_exec($curl);
+        $response = curl_exec($curl);
         $err = curl_error($curl);
-         curl_close($curl);
-         if ($err) {
+        curl_close($curl);
+        if ($err) {
             echo "cURL Error #:" . $err;
         } else {
             $data = json_decode($response);
         }
-          $videosList = ($data->rows) ? $data->rows : array();
+        $videosList = ($data->rows) ? $data->rows : array();
         return ($videosList) ? $videosList : array();
-     }
+    }
     public static function getAllVdocipherPromoCourses()
     {
         $curl = curl_init();
@@ -919,77 +919,81 @@ use Illuminate\Support\Facades\View;
         return (isset($videosList->length)) ? $videosList : null;
     }
     //****************** End vdocipher   ******************
-      public function getIncludedCoursesLecturesSum(){
-         $sum = 0;
+    public function getIncludedCoursesLecturesSum(){
+        $sum = 0;
         foreach($this->courseincludes as $includedCourse){
-                                       $sum += count($includedCourse->includedCourse->courselectures);
+            $sum += count($includedCourse->includedCourse->courselectures);
         }
-         return $sum;
-             }
-     public function getIncludedCoursesResourcesSum(){
-         $sum = 0;
+        return $sum;
+    }
+    public function getIncludedCoursesResourcesSum(){
+        $sum = 0;
         foreach($this->courseincludes as $includedCourse){
-                                       $sum += count($includedCourse->includedCourse->courseresources);
+            $sum += count($includedCourse->includedCourse->courseresources);
         }
-         return $sum;
-             }
+        return $sum;
+    }
 
-        public function getIncludedCoursesOriginalPriceSumAttribute()
-        {
-            $sum = 0;
-            foreach($this->courseincludes as $includedCourse){
-                $sum += $includedCourse->includedCourse->OriginalPrice;
+    public function getIncludedCoursesOriginalPriceSumAttribute()
+    {
+        $sum = 0;
+        foreach($this->courseincludes as $includedCourse){
+            $sum += $includedCourse->includedCourse->OriginalPrice;
+        }
+        return $sum;
+    }
+
+
+    public function getIncludedCoursesPriceSum(){
+
+        $sum = 0;
+
+        foreach($this->courseincludes as $includedCourse){
+
+            if(getCurrency() == 'USD'){
+                //get Exchange rate
+                $exchangeRate = Payments::exchangeRate();
+
+                $course_price = round($exchangeRate * $includedCourse->includedCourse->price_in_dollar);
+            }else{
+                $course_price = $includedCourse->includedCourse->price;
             }
-            return $sum;
+
+            $sum += $course_price;
+
         }
-         
 
-        public function getIncludedCoursesPriceSum(){
+        return $sum;
+    }
 
-            $sum = 0;
-            
-            foreach($this->courseincludes as $includedCourse){
-                
-                if(getCurrency() == 'USD'){
-                    //get Exchange rate
-                    $exchangeRate = Payments::exchangeRate();
+    public static function getVdoCipherOTP($vidID){
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://dev.vdocipher.com/api/videos/$vidID/otp",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                "ttl" => 300,
+                "whitelisthref" => "igtsservice.com",
 
-                    $course_price = round($exchangeRate * $includedCourse->includedCourse->price_in_dollar);
-                }else{
-                    $course_price = $includedCourse->includedCourse->price;
-                }
-
-                $sum += $course_price;
-    
-            }
-    
-            return $sum;
-        }
-        
-     public static function getVdoCipherOTP($vidID){
-                       $curl = curl_init();
-         curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://dev.vdocipher.com/api/videos/$vidID/otp",
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "POST",
-          CURLOPT_POSTFIELDS => json_encode([
-            "ttl" => 300,
-            "whitelisthref" => "igtsservice.com",
-
-          ]),
-          CURLOPT_HTTPHEADER => array(
-            "Accept: application/json",
-            "Authorization: Apisecret 9ZSvMS6vr9zEfPEgtvl4AupoXpthbt6bO9sMz7m7n8tYRTclhKBXu6sWChZ2IVON",
-            "Content-Type: application/json"
-          ),
+            ]),
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "Authorization: Apisecret 9ZSvMS6vr9zEfPEgtvl4AupoXpthbt6bO9sMz7m7n8tYRTclhKBXu6sWChZ2IVON",
+                "Content-Type: application/json"
+            ),
         ));
-                 $response = curl_exec($curl);
-                            $err = curl_error($curl);
-                 curl_close($curl);
-                 return json_decode($response);
-             }
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    public function getCourseProgressAttribute(){
+        return Progress::getLectureProgress(Auth::guard('api')->user()->id,$this->id);
+    }
 }
