@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Application\Transformers;
+
+use Illuminate\Database\Eloquent\Model;
+
+class SimpleCourseTransformers extends AbstractTransformer
+{
+
+    public function transformModel(Model $modelOrCollection)
+    {
+        return [
+            "id" => $modelOrCollection->id,
+			"title" => $modelOrCollection->title_lang,
+			"slug" => $modelOrCollection->slug,
+//			"description" => $modelOrCollection->description_lang,
+			"type" => $modelOrCollection->type,
+			"featured" => $modelOrCollection->featured,
+			"image" => $modelOrCollection->image,
+			"doctor_name" => $modelOrCollection->doctor_name_lang,
+			"poster" => $modelOrCollection->poster,
+            "rating" => $modelOrCollection->CourseRating,
+            "courseCountRating" => $modelOrCollection->CourseCountRating,
+            "priceBase" => $modelOrCollection->PriceBase,
+        ];
+    }
+}

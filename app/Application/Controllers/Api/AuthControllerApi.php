@@ -44,7 +44,7 @@ class AuthControllerApi extends Controller
             'password' => 'required|min:6',
         ]);
         if ($validator->fails()) {
-            return response(apiReturn(['error'=>$validator->errors()], '', 'Unauthorised'), 401);
+            return response(apiReturn(['error'=>$validator->errors()], ['error'=>$validator->errors()], ), 401);
         }
             $user = User::create([
                 'name' => $request->name,

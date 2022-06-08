@@ -158,6 +158,9 @@ return [
     'Cart empty' => 'Cart empty',
     'Ratings' => 'Ratings',
     'Levels' => 'Levels',
+    'Level1' => 'Beginner',
+    'Level2' => 'Intermediate',
+    'Level3' => 'Expert',
     'Beginner' => 'Beginner',
     'Intermediate' => 'Intermediate',
     'Expert' => 'Expert',
@@ -356,4 +359,5 @@ return [
     'Mobile App' => '<span>Our</span> Mobile App',
     'Our mobile application is coming soon' => 'Our mobile application is coming soon',
     'All' => 'All',
+    'No Data Found' => 'No Data Found',
 ];

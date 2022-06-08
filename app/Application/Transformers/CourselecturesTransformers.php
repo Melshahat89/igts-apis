@@ -11,30 +11,16 @@ class CourselecturesTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "en")},
-			"slug" => $modelOrCollection->slug,
-			"description" => $modelOrCollection->{lang("description" , "en")},
-			"video_file" => $modelOrCollection->video_file,
-			"length" => $modelOrCollection->length,
+			"title" => $modelOrCollection->title_lang,
+			"length" => timeLength($modelOrCollection->length)  ,
 			"is_free" => $modelOrCollection->is_free,
-			"position" => $modelOrCollection->position,
-
+			"description" => $modelOrCollection->description_lang,
+			"video_file" => $modelOrCollection->video_file,
+			"vid_playbackInfo" => $modelOrCollection->vid_playbackInfo,
+			"vdocipher_id" => $modelOrCollection->vdocipher_id,
+			"courses_id" => $modelOrCollection->courses_id,
         ];
     }
 
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "ar")},
-			"slug" => $modelOrCollection->slug,
-			"description" => $modelOrCollection->{lang("description" , "ar")},
-			"video_file" => $modelOrCollection->video_file,
-			"length" => $modelOrCollection->length,
-			"is_free" => $modelOrCollection->is_free,
-			"position" => $modelOrCollection->position,
-
-        ];
-    }
 
 }

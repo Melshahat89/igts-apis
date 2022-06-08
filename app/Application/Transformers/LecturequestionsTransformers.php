@@ -12,19 +12,10 @@ class LecturequestionsTransformers extends AbstractTransformer
         return [
             "id" => $modelOrCollection->id,
 			"question_title" => $modelOrCollection->question_title,
-			"question_description" => $modelOrCollection->question_description,
 			"approve" => $modelOrCollection->approve,
-
-        ];
-    }
-
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"question_title" => $modelOrCollection->question_title,
-			"question_description" => $modelOrCollection->question_description,
-			"approve" => $modelOrCollection->approve,
+			"user_id" => $modelOrCollection->user_id,
+			"answers" => LecturequestionsanswersTransformers::transform($modelOrCollection->lecturequestionsanswers),
+			"created_at" => $modelOrCollection->created_at,
 
         ];
     }

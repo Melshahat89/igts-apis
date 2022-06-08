@@ -12,15 +12,9 @@ class LecturequestionsanswersTransformers extends AbstractTransformer
         return [
             "id" => $modelOrCollection->id,
 			"answer" => $modelOrCollection->answer,
-
-        ];
-    }
-
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"answer" => $modelOrCollection->answer,
+			"is_instructor" => $modelOrCollection->is_instructor,
+			"user_id" => $modelOrCollection->user_id,
+            "created_at" => $modelOrCollection->created_at,
 
         ];
     }

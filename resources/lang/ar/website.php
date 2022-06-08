@@ -158,6 +158,9 @@ return [
     'Cart empty' => 'السلة فارغة الآن',
     'Ratings' => 'التقييمات',
     'Levels' => 'المستوى',
+    'Level0' => 'مبتدئ',
+    'Level1' => 'متوسط',
+    'Level2' => 'خبير',
     'Beginner' => 'مبتدئ',
     'Intermediate' => 'متوسط',
     'Expert' => 'خبير',
@@ -356,5 +359,5 @@ return [
     'Mobile App' => '<span>تطبيقنا</span>',
     'Our mobile application is coming soon' => 'انتظروا تطبيقنا على الهاتف',
     'All' => 'الكل',
-
+    'No Data Found' => 'لا يوجد بيانات',
 ];

@@ -16,12 +16,7 @@ Route::any('site/acceptConfirmationCallback2' , 'PaymentsApi@actionAcceptConfirm
 Route::any('site/FawryConfirmationCallback' , 'PaymentsApi@actionFawryConfirmationCallback');
 
 Route::middleware("localization")->group(function () {
-
-
-
-
     Route::group(array('prefix' => 'v1'), function () {
-
         Route::prefix('auth')->group(function () {
             Route::post('/register', 'AuthControllerApi@register');
             Route::post('/login', 'AuthControllerApi@login');
@@ -51,7 +46,18 @@ Route::middleware("localization")->group(function () {
         Route::get('reviews', 'CoursereviewsApi@index');
         Route::get('topSearches', 'HomeApi@topSearches');
         Route::get('quickLinks', 'HomeApi@quickLinks');
+        Route::post('instructor', 'UserApi@instructor');
 
+        Route::prefix('course')->group(function () {
+            Route::post('/inner', 'CoursesApi@inner');
+            Route::post('/lectures', 'CoursesApi@lectures');
+            Route::post('/requirements', 'CoursesApi@requirements');
+            Route::post('/willlearn', 'CoursesApi@willlearn');
+            Route::post('/instructors', 'CoursesApi@instructors');
+            Route::post('/qa', 'CoursesApi@qa');
+            Route::post('/resources', 'CoursesApi@resources');
+            Route::post('/addReview', 'CoursesApi@addReview');
+        });
 
 
 

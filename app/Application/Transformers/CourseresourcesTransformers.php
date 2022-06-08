@@ -11,20 +11,11 @@ class CourseresourcesTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "en")},
+			"title" => $modelOrCollection->title_lang,
 			"file" => $modelOrCollection->file,
 
         ];
     }
 
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "ar")},
-			"file" => $modelOrCollection->file,
-
-        ];
-    }
 
 }

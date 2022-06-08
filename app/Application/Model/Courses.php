@@ -1,5 +1,7 @@
 <?php
 namespace App\Application\Model;
+use App\Application\Transformers\CourseTransformers;
+use App\Application\Transformers\SimpleCourseTransformers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,7 +80,7 @@ class Courses extends Model
 
     public function usercourseenrollment(){
 
-        return Courseenrollment::where('courses_id', $this->id)->where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->first();
+        return Courseenrollment::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->orderBy('id', 'DESC')->first();
     }
 
 
@@ -127,10 +129,14 @@ class Courses extends Model
 
     protected $fillable = [
         'categories_id',
-        'title', 'slug', 'description', 'welcome_message', 'congratulation_message', 'type', 'skill_level', 'language_id', 'has_captions', 'has_certificate', 'length', 'price', 'price_in_dollar', 'affiliate1_per', 'affiliate2_per', 'affiliate3_per', 'affiliate4_per', 'instructor_per', 'discount_egp', 'discount_usd', 'featured', 'image', 'promo_video', 'visits', 'published', 'position', 'sort', 'doctor_name', 'full_access', 'access_time', 'soon', 'seo_desc', 'seo_keys', 'search_keys', 'poster',
+        'title', 'slug', 'description', 'welcome_message', 'congratulation_message', 'type', 'skill_level', 'language_id', 'has_captions',
+        'has_certificate', 'length', 'price', 'price_in_dollar', 'affiliate1_per', 'affiliate2_per', 'affiliate3_per', 'affiliate4_per',
+        'instructor_per', 'discount_egp', 'discount_usd', 'featured', 'image', 'promo_video', 'visits', 'published', 'position', 'sort',
+        'doctor_name', 'full_access', 'access_time', 'soon', 'seo_desc', 'seo_keys', 'search_keys', 'poster',
         'promoPoster', 'instructor_id',
         'will_learn', 'requirments', 'description_large', 'target_students', 'is_partnership',
-        'other_categories','lectures_link','videosready','sales_count','start_date', 'certificates', 'accreditation_text', 'vdocipher_tag', 'webinar_url',
+        'other_categories','lectures_link','videosready','sales_count','start_date', 'certificates', 'accreditation_text',
+        'vdocipher_tag', 'webinar_url',
     ];
     public function getTitleLangAttribute()
     {
@@ -542,10 +548,10 @@ class Courses extends Model
     }
     public static function isEnrolledCourse($id, $userId = null)
     {
-        if (!$userId AND !isset(Auth::user()->id)) {
+        if (!$userId AND !isset(Auth::guard('api')->user()->id)) {
             return false;
         }
-        $userId = ($userId) ? $userId : Auth::user()->id;
+        $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
         if (!$userId) {
             return false;
         }
@@ -590,7 +596,7 @@ class Courses extends Model
 
                 foreach($businessInputFields as $businessInputField) {
 
-                    $response = Businessinputfieldsresponses::where('businessinputfields_id', $businessInputField->id)->where('user_id', Auth::user()->id)->get();
+                    $response = Businessinputfieldsresponses::where('businessinputfields_id', $businessInputField->id)->where('user_id', Auth::guard('api')->user()->id)->get();
 
                     if(count($response) == 0) {
                         return 1;
@@ -608,11 +614,11 @@ class Courses extends Model
     }
     public static function inShoppingCart($id, $userId = null)
     {
-        if (!$userId AND !isset(Auth::user()->id)) {
+        if (!$userId AND !isset(Auth::guard('api')->user()->id)) {
             return false;
         }
-        $userId = ($userId) ? $userId : Auth::user()->id;
-        $order = Orders::where('user_id', Auth::user()->id)->where('status', Orders::STATUS_PENDING)->orderBy('id', 'DESC')->first();
+        $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
+        $order = Orders::where('user_id', Auth::guard('api')->user()->id)->where('status', Orders::STATUS_PENDING)->orderBy('id', 'DESC')->first();
         if (!$order) {
             return false;
         }
@@ -638,7 +644,7 @@ class Courses extends Model
     }
     public static function cartItems($order_id = 0, $user_id = null)
     {
-        $user_id = ($user_id) ? $user_id : Auth::user()->id;
+        $user_id = ($user_id) ? $user_id : Auth::guard('api')->user()->id;
         $cartItemsArr = array();
         $cartItemsArr["items"] = array();
         $cartItemsArr["totalCost"] = 0;
@@ -689,7 +695,7 @@ class Courses extends Model
     {
         $totalCost = 0;
         //check the current pending order and remove the related positions from the database:
-        $order = Orders::where('user_id', Auth::user()->id)->where(function ($query) {
+        $order = Orders::where('user_id', Auth::guard('api')->user()->id)->where(function ($query) {
             $query->where('status', Orders::STATUS_PENDING)
                 //   ->orWhere('status', Orders::STATUS_VODAFONE)
                 //   ->orWhere('status', Orders::STATUS_KIOSK)
@@ -709,19 +715,19 @@ class Courses extends Model
     }
     public function getCourseCountStudentsAttribute()
     {
-        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::user()->id)->where('price', '>', 0)->count();
+        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->where('price', '>', 0)->count();
     }
 
     public function getCourseCountStudentsFromTo($from, $to){
-        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::user()->id)->where('price', '>', 0)->whereBetween('date', [$from, $to])->count();
+        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->where('price', '>', 0)->whereBetween('date', [$from, $to])->count();
     }
 
     public function getCourseRevenueAttribute(){
-        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::user()->id)->sum('amount');
+        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->sum('amount');
     }
 
     public function getCourseRevenueFromTo($from, $to){
-        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->sum('amount');
+        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->whereBetween('date', [$from, $to])->sum('amount');
     }
 
     public static function generateWebinarCertificate($webinar, $name = "")
@@ -762,7 +768,7 @@ class Courses extends Model
         // $image = base64_decode($content);
         // file_put_contents(public_path(env('UPLOAD_PATH_1')) . '/certificate/' . $fileName . '.jpg', $image);
 
-        $webinarEnrollment = Courseenrollment::where('user_id', Auth::user()->id)->where('courses_id', $webinar->id)->first();
+        $webinarEnrollment = Courseenrollment::where('user_id', Auth::guard('api')->user()->id)->where('courses_id', $webinar->id)->first();
 
         $webinarEnrollment->certificate = $fileName . '.pdf';
         $webinarEnrollment->save();
@@ -774,7 +780,7 @@ class Courses extends Model
     public static function hasWebinarCertificate($id)
     {
 
-        $webinarEnrollment = Courseenrollment::where('user_id', Auth::user()->id)->where('courses_id', $id)->first();
+        $webinarEnrollment = Courseenrollment::where('user_id', Auth::guard('api')->user()->id)->where('courses_id', $id)->first();
 
         return ($webinarEnrollment && $webinarEnrollment->certificate) ? true : false;
 
@@ -995,5 +1001,11 @@ class Courses extends Model
 
     public function getCourseProgressAttribute(){
         return Progress::getLectureProgress(Auth::guard('api')->user()->id,$this->id);
+    }
+
+    public function getRecommendedCoursesAttribute(){
+        $filtered = $this->courserelated->pluck('related_course_id');
+        $courses = $this->whereIn('id',$filtered)->limit(3)->get();
+        return SimpleCourseTransformers::transform($courses);
     }
 }

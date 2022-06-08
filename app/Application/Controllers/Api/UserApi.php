@@ -198,6 +198,20 @@ class UserApi extends Controller
 
         }
     }
+    public function instructor(Request $request){
+        $validator = Validator::make($request->all(), [
+            'instructor_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $instructor = $this->model->where('id',$request->instructor_id)->first();
+        if($instructor){
+            return response(apiReturn(InstructorsTransformers::transform($instructor)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
 
+    }
 
 }

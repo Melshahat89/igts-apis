@@ -5,12 +5,23 @@ namespace App\Application\Controllers\Api;
 
 use App\Application\Controllers\Controller;
 use App\Application\Model\Categories;
+use App\Application\Model\Courselectures;
+use App\Application\Model\Coursereviews;
 use App\Application\Model\Courses;
+use App\Application\Model\Coursesections;
+use App\Application\Model\Lecturequestions;
+use App\Application\Transformers\CourselecturesTransformers;
+use App\Application\Transformers\CourseresourcesTransformers;
+use App\Application\Transformers\CoursesectionsTransformers;
 use App\Application\Transformers\CoursesTransformers;
 use App\Application\Requests\Website\Courses\ApiAddRequestCourses;
 use App\Application\Requests\Website\Courses\ApiUpdateRequestCourses;
+use App\Application\Transformers\CourseTransformers;
+use App\Application\Transformers\InstructorsTransformers;
+use App\Application\Transformers\LecturequestionsTransformers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 
 
 class CoursesApi extends Controller
@@ -63,7 +74,142 @@ class CoursesApi extends Controller
         if ($data AND count($data) > 0) {
             return response(apiReturn(['items' => array_values(CoursesTransformers::transform($data))] + $this->paginateArray($data)), 200);
         }
-        return response(apiReturn('', '', 'No Data Found'), 200);
+        return response(apiReturn('', '', trans('website.No Data Found')), 200);
+    }
+
+    public function inner(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+
+        $course = $this->model->where('id',$request->course_id)->first();
+        if($course){
+            return response(apiReturn(CourseTransformers::transform($course)), 200);
+        }else{
+            return response(apiReturn(['error'=>$validator->errors()], '', trans('website.No Data Found')), 401);
+        }
+
+    }
+    public function lectures(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+//        $course = $this->model->where('id',$request->course_id)->first();
+        $lectures = Coursesections::where('courses_id',$request->course_id)->get();
+
+        if($lectures){
+            return response(apiReturn(CoursesectionsTransformers::transform($lectures)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+
+    }
+
+    public function requirements(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+
+        $course = $this->model->where('id',$request->course_id)->first();
+        if($course){
+            return response(apiReturn($course->requirments_lang), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+
+    }
+    public function willlearn(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $course = $this->model->where('id',$request->course_id)->first();
+        if($course){
+            return response(apiReturn($course->willlearn_lang), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+
+    }
+    public function instructors(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $course = $this->model->where('id',$request->course_id)->first();
+        if($course){
+            return response(apiReturn(InstructorsTransformers::transform($course->instructor)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
+    public function qa(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+
+        $courselectures = Courselectures::where('courses_id',$request->course_id)->pluck('id');
+
+        $questions = Lecturequestions::where('approve',1)->wherein('courselectures_id',$courselectures)->get();
+//        dd($questions);
+
+        if($questions && count($questions) > 0){
+            return response(apiReturn(LecturequestionsTransformers::transform($questions)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
+    public function resources(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $course = $this->model->where('id',$request->course_id)->first();
+        if($course['courseresources'] && count($course['courseresources']) > 0){
+            return response(apiReturn(CourseresourcesTransformers::transform($course['courseresources'])), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
+    public function addReview(Request $request){
+        $validator = Validator::make($request->all(), [
+            'review' => 'required|max:255',
+            'rating' => 'int|max:5',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $Coursereviews = Coursereviews::create([
+            'courses_id' => $request->course_id,
+            'user_id' => Auth::guard('api')->user()->id,
+            'review' => $request->review,
+            'rating' =>  $request->rating,
+            'type' => Coursereviews::TYPE_DYNAMIC,
+        ]);
+
+        if($Coursereviews){
+            return response(apiReturn(trans('website.Your review has been added successfully'), '', ''), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
     }
 
 }
