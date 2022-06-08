@@ -6,11 +6,14 @@ namespace App\Application\Controllers\Api;
 use App\Application\Controllers\Controller;
 use App\Application\Model\Categories;
 use App\Application\Model\Courselectures;
+use App\Application\Model\Coursenotes;
+use App\Application\Model\Coursereport;
 use App\Application\Model\Coursereviews;
 use App\Application\Model\Courses;
 use App\Application\Model\Coursesections;
 use App\Application\Model\Lecturequestions;
 use App\Application\Transformers\CourselecturesTransformers;
+use App\Application\Transformers\CoursenotesTransformers;
 use App\Application\Transformers\CourseresourcesTransformers;
 use App\Application\Transformers\CoursesectionsTransformers;
 use App\Application\Transformers\CoursesTransformers;
@@ -37,7 +40,7 @@ class CoursesApi extends Controller
     }
 
     public function add(ApiAddRequestCourses $validation){
-         return $this->addItem($validation);
+        return $this->addItem($validation);
     }
 
     public function update($id , ApiUpdateRequestCourses $validation){
@@ -48,9 +51,9 @@ class CoursesApi extends Controller
     {
 
 //        dd(request()->hasHeader("Accept-Language"));
-       if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
+        if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
 
-           return response(apiReturn(array_values(CoursesTransformers::transformAr($data) + $paginate)), $status_code);
+            return response(apiReturn(array_values(CoursesTransformers::transformAr($data) + $paginate)), $status_code);
         }
 //        dd(22);
         return response(apiReturn(array_values(CoursesTransformers::transform($data) + $paginate)), $status_code);
@@ -193,6 +196,7 @@ class CoursesApi extends Controller
         $validator = Validator::make($request->all(), [
             'review' => 'required|max:255',
             'rating' => 'int|max:5',
+            'course_id' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
@@ -207,6 +211,68 @@ class CoursesApi extends Controller
 
         if($Coursereviews){
             return response(apiReturn(trans('website.Your review has been added successfully'), '', ''), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
+
+
+
+    public function addReport(Request $request){
+        $validator = Validator::make($request->all(), [
+            'report' => 'required|max:255',
+            'course_id' => 'required|int|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $Coursereport = Coursereport::create([
+            'courses_id' => $request->course_id,
+            'user_id' => Auth::guard('api')->user()->id,
+            'report' => $request->report,
+        ]);
+
+        if($Coursereport){
+            return response(apiReturn(trans('website.Your review has been added successfully'), '', ''), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
+
+    public function notes(Request $request){
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|int|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $coursenotes = Coursenotes::where('courses_id',$request->course_id)
+            ->where('user_id',Auth::guard('api')->user()->id)->get();
+
+
+        if($coursenotes && count($coursenotes) > 0){
+            return response(apiReturn(CoursenotesTransformers::transform($coursenotes)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
+
+    public function addNotes(Request $request){
+        $validator = Validator::make($request->all(), [
+            'notes' => 'required|max:255',
+            'course_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $Coursenotes= Coursenotes::create([
+            'courses_id' => $request->course_id,
+            'user_id' => Auth::guard('api')->user()->id,
+            'notes' => $request->notes,
+        ]);
+
+        if($Coursenotes){
+            return response(apiReturn(trans('website.Your note has been added successfully'), '', ''), 200);
         }else{
             return response(apiReturn('', '', trans('website.No Data Found')), 401);
         }

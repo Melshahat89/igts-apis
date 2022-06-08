@@ -243,6 +243,7 @@ return [
     'Payment Finish' => 'إنهاء عملية الدفع',
     'Thank You' => 'شكراً لك',
     'Your review has been added successfully' => 'لقد تم إضافة تقييمك بنجاح',
+    'Your note has been added successfully' => 'لقد تم إضافة الملاحظة بنجاح',
     'Anonymous' => 'Anonymous',
     'Register now to be able to add a comment' => 'سجل الآن لتتمكن من إضافة تعليق',
     'Your question has been added successfully' => 'لقد تم إضافة سؤالكم بنجاح',

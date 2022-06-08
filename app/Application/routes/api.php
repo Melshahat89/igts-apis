@@ -57,6 +57,9 @@ Route::middleware("localization")->group(function () {
             Route::post('/qa', 'CoursesApi@qa');
             Route::post('/resources', 'CoursesApi@resources');
             Route::post('/addReview', 'CoursesApi@addReview');
+            Route::post('/addReport', 'CoursesApi@addReport');
+            Route::post('/notes', 'CoursesApi@notes');
+            Route::post('/addNotes', 'CoursesApi@addNotes');
         });
 
 

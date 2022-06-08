@@ -104,6 +104,14 @@ class Courses extends Model
     {
         return $this->hasMany(Coursereviews::class, "courses_id");
     }
+    public function coursenotes()
+    {
+        return $this->hasMany(Coursenotes::class, "courses_id");
+    }
+    public function coursereport()
+    {
+        return $this->hasMany(Coursereport::class, "courses_id");
+    }
     public function coursewishlist()
     {
         return $this->hasMany(Coursewishlist::class, "courses_id");

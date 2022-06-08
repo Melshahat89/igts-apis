@@ -18,6 +18,7 @@
      protected $fillable = [
      'courses_id',
    'user_id',
-        'review','rating','type','manual_name','manual_image'
+        'review','rating','type','manual_name','manual_image',
+         'is_report'
    ];
   }

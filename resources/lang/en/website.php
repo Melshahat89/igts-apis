@@ -243,6 +243,7 @@ return [
     'Payment Finish' => 'Payment Finish',
     'Thank You' => 'Thank you',
     'Your review has been added successfully' => 'Your review has been added successfully',
+    'Your note has been added successfully' => 'Your note has been added successfully',
     'Anonymous' => 'Anonymous',
     'Register now to be able to add a comment' => 'Register now to be able to add a comment',
     'Your question has been added successfully' => 'Your question has been added successfully',
