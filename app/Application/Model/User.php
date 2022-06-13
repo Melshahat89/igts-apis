@@ -428,6 +428,7 @@ use Laravel\Passport\HasApiTokens;
         public function getCartcountAttribute()
         {
             return  count(getShoppingCart());
+            //todo
         }
 
 
