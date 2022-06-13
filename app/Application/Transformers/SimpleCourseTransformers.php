@@ -17,7 +17,7 @@ class SimpleCourseTransformers extends AbstractTransformer
 			"type" => $modelOrCollection->type,
 			"featured" => $modelOrCollection->featured,
 			"image" => $modelOrCollection->image,
-			"doctor_name" => $modelOrCollection->doctor_name_lang,
+			"doctor_name" => $modelOrCollection->instructor['Fullname_lang'],
 			"poster" => $modelOrCollection->poster,
             "rating" => $modelOrCollection->CourseRating,
             "courseCountRating" => $modelOrCollection->CourseCountRating,

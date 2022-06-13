@@ -44,7 +44,7 @@ class AuthControllerApi extends Controller
             'password' => 'required|min:6',
         ]);
         if ($validator->fails()) {
-            return response(apiReturn(['error'=>$validator->errors()], ['error'=>$validator->errors()], ), 401);
+            return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
         }
             $user = User::create([
                 'name' => $request->name,
@@ -58,9 +58,8 @@ class AuthControllerApi extends Controller
             ]);
         $user = User::find($user->id);
         if($user){
-                if (request()->headers->has('lang') && request()->headers->get('lang') == 'ar') {
-                    return response(apiReturn((UserTransformers::transformAr($user))), 200);
-                }
+//            $user = Auth::user();
+            Auth::login($user);
                 return response(apiReturn((UserTransformers::transform($user))), 200);
         }
     }

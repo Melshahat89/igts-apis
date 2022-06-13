@@ -160,6 +160,11 @@ class Courses extends Model
     }
     public function getDescriptionLangAttribute()
     {
+//        dd($this->description);
+
+//        dd( is_json($this->description) && is_object(json_decode($this->description)) );
+
+
         return is_json($this->description) && is_object(json_decode($this->description)) ? json_decode($this->description)->{app()->getLocale()} : $this->description;
     }
     public function getDescriptionEnAttribute()
