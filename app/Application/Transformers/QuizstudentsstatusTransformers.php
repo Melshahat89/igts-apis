@@ -15,10 +15,6 @@ class QuizstudentsstatusTransformers extends AbstractTransformer
             "certificate" => $modelOrCollection->certificate,
             "title" => $modelOrCollection['quiz']['courses']['title_lang'],
             "course_id" => $modelOrCollection['quiz']['courses']['id'],
-
-
-
-
 			"start_time" => $modelOrCollection->start_time,
 			"end_time" => $modelOrCollection->end_time,
 			"pause_time" => $modelOrCollection->pause_time,

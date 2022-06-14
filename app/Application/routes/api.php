@@ -35,6 +35,14 @@ Route::middleware("localization")->group(function () {
             Route::post('toggleFavourite', 'UserApi@toggleFavourite');
             Route::post('myLearning', 'AccountControllerApi@myLearning');
             Route::get('myCertifications', 'AccountControllerApi@myCertifications');
+
+
+            Route::prefix('account')->group(function () {
+                Route::post('/myExams', 'AccountControllerApi@myExams');
+                Route::post('/settings', 'AccountControllerApi@settings');
+            });
+
+
         });
 
         //Home
@@ -61,6 +69,8 @@ Route::middleware("localization")->group(function () {
             Route::post('/notes', 'CoursesApi@notes');
             Route::post('/addNotes', 'CoursesApi@addNotes');
         });
+
+
 
 
 

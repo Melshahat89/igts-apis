@@ -22,6 +22,7 @@ use App\Application\Requests\Admin\User\UpdateRequestUser;
 use App\Application\Transformers\CoursesTransformers;
 use App\Application\Transformers\MyCoursesTransformers;
 use App\Application\Transformers\QuizstudentsstatusTransformers;
+use App\Models\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -29,18 +30,19 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session as Session;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 
 class AccountControllerApi extends Controller
 {
     use ApiTrait;
-	protected $userInterface;
+    protected $userInterface;
     protected $request;
     protected $middleware;
 
-     public function __construct(User $model, Request $request)
-     {
+    public function __construct(User $model, Request $request)
+    {
         parent::__construct($model);
-         $this->request = $request;
+        $this->request = $request;
     }
     public function myLearning(){
 
@@ -70,6 +72,73 @@ class AccountControllerApi extends Controller
             return response(apiReturn(QuizstudentsstatusTransformers::transform($data)), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 200);
+    }
+    public function myExams(){
+        $data = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('status',4)->whereNotNull('certificate')->get();
+        if ($data) {
+            return response(apiReturn(QuizstudentsstatusTransformers::transform($data)), 200);
+        }
+        return response(apiReturn('', '', 'No Data Found'), 200);
+    }
+    public function settings(Request $request){
+
+        $user = Auth::guard('api')->user();
+        if(request()->has('password') && request()->post('password') != ''){
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|min:6|confirmed|required_with:password_confirmation',
+                'password_confirmation' => 'required',
+                'old_password' => 'required',
+            ]);
+
+            if (!Hash::check( request()->post('old_password'),Auth::guard('api')->user()->password)) {
+                return response(apiReturn(trans('website.The current password is incorrect'),'error', trans('website.The current password is incorrect') ), 401);
+            }
+
+            if ($validator->fails()) {
+                return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
+            }
+            $user->password = bcrypt($request->password);
+        }
+
+        if(request()->has('name') && request()->post('name') != ''){
+            $user->first_name = (json_encode([
+                'en' => (request()->post('name')),
+                'ar' => (request()->post('name'))
+            ], JSON_UNESCAPED_UNICODE)) ;
+
+            $user->name = request()->post('name');
+        }
+
+        if(request()->has('email') && request()->post('email') != ''){
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|max:255|unique:users',
+            ]);
+            if ($validator->fails()) {
+                return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
+            }
+            $user->email = request()->post('email');
+        }
+
+        if(request()->has('mobile') && request()->post('mobile') != ''){
+            $user->mobile = request()->post('mobile');
+        }
+
+        if(request()->hasfile('image') && request()->file('image') != ''){
+            $file = request()->file('image');
+            $name= $file->getClientOriginalName();
+            $file->move(env('SAVE_IMAGE').'/', $name);
+            $user->image = $name;
+        }
+        if(request()->has('stop_account') && request()->post('stop_account') == 1){
+            $user->verified = 0;
+            $user->activated = 0;
+        }
+        if(request()->has('delete_account') && request()->post('delete_account') == 1){
+            $user->verified = 0;
+            $user->activated = 0;
+        }
+        $user->save();
+        return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
     }
 
 
