@@ -40,6 +40,10 @@ Route::middleware("localization")->group(function () {
             Route::prefix('account')->group(function () {
                 Route::post('/myExams', 'AccountControllerApi@myExams');
                 Route::post('/settings', 'AccountControllerApi@settings');
+
+                Route::post('/getAllNotifications', 'AccountControllerApi@getAllNotifications');
+                Route::post('/readAllNotifications', 'AccountControllerApi@readAllNotifications');
+                Route::post('/notificationsCount', 'AccountControllerApi@notificationsCount');
             });
 
 

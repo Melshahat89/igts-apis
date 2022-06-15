@@ -22,7 +22,6 @@ use App\Application\Requests\Admin\User\UpdateRequestUser;
 use App\Application\Transformers\CoursesTransformers;
 use App\Application\Transformers\MyCoursesTransformers;
 use App\Application\Transformers\QuizstudentsstatusTransformers;
-use App\Models\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +30,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session as Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Kreait\Firebase\Factory;
 
 class AccountControllerApi extends Controller
 {
@@ -140,6 +140,62 @@ class AccountControllerApi extends Controller
         $user->save();
         return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
     }
+
+
+
+    public function getAllNotifications(){
+        $userId = Auth::guard('api')->user()->id;
+        $factory = (new Factory)
+            ->withServiceAccount(__DIR__.'/../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+            ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
+        $database = $factory->createDatabase();
+        $reference = $database->getReference('notifications/'.$userId);
+        $snapshot = $reference->getSnapshot();
+
+        if($snapshot->hasChildren()){
+            $data = $snapshot->getValue();
+            return response(apiReturn($data), 200);
+        }else{
+            return response(apiReturn('', '', 'No Data Found'), 200);
+        }
+
+    }
+    public function readAllNotifications(){
+        $userId = Auth::guard('api')->user()->id;
+        $factory = (new Factory)
+            ->withServiceAccount(__DIR__.'/../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+            ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
+        $database = $factory->createDatabase();
+        $reference = $database->getReference('notifications/'.$userId);
+        $snapshot = $reference->orderByChild('is_read')
+            // returns all persons being exactly 1.98 (meters) tall
+            ->equalTo(0)
+            ->getSnapshot();
+        $update = ['is_read'  => 1 ];
+        if ( count($snapshot->getValue()) > 0  ){
+            foreach  ($reference->getChildKeys() as $noti){
+                $reference = $database->getReference('notifications/'.$userId.'/'.$noti);
+                $reference->update($update);
+            }
+        }
+        return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
+    }
+    public function notificationsCount(){
+        $userId = Auth::guard('api')->user()->id;
+        $factory = (new Factory)
+            ->withServiceAccount(__DIR__.'/../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+            ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
+        $database = $factory->createDatabase();
+        $reference = $database->getReference('notifications/'.$userId)
+
+        ->orderByChild('is_read')
+            // returns all persons being exactly 1.98 (meters) tall
+            ->equalTo(0)
+            ->getSnapshot();
+        $data = $reference->getValue();
+        return response(apiReturn(['count' => count($data)]), 200);
+    }
+
 
 
 
