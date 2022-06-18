@@ -11,20 +11,11 @@ class QuizquestionschoiceTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
-			"choice" => $modelOrCollection->{lang("choice" , "en")},
+			"choice" => $modelOrCollection->choice_lang,
 			"is_correct" => $modelOrCollection->is_correct,
 
         ];
     }
 
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"choice" => $modelOrCollection->{lang("choice" , "ar")},
-			"is_correct" => $modelOrCollection->is_correct,
-
-        ];
-    }
 
 }

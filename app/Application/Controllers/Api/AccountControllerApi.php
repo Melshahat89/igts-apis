@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Kreait\Firebase\Factory;
 
+use Illuminate\Support\Arr;
+
 class AccountControllerApi extends Controller
 {
     use ApiTrait;
@@ -141,8 +143,6 @@ class AccountControllerApi extends Controller
         return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
     }
 
-
-
     public function getAllNotifications(){
         $userId = Auth::guard('api')->user()->id;
         $factory = (new Factory)
@@ -153,8 +153,12 @@ class AccountControllerApi extends Controller
         $snapshot = $reference->getSnapshot();
 
         if($snapshot->hasChildren()){
-            $data = $snapshot->getValue();
-            return response(apiReturn($data), 200);
+            $data =  array_values($snapshot->getValue());
+            foreach ($data as &$value) {
+                $start_date = date('m-d-Y', $value['timestamp']);
+                $value['timestamp'] = $start_date;
+            }
+            return response(apiReturn(['items'=>$data]), 200);
         }else{
             return response(apiReturn('', '', 'No Data Found'), 200);
         }

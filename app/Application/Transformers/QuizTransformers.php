@@ -11,30 +11,16 @@ class QuizTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "en")},
-			"description" => $modelOrCollection->{lang("description" , "en")},
+			"title" => $modelOrCollection->title_lang,
+			"description" => htmlspecialchars(trim(strip_tags($modelOrCollection->description_lang))),
 			"instructions" => $modelOrCollection->instructions,
 			"time" => $modelOrCollection->time,
 			"time_in_mins" => $modelOrCollection->time_in_mins,
 			"type" => $modelOrCollection->type,
 			"pass_percentage" => $modelOrCollection->pass_percentage,
-
+            "questions" => $modelOrCollection->quizquestions ? QuizquestionsTransformers::transform($modelOrCollection['quizquestions']) : null,
         ];
     }
 
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "ar")},
-			"description" => $modelOrCollection->{lang("description" , "ar")},
-			"instructions" => $modelOrCollection->instructions,
-			"time" => $modelOrCollection->time,
-			"time_in_mins" => $modelOrCollection->time_in_mins,
-			"type" => $modelOrCollection->type,
-			"pass_percentage" => $modelOrCollection->pass_percentage,
-
-        ];
-    }
 
 }

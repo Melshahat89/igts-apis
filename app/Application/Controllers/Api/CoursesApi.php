@@ -12,6 +12,8 @@ use App\Application\Model\Coursereviews;
 use App\Application\Model\Courses;
 use App\Application\Model\Coursesections;
 use App\Application\Model\Lecturequestions;
+use App\Application\Model\Quiz;
+use App\Application\Model\Quizstudentsstatus;
 use App\Application\Transformers\CourselecturesTransformers;
 use App\Application\Transformers\CoursenotesTransformers;
 use App\Application\Transformers\CourseresourcesTransformers;
@@ -22,6 +24,8 @@ use App\Application\Requests\Website\Courses\ApiUpdateRequestCourses;
 use App\Application\Transformers\CourseTransformers;
 use App\Application\Transformers\InstructorsTransformers;
 use App\Application\Transformers\LecturequestionsTransformers;
+use App\Application\Transformers\QuizquestionsTransformers;
+use App\Application\Transformers\QuizTransformers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -276,6 +280,101 @@ class CoursesApi extends Controller
         }else{
             return response(apiReturn('', '', trans('website.No Data Found')), 401);
         }
+    }
+
+
+    public function exam(Request $request){
+        $validator = Validator::make($request->all(), [
+            'exam_id' => 'required|integer|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+
+        $exam = Quiz::where('id',$request->exam_id)->first();
+
+        $enrolled = Courses::isEnrolledCourse($exam['courses']['id']);
+
+        if ((!$enrolled)) {
+            return response(apiReturn('', '', 'You don\'t have permission to access this page'), 403);
+        }
+
+        $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
+
+
+        if($studentExam){
+            // Exam time-out //////////////////////////
+            $done = FALSE;
+
+            if($studentExam->end_time == 0){
+                $current = time();
+                $start = $studentExam->start_time;
+
+                $spentTime = $current - $start;
+                $quizTime = $studentExam->quiz->time * 60;
+
+                $done = ( ($quizTime - $spentTime) > 0 ) ? FALSE : TRUE;
+            }
+
+            if($done == TRUE){
+                $studentExam->status = 4;
+                $studentExam->end_time = time();
+
+                // Pass or fail/////////////////////////////////////
+                $quizTotalScore = $exam->quizSum;
+                //                    $studentScore = $exam->currentStudentMark;
+                $studentScore = $studentExam->CurrentStudentMark;
+
+                $percentage = round( (( $studentScore * 100 ) / $quizTotalScore),1 ) ;
+                $examPassPercentage = $exam->pass_percentage;
+                $studentExam->passed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+                $studentExam->save();
+
+                return response(apiReturn($exam->pass_percentage, '', ''), 200);
+            }
+
+            // Start New Exam if the admin anabled the student to retry again
+            if($studentExam->exam_anytime == 1){
+
+                $studentExam = new Quizstudentsstatus();
+                $studentExam->user_id = Auth::guard('api')->user()->id;
+                $studentExam->quiz_id = $exam->id;
+                $studentExam->start_time = time();
+                $studentExam->status = 1;
+                $studentExam->save();
+            }
+            /////////////////////////////////////////////////////////////////////
+
+            // if the student finishs this exam, display him/her the results:
+            if($studentExam->status == 4){
+                return response(apiReturn($exam->pass_percentage, '', ''), 200);
+            }
+
+        }else{
+            $studentExam = new Quizstudentsstatus();
+            $studentExam->user_id = Auth::guard('api')->user()->id;
+            $studentExam->quiz_id = $exam->id;
+            $studentExam->start_time = time();
+            $studentExam->status = 1;
+            $studentExam->save();
+        }
+
+        return response(apiReturn(QuizTransformers::transform($exam), '', ''), 200);
+
+    }
+
+    public function examResult(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'exam_id' => 'required|integer|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error' => $validator->errors()], '', ['error' => $validator->errors()]), 401);
+        }
+
+
+
+
     }
 
 }

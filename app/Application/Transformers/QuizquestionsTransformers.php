@@ -11,22 +11,13 @@ class QuizquestionsTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
-			"question" => $modelOrCollection->{lang("question" , "en")},
+			"question" => $modelOrCollection->question_lang,
 			"type" => $modelOrCollection->type,
 			"mark" => $modelOrCollection->mark,
+			"choice" => $modelOrCollection->quizquestionschoice ? QuizquestionschoiceTransformers::transform($modelOrCollection['quizquestionschoice']) : null,
 
         ];
     }
 
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"question" => $modelOrCollection->{lang("question" , "ar")},
-			"type" => $modelOrCollection->type,
-			"mark" => $modelOrCollection->mark,
-
-        ];
-    }
 
 }

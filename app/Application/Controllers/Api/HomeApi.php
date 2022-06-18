@@ -4,10 +4,16 @@ namespace App\Application\Controllers\Api;
 
 
 use App\Application\Controllers\Controller;
+use App\Application\Model\Contact;
 use App\Application\Model\Homesettings;
+use App\Application\Model\Partners;
 use App\Application\Transformers\HomesettingsTransformers;
 use App\Application\Requests\Website\Homesettings\ApiAddRequestHomesettings;
 use App\Application\Requests\Website\Homesettings\ApiUpdateRequestHomesettings;
+use App\Application\Transformers\PartnersTransformers;
+use App\Application\Transformers\QuizstudentsstatusTransformers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HomeApi extends Controller
 {
@@ -77,6 +83,38 @@ class HomeApi extends Controller
                 ],
 
         ]), 200);
+    }
+
+
+    public function contactUs(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'phone' => 'required|max:15',
+            'email' => 'required|email|max:255',
+            'message' => 'required|max:1000',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
+        }
+
+        $user = Contact::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'message' => $request->message,
+        ]);
+
+        if($user){
+            return response(apiReturn(trans('website.Your message has Been sent')), 200);
+        }
+    }
+
+    public function partners(){
+        $data = Partners::get();
+        if ($data) {
+            return response(apiReturn(PartnersTransformers::transform($data)), 200);
+        }
+        return response(apiReturn('', '', 'No Data Found'), 200);
     }
 
 }

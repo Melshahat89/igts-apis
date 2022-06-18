@@ -11,26 +11,9 @@ class PartnersTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "en")},
-			"description" => $modelOrCollection->{lang("description" , "en")},
+			"title" => $modelOrCollection->title_lang,
+			"description" => $modelOrCollection->description_lang,
 			"logo" => $modelOrCollection->logo,
-			"seo_desc[]" => $modelOrCollection->{lang("seo_desc[]" , "en")},
-			"seo_keys[]" => $modelOrCollection->{lang("seo_keys[]" , "en")},
-			"search_keys[]" => $modelOrCollection->{lang("search_keys[]" , "en")},
-
-        ];
-    }
-
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"title" => $modelOrCollection->{lang("title" , "ar")},
-			"description" => $modelOrCollection->{lang("description" , "ar")},
-			"logo" => $modelOrCollection->logo,
-			"seo_desc[]" => $modelOrCollection->{lang("seo_desc[]" , "ar")},
-			"seo_keys[]" => $modelOrCollection->{lang("seo_keys[]" , "ar")},
-			"search_keys[]" => $modelOrCollection->{lang("search_keys[]" , "ar")},
 
         ];
     }

@@ -17,6 +17,7 @@ Route::any('site/FawryConfirmationCallback' , 'PaymentsApi@actionFawryConfirmati
 
 Route::middleware("localization")->group(function () {
     Route::group(array('prefix' => 'v1'), function () {
+
         Route::prefix('auth')->group(function () {
             Route::post('/register', 'AuthControllerApi@register');
             Route::post('/login', 'AuthControllerApi@login');
@@ -36,11 +37,13 @@ Route::middleware("localization")->group(function () {
             Route::post('myLearning', 'AccountControllerApi@myLearning');
             Route::get('myCertifications', 'AccountControllerApi@myCertifications');
 
+            Route::post('exam', 'CoursesApi@exam');
+            Route::post('examResult', 'CoursesApi@examResult');
+
 
             Route::prefix('account')->group(function () {
                 Route::post('/myExams', 'AccountControllerApi@myExams');
                 Route::post('/settings', 'AccountControllerApi@settings');
-
                 Route::post('/getAllNotifications', 'AccountControllerApi@getAllNotifications');
                 Route::post('/readAllNotifications', 'AccountControllerApi@readAllNotifications');
                 Route::post('/notificationsCount', 'AccountControllerApi@notificationsCount');
@@ -59,6 +62,8 @@ Route::middleware("localization")->group(function () {
         Route::get('topSearches', 'HomeApi@topSearches');
         Route::get('quickLinks', 'HomeApi@quickLinks');
         Route::post('instructor', 'UserApi@instructor');
+        Route::post('contactUs', 'HomeApi@contactUs');
+        Route::get('partners', 'HomeApi@partners');
 
         Route::prefix('course')->group(function () {
             Route::post('/inner', 'CoursesApi@inner');
