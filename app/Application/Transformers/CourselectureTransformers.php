@@ -5,7 +5,7 @@ namespace App\Application\Transformers;
 use App\Application\Model\Courses;
 use Illuminate\Database\Eloquent\Model;
 
-class CourselecturesTransformers extends AbstractTransformer
+class CourselectureTransformers extends AbstractTransformer
 {
 
     public function transformModel(Model $modelOrCollection)
@@ -17,8 +17,7 @@ class CourselecturesTransformers extends AbstractTransformer
 			"is_free" => $modelOrCollection->is_free,
 			"description" => $modelOrCollection->description_lang,
 			"video_file" => $modelOrCollection->video_file,
-			"vid_playbackInfo" => $modelOrCollection->vid_playbackInfo,
-//			"vid_otp" =>  $response =  Courses::getVdoCipherOTP( $modelOrCollection->vdocipher_id),
+			"vdocipher" =>  $response =  Courses::getVdoCipherOTP( $modelOrCollection->vdocipher_id),
 			"vdocipher_id" => $modelOrCollection->vdocipher_id,
 			"courses_id" => $modelOrCollection->courses_id,
         ];

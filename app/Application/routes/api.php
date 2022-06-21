@@ -68,6 +68,7 @@ Route::middleware("localization")->group(function () {
         Route::prefix('course')->group(function () {
             Route::post('/inner', 'CoursesApi@inner');
             Route::post('/lectures', 'CoursesApi@lectures');
+            Route::post('/lecture', 'CoursesApi@lecture');
             Route::post('/requirements', 'CoursesApi@requirements');
             Route::post('/willlearn', 'CoursesApi@willlearn');
             Route::post('/instructors', 'CoursesApi@instructors');

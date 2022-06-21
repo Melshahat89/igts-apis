@@ -13,8 +13,10 @@ use App\Application\Model\Courses;
 use App\Application\Model\Coursesections;
 use App\Application\Model\Lecturequestions;
 use App\Application\Model\Quiz;
+use App\Application\Model\Quizstudentsanswers;
 use App\Application\Model\Quizstudentsstatus;
 use App\Application\Transformers\CourselecturesTransformers;
+use App\Application\Transformers\CourselectureTransformers;
 use App\Application\Transformers\CoursenotesTransformers;
 use App\Application\Transformers\CourseresourcesTransformers;
 use App\Application\Transformers\CoursesectionsTransformers;
@@ -112,6 +114,23 @@ class CoursesApi extends Controller
 
         if($lectures){
             return response(apiReturn(CoursesectionsTransformers::transform($lectures)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+
+    }
+    public function lecture(Request $request){
+        $validator = Validator::make($request->all(), [
+            'lecture_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+//        $course = $this->model->where('id',$request->course_id)->first();
+        $lecture = Courselectures::where('id',$request->lecture_id)->first();
+
+        if($lecture){
+            return response(apiReturn(CourselectureTransformers::transform($lecture)), 200);
         }else{
             return response(apiReturn('', '', trans('website.No Data Found')), 401);
         }
@@ -302,6 +321,7 @@ class CoursesApi extends Controller
         $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
 
 
+
         if($studentExam){
             // Exam time-out //////////////////////////
             $done = FALSE;
@@ -358,7 +378,6 @@ class CoursesApi extends Controller
             $studentExam->status = 1;
             $studentExam->save();
         }
-
         return response(apiReturn(QuizTransformers::transform($exam), '', ''), 200);
 
     }
@@ -367,9 +386,56 @@ class CoursesApi extends Controller
     {
         $validator = Validator::make($request->all(), [
             'exam_id' => 'required|integer|max:255',
+            'question' => 'required|max:255',
         ]);
         if ($validator->fails()) {
             return response(apiReturn(['error' => $validator->errors()], '', ['error' => $validator->errors()]), 401);
+        }
+
+        $exam = Quiz::where('id',$request->exam_id)->first();
+        $enrolled = Courses::isEnrolledCourse($exam['courses']['id']);
+
+        if ((!$enrolled)) {
+            return response(apiReturn('', '', 'You don\'t have permission to access this page'), 403);
+        }
+
+        $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
+
+        //Save the student answers:
+        foreach ($exam->quizquestions as $question) {
+            if(isset($request->question[$question->id])){
+
+
+                $questionSelcetedAnswer = (int)$request->question[$question->id];
+                //   var_dump($questionSelcetedAnswer);die;
+                $quizAnswers = new Quizstudentsanswers();
+
+                $quizAnswers->user_id = Auth::guard('api')->user()->id;
+                $quizAnswers->quiz_id = $exam->id;
+                $quizAnswers->quizquestions_id = $question->id;
+                $quizAnswers->quizstudentsstatus_id = $studentExam->id;
+
+                if(is_int($questionSelcetedAnswer) && $questionSelcetedAnswer > 0){
+                    $quizAnswers->quizquestionschoice_id = $questionSelcetedAnswer;
+                    $quizAnswers->answered = 1;
+                }else{
+                    $quizAnswers->quizquestionschoice_id = NULL;
+                    $quizAnswers->answered = 0;
+                    $quizAnswers->mark = 0;
+                }
+                $quizAnswers->save();
+                //Check if the answer is correct or not:
+                if($quizAnswers->quizquestionschoice->is_correct == 1){
+                    $quizAnswers->is_correct = 1;
+                    $quizAnswers->mark = $question->mark;
+                    $quizAnswers->save();
+                }
+
+            }else{
+                //                        die("out");
+            }
+
+
         }
 
 
