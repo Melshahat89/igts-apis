@@ -404,8 +404,6 @@ class CoursesApi extends Controller
         //Save the student answers:
         foreach ($exam->quizquestions as $question) {
             if(isset($request->question[$question->id])){
-
-
                 $questionSelcetedAnswer = (int)$request->question[$question->id];
                 //   var_dump($questionSelcetedAnswer);die;
                 $quizAnswers = new Quizstudentsanswers();
@@ -435,6 +433,93 @@ class CoursesApi extends Controller
                 //                        die("out");
             }
 
+
+        }
+
+        if($studentExam){
+            // Exam time-out //////////////////////////
+            $done = FALSE;
+
+            if($studentExam->end_time == 0){
+                $current = time();
+                $start = $studentExam->start_time;
+
+                $spentTime = $current - $start;
+                $quizTime = $studentExam->quiz->time * 60;
+
+                $done = ( ($quizTime - $spentTime) > 0 ) ? FALSE : TRUE;
+            }
+
+            if($done == TRUE){
+                $studentExam->status = 4;
+                $studentExam->end_time = time();
+
+                // Pass or fail/////////////////////////////////////
+                $quizTotalScore = $exam->quizSum;
+                //                    $studentScore = $exam->currentStudentMark;
+                $studentScore = $studentExam->CurrentStudentMark;
+
+                $percentage = round( (( $studentScore * 100 ) / $quizTotalScore),1 ) ;
+                $examPassPercentage = $exam->pass_percentage;
+                $studentExam->passed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+                $studentExam->save();
+
+                return redirect("/courses/examResults/" . $slug);
+            }
+
+            // Start New Exam if the admin anabled the student to retry again
+            if($studentExam->exam_anytime == 1){
+
+                $studentExam = new Quizstudentsstatus();
+                $studentExam->user_id = auth()->user()->id;
+                $studentExam->quiz_id = $exam->id;
+                $studentExam->start_time = time();
+                $studentExam->status = 1;
+                $studentExam->save();
+            }
+            /////////////////////////////////////////////////////////////////////
+            ///
+            $quizTotalScore = $exam->quizSum;
+            $studentScore = Quiz::currentStudentMark($studentExam->id);
+            $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
+            $examPassPercentage = $exam->pass_percentage;
+            $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+            $totalQuestions = $exam->quizQuestionsCount;
+
+
+
+            //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
+            $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
+            $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
+
+
+//            dd($studentExam->isPassed);
+            // if the student finishs this exam, display him/her the results:
+            if($studentExam->status == 4){
+                return response(apiReturn(
+                    [
+//                        'exam' => $exam,
+                        'isPassed' => $isPassed,
+                        'totalQuestions' => $totalQuestions,
+                        'answeredQuestions' => $answeredQuestions,
+                        'correctansweredQuestions' => $CorrectansweredQuestions,
+                        'percentage' => $percentage,
+                        'examPassPercentage' => $examPassPercentage,
+                        'certificate' => $studentExam->certificate,
+                    ], '', ''), 200);
+            }
+
+            return response(apiReturn(
+                [
+//                    'exam' => $exam,
+                    'isPassed' => $isPassed,
+                    'totalQuestions' => $totalQuestions,
+                    'answeredQuestions' => $answeredQuestions,
+                    'correctansweredQuestions' => $CorrectansweredQuestions,
+                    'percentage' => $percentage,
+                    'examPassPercentage' => $examPassPercentage,
+                    'certificate' => $studentExam->certificate,
+                ], '', ''), 200);
 
         }
 
