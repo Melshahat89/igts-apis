@@ -52,15 +52,11 @@
  }
 
  public static function currentStudentMark($quizInstatntId){
-   //            QuizStudentsAnswers
-               
-               $result = Quizstudentsanswers::where('quizstudentsstatus_id',$quizInstatntId)->get();
-               
+               $result = Quizstudentsanswers::where('quizstudentsstatus_id',$quizInstatntId)->groupBy('quizquestionschoice_id')->get();
                $total = 0;
                foreach ($result as $row) {
                    $total += $row->mark;
                }
-               
                return $total;
            }
  }

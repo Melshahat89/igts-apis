@@ -2,6 +2,7 @@
 namespace App\Application\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Quizstudentsstatus extends Model
 {
@@ -38,12 +39,12 @@ class Quizstudentsstatus extends Model
     }
     public function getStudentAnswerdQuestionsCountAttribute()
     {
-        return $this->quizstudentsanswers->where('answered', 1)->count();
+        return $this->quizstudentsanswers->where('answered', 1)->groupBy('quizquestionschoice_id')->count();
     }
 
     public function getStudentAnswerdCorrectQuestionsCountAttribute()
     {
-        return $this->quizstudentsanswers->where('is_correct', 1)->count();
+        return $this->quizstudentsanswers->where('is_correct', 1)->groupBy('quizquestionschoice_id')->count();
     }
 
     public static function generateCertificate($course, $name = "", $studentExamStatusID)
@@ -58,7 +59,7 @@ class Quizstudentsstatus extends Model
 
         }
         $title = $course->title_en;
-        $randomNo = auth()->user()->id . "R1" . createRandomCode();
+        $randomNo = Auth::guard('api')->user()->id. "R1" . createRandomCode();
         $fileName = 'IGTS-CRT-' . $randomNo;
 
         $studentExamStatus = Quizstudentsstatus::find($studentExamStatusID);

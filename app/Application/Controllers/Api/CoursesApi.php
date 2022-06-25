@@ -70,15 +70,54 @@ class CoursesApi extends Controller
 //        dd(auth('api')->check());
         $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
         $data = $this->model;
-        if (request()->has("search_keys") && request()->get("search_keys") != "") {
-            $data = $data->where("search_keys", "like", "%" . request()->get("search_keys") . "%");
-        }
 
         if (request()->has("type") && request()->get("type") != "") {
             $data = $data->where("type", "=", request()->get("type"));
         }
 
-        $data = $data->where('published', 1)->orderBy('id' , 'desc')->paginate($limit);
+        if (request()->has('search_keys') && request()->get('search_keys') != '') {
+            $data = $data->where(function ($query) {
+                $query->where("title", "like", "%" . request()->get("search_keys") . "%")
+                    ->orWhere("search_keys", "like", "%" . request()->get("search_keys") . "%")
+                    ->orWhere("doctor_name", "like", "%" . request()->get("search_keys") . "%")
+
+                ;
+            });
+        }
+        if (request()->has('categories_id') && request()->get('categories_id') != '') {
+            $data = $data->where("categories_id", "=", request()->get("categories_id"));
+        }
+        if (request()->has('skill_level') && request()->get('skill_level') != '') {
+            $data = $data->where("skill_level", "=", request()->get("skill_level"));
+        }
+        if (request()->has('language_id') && request()->get('language_id') != '') {
+            $data = $data->where("language_id", "=", request()->get("language_id"));
+        }
+
+
+        $data = $data->where('published', 1)->orderBy('id' , 'desc')->get();
+
+        if (request()->has('rating') && request()->get('rating') != '') {
+            $data = $data->filter(function ($item) {
+                if ($item->CourseRating > ((int) request()->get('rating')- 1) and $item->CourseRating <= (int) request()->get('rating')) {
+                    return $item;
+                }
+            });
+        }
+        if (request()->has('duration') && request()->get('duration') != '') {
+            $duration = explode(":", request()->get('duration'));
+            //dd($duration);
+            $data = $data->filter(function ($item) use ($duration) {
+                if (($item->CourseDuration > ($duration[0] * 60 * 60)) and ($item->CourseDuration <= ($duration[1] * 60 * 60))) {
+                    return $item;
+                }
+            });
+        }
+
+
+        $data = initPaginate($data, 8);
+//        $data = $$data->paginate($limit);
+
 
         if ($data AND count($data) > 0) {
             return response(apiReturn(['items' => array_values(CoursesTransformers::transform($data))] + $this->paginateArray($data)), 200);
@@ -400,6 +439,45 @@ class CoursesApi extends Controller
         }
 
         $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
+        $alreadyPassed = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->where('passed', 1)->first();
+
+
+
+
+        $quizTotalScore = $exam->quizSum;
+        $studentScore = Quiz::currentStudentMark($studentExam->id);
+        $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
+
+
+        $examPassPercentage = $exam->pass_percentage;
+        $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+        $totalQuestions = $exam->quizQuestionsCount;
+
+        //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
+        $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
+        $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
+
+
+        if($isPassed == 1 || $alreadyPassed){
+            $certificate = $studentExam->certificate;
+            if(!$certificate){
+//                $certificate = Quizstudentsstatus::generateCertificate($exam->courses,Auth::guard('api')->user()->fullname,$studentExam->id);
+//                dd($certificate);
+            }
+
+            return response(apiReturn(
+                [
+//                        'exam' => $exam,
+                    'isPassed' => $isPassed,
+                    'totalQuestions' => $totalQuestions,
+                    'answeredQuestions' => $answeredQuestions,
+                    'correctansweredQuestions' => $CorrectansweredQuestions,
+                    'percentage' => $percentage,
+                    'examPassPercentage' => $examPassPercentage,
+                    'certificate' => $studentExam->certificate,
+                ], '', ''), 200);
+
+        }
 
         //Save the student answers:
         foreach ($exam->quizquestions as $question) {
@@ -464,7 +542,7 @@ class CoursesApi extends Controller
                 $studentExam->passed = ( $percentage >= $examPassPercentage) ? 1 : 0;
                 $studentExam->save();
 
-                return redirect("/courses/examResults/" . $slug);
+//                return redirect("/courses/examResults/" . $slug);
             }
 
             // Start New Exam if the admin anabled the student to retry again
@@ -479,21 +557,8 @@ class CoursesApi extends Controller
             }
             /////////////////////////////////////////////////////////////////////
             ///
-            $quizTotalScore = $exam->quizSum;
-            $studentScore = Quiz::currentStudentMark($studentExam->id);
-            $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
-            $examPassPercentage = $exam->pass_percentage;
-            $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
-            $totalQuestions = $exam->quizQuestionsCount;
 
 
-
-            //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
-            $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
-            $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
-
-
-//            dd($studentExam->isPassed);
             // if the student finishs this exam, display him/her the results:
             if($studentExam->status == 4){
                 return response(apiReturn(
