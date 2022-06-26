@@ -1072,4 +1072,21 @@ class HomeController extends Controller
         $test = new PostAffiliateProIntegration;
 
     }
+
+
+    public function checkoutApi(Request $request){
+
+        $user = Auth::guard('api')->user();
+//        Auth::guard()->login($user);
+//        dd($user);
+
+        return redirect('site/payments');
+
+        return Auth::guard('api')->user();
+
+
+
+        dd(22);
+
+    }
 }

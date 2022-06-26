@@ -82,12 +82,12 @@ use Illuminate\Support\Facades\Session as Session;
 @endif
 
 <!-- <div class="se-pre-con"></div> -->
-<div class="loading flexCenter">
-      <div class="loader-logo">
-        <div class="loader">Loading...</div>
-        <img src="{{ asset('public/website') }}/images/logonew.png" alt="..." >
-      </div>
-    </div>
+{{--<div class="loading flexCenter">--}}
+{{--      <div class="loader-logo">--}}
+{{--        <div class="loader">Loading...</div>--}}
+{{--        <img src="{{ asset('public/website') }}/images/logonew.png" alt="..." >--}}
+{{--      </div>--}}
+{{--    </div>--}}
 
 
 @include(layoutIgtsHeader('website'))
