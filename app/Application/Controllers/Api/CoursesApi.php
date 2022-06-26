@@ -406,7 +406,6 @@ class CoursesApi extends Controller
 
                 return response(apiReturn(
                     [
-
                             'isPassed' => $isPassed,
                             'totalQuestions' => $totalQuestions,
                             'answeredQuestions' => $answeredQuestions,
@@ -414,7 +413,6 @@ class CoursesApi extends Controller
                             'percentage' => $percentage,
                             'examPassPercentage' => $examPassPercentage,
                             'certificate' => $studentExam->certificate,
-
 //                        'exam' => $exam,
 
                     ], '201', ''), 201);
