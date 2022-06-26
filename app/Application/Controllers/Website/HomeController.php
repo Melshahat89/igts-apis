@@ -1079,14 +1079,8 @@ class HomeController extends Controller
         $user = Auth::guard('api')->user();
         Auth::guard()->login($user);
 //        dd($user);
+        return response(apiReturn(['url'=>'https://igtsservice.com/cart'], '', ''), 200);
 
-        return redirect('site/payments');
-
-        return Auth::guard('api')->user();
-
-
-
-        dd(22);
-
+//        return redirect('site/payments');
     }
 }
