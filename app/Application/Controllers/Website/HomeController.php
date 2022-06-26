@@ -1077,7 +1077,7 @@ class HomeController extends Controller
     public function checkoutApi(Request $request){
 
         $user = Auth::guard('api')->user();
-//        Auth::guard()->login($user);
+        Auth::guard()->login($user);
 //        dd($user);
 
         return redirect('site/payments');
