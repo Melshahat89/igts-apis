@@ -417,7 +417,7 @@ class CoursesApi extends Controller
                         ]
 //                        'exam' => $exam,
 
-                    ], '', ''), 200);
+                    ], '202', ''), 201);
             }
 
             // Start New Exam if the admin anabled the student to retry again
@@ -448,7 +448,7 @@ class CoursesApi extends Controller
                         ]
 //                        'exam' => $exam,
 
-                    ], '', ''), 200);
+                    ], '202', ''), 201);
             }
 
         }else{
