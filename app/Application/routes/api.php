@@ -21,10 +21,11 @@ Route::middleware("localization")->group(function () {
         Route::prefix('auth')->group(function () {
             Route::post('/register', 'AuthControllerApi@register');
             Route::post('/login', 'AuthControllerApi@login');
+            Route::post('/forgotPassword',  'AuthControllerApi@forgotPassword');
             Route::post('/confirm', 'AuthControllerApi@confirm');
             Route::post('/resetPasswordRequest', 'AuthControllerApi@resetPasswordRequest');
             Route::post('/resetPasswordConfirm', 'AuthControllerApi@resetPasswordConfirm');
-            Route::post('/resetPassword',  'AuthControllerApi@resetPassword');
+
             Route::post('/resendotp',  'AuthControllerApi@resendotp');
         });
 

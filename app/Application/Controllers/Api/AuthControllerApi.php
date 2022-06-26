@@ -75,6 +75,29 @@ class AuthControllerApi extends Controller
             return response(apiReturn('', '', 'Unauthorised'), 200);
         }
     }
+    public function forgotPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
+        }
+
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response(apiReturn('', '', 'Unauthorised'), 200);
+        }else{
+
+            $credentials = request()->validate(['email' => 'required|email']);
+
+            Password::sendResetLink($credentials);
+
+        }
+
+
+
+    }
 
     public function resetPasswordRequest(Request $request){
 
