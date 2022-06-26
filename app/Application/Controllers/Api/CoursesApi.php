@@ -359,6 +359,21 @@ class CoursesApi extends Controller
 
         $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
 
+        $quizTotalScore = $exam->quizSum;
+        $studentScore = Quiz::currentStudentMark($studentExam->id);
+        $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
+
+
+        $examPassPercentage = $exam->pass_percentage;
+        $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+        $totalQuestions = $exam->quizQuestionsCount;
+
+        //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
+        $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
+        $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
+
+
+
 
 
         if($studentExam){
@@ -389,7 +404,20 @@ class CoursesApi extends Controller
                 $studentExam->passed = ( $percentage >= $examPassPercentage) ? 1 : 0;
                 $studentExam->save();
 
-                return response(apiReturn($exam->pass_percentage, '', ''), 200);
+                return response(apiReturn(
+                    [
+                        'result' => [
+                            'isPassed' => $isPassed,
+                            'totalQuestions' => $totalQuestions,
+                            'answeredQuestions' => $answeredQuestions,
+                            'correctansweredQuestions' => $CorrectansweredQuestions,
+                            'percentage' => $percentage,
+                            'examPassPercentage' => $examPassPercentage,
+                            'certificate' => $studentExam->certificate,
+                        ]
+//                        'exam' => $exam,
+
+                    ], '', ''), 200);
             }
 
             // Start New Exam if the admin anabled the student to retry again
@@ -406,7 +434,21 @@ class CoursesApi extends Controller
 
             // if the student finishs this exam, display him/her the results:
             if($studentExam->status == 4){
-                return response(apiReturn($exam->pass_percentage, '', ''), 200);
+
+                return response(apiReturn(
+                    [
+                        'result' => [
+                            'isPassed' => $isPassed,
+                            'totalQuestions' => $totalQuestions,
+                            'answeredQuestions' => $answeredQuestions,
+                            'correctansweredQuestions' => $CorrectansweredQuestions,
+                            'percentage' => $percentage,
+                            'examPassPercentage' => $examPassPercentage,
+                            'certificate' => $studentExam->certificate,
+                        ]
+//                        'exam' => $exam,
+
+                    ], '', ''), 200);
             }
 
         }else{
