@@ -200,6 +200,18 @@ class AccountControllerApi extends Controller
         return response(apiReturn(['count' => count($data)]), 200);
     }
 
+    public function generalSettings(Request $request){
+
+        return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
+
+    }
+
+    public function recommendedTopics(Request $request){
+
+        return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
+
+    }
+
 
 
 

@@ -48,9 +48,9 @@ Route::middleware("localization")->group(function () {
                 Route::post('/getAllNotifications', 'AccountControllerApi@getAllNotifications');
                 Route::post('/readAllNotifications', 'AccountControllerApi@readAllNotifications');
                 Route::post('/notificationsCount', 'AccountControllerApi@notificationsCount');
+                Route::post('/generalSettings', 'AccountControllerApi@generalSettings');
+                Route::post('/recommendedTopics', 'AccountControllerApi@recommendedTopics');
             });
-
-
         });
 
         //Home
