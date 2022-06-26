@@ -406,7 +406,7 @@ class CoursesApi extends Controller
 
                 return response(apiReturn(
                     [
-                        'result' => [
+
                             'isPassed' => $isPassed,
                             'totalQuestions' => $totalQuestions,
                             'answeredQuestions' => $answeredQuestions,
@@ -414,10 +414,10 @@ class CoursesApi extends Controller
                             'percentage' => $percentage,
                             'examPassPercentage' => $examPassPercentage,
                             'certificate' => $studentExam->certificate,
-                        ]
+
 //                        'exam' => $exam,
 
-                    ], '202', ''), 201);
+                    ], '201', ''), 201);
             }
 
             // Start New Exam if the admin anabled the student to retry again
@@ -437,7 +437,7 @@ class CoursesApi extends Controller
 
                 return response(apiReturn(
                     [
-                        'result' => [
+
                             'isPassed' => $isPassed,
                             'totalQuestions' => $totalQuestions,
                             'answeredQuestions' => $answeredQuestions,
@@ -445,10 +445,10 @@ class CoursesApi extends Controller
                             'percentage' => $percentage,
                             'examPassPercentage' => $examPassPercentage,
                             'certificate' => $studentExam->certificate,
-                        ]
+
 //                        'exam' => $exam,
 
-                    ], '202', ''), 201);
+                    ], '201', ''), 201);
             }
 
         }else{
