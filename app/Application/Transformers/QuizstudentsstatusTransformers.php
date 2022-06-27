@@ -22,7 +22,7 @@ class QuizstudentsstatusTransformers extends AbstractTransformer
 			"skipped_question_id" => $modelOrCollection->skipped_question_id,
 			"passed" => $modelOrCollection->passed,
 			"exam_anytime" => $modelOrCollection->exam_anytime,
-
+			"exam_id" => $modelOrCollection['quiz']['id'],
         ];
     }
 
