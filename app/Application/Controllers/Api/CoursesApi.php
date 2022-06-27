@@ -359,24 +359,21 @@ class CoursesApi extends Controller
 
         $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
 
-        $quizTotalScore = $exam->quizSum;
-        $studentScore = Quiz::currentStudentMark($studentExam->id);
-        $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
-
-
-        $examPassPercentage = $exam->pass_percentage;
-        $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
-        $totalQuestions = $exam->quizQuestionsCount;
-
-        //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
-        $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
-        $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
-
-
-
-
-
         if($studentExam){
+
+            $quizTotalScore = $exam->quizSum;
+            $studentScore = Quiz::currentStudentMark($studentExam->id);
+            $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
+
+            $examPassPercentage = $exam->pass_percentage;
+            $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+            $totalQuestions = $exam->quizQuestionsCount;
+
+            //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
+            $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
+            $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
+
+
             // Exam time-out //////////////////////////
             $done = FALSE;
 
@@ -482,20 +479,22 @@ class CoursesApi extends Controller
         $alreadyPassed = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->where('passed', 1)->first();
 
 
+            if ($studentExam){
+
+                $quizTotalScore = $exam->quizSum;
+                $studentScore = Quiz::currentStudentMark($studentExam->id);
+                $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
 
 
-        $quizTotalScore = $exam->quizSum;
-        $studentScore = Quiz::currentStudentMark($studentExam->id);
-        $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
+                $examPassPercentage = $exam->pass_percentage;
+                $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+                $totalQuestions = $exam->quizQuestionsCount;
 
+                //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
+                $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
+                $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
 
-        $examPassPercentage = $exam->pass_percentage;
-        $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
-        $totalQuestions = $exam->quizQuestionsCount;
-
-        //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
-        $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
-        $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
+            }
 
 
         if($isPassed == 1 || $alreadyPassed){
