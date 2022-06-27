@@ -33,7 +33,7 @@ class CoursesTransformers extends AbstractTransformer
 			"published" => $modelOrCollection->published,
 			"position" => $modelOrCollection->position,
 			"sort" => $modelOrCollection->sort,
-			"doctor_name" => $modelOrCollection->instructor['name'],
+			"doctor_name" => $modelOrCollection->instructor['name']['lang'],
 			"full_access" => $modelOrCollection->full_access,
 			"access_time" => $modelOrCollection->access_time,
 			"soon" => $modelOrCollection->soon,
