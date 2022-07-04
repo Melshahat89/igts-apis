@@ -51,6 +51,7 @@ class CourseTransformers extends AbstractTransformer
             "enrolled" => $modelOrCollection->isEnrolledCourse($modelOrCollection->id),
             "exam_id" => $modelOrCollection->quiz?$modelOrCollection->quiz['id']:null,
             "coursereviews" => $modelOrCollection->coursereviews ? CoursereviewsTransformers::transform($modelOrCollection->coursereviews) :null,
+            "Lecture_free" => $modelOrCollection->LectureFree,
         ];
     }
 }

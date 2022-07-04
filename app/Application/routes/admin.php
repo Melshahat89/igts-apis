@@ -639,3 +639,11 @@ Route::get('quizquestions/addInput/{counter}', 'QuizquestionsController@addInput
 
 ### Optimize Select2 users
 Route::get('/loadAllUsers', 'HomeController@loadAllUsers');
+#### becomeinstructor control
+Route::get('becomeinstructor' , 'BecomeinstructorController@index');
+Route::get('becomeinstructor/item/{id?}' , 'BecomeinstructorController@show');
+Route::post('becomeinstructor/item' , 'BecomeinstructorController@store');
+Route::post('becomeinstructor/item/{id}' , 'BecomeinstructorController@update');
+Route::get('becomeinstructor/{id}/delete' , 'BecomeinstructorController@destroy');
+Route::get('becomeinstructor/{id}/view' , 'BecomeinstructorController@getById');
+Route::get('becomeinstructor/pluck', 'BecomeinstructorController@pluck');

@@ -985,3 +985,11 @@ Route::post('careersresponses/item' , 'CareersresponsesController@store');
 Route::post('careersresponses/item/{id}' , 'CareersresponsesController@update');
 Route::get('careersresponses/{id}/delete' , 'CareersresponsesController@destroy');
 Route::get('careersresponses/{id}/view' , 'CareersresponsesController@getById');
+
+#### becomeinstructor control
+Route::get('becomeinstructor' , 'BecomeinstructorController@index');
+Route::get('becomeinstructor/item/{id?}' , 'BecomeinstructorController@show');
+Route::post('becomeinstructor/item' , 'BecomeinstructorController@store');
+Route::post('becomeinstructor/item/{id}' , 'BecomeinstructorController@update');
+Route::get('becomeinstructor/{id}/delete' , 'BecomeinstructorController@destroy');
+Route::get('becomeinstructor/{id}/view' , 'BecomeinstructorController@getById');

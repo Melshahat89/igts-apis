@@ -206,4 +206,12 @@ return [
     'Sign in to join this webinar' => 'Sign-In To Join This Webinar',
     'Best the first and type in your question in the box below' => 'Best the first and type in your question in the box below',
     'add question' => 'Type in your question',
+    'vdocipher_tag' => '',
+    'accreditation_text' => '',
+    'diplomas_discount' => '',
+    'masters_discount' => '',
+    'courses_discount' => '',
+    'bundles_discount' => '',
+    'bundle_discount' => '',
+    'seo_title' => '',
 ];

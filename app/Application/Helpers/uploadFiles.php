@@ -11,6 +11,7 @@ function fileFields()
         'file' => 'file',
         'files' => 'files',
         'files[]' => 'files[]',
+        'cv' => 'cv',
     ];
 }
 

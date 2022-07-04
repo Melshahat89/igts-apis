@@ -1,4 +1,5 @@
 <?php 
+
 return [
     'Name' => 'الأسم',
     'Email' => 'البريد الالكتروني',
@@ -321,7 +322,7 @@ return [
     'new' => 'جديد',
     'complete profile desc' => 'ادخل رقم جوالك و اختر تخصص او اكثر من التخصصات في الكروت التاليه لاستكمال ملفك الشخصي ولتتمكن من تصفح باقي صفحات الموقع.',
     'complete profile' => 'استكمل ملفك الشصخي',
-    'Started at'=>'بدأت فى',
+    'Started at' => 'بدأت فى',
     'starts at' => 'تبدأ في',
     'please enter a valid number' => 'الرجاء ادخال رقم صحيح!',
     'complete profile message' => 'استكمل ملفك الشخصي الآن لتكون اول من يصله عروضنا!',
@@ -361,4 +362,6 @@ return [
     'Our mobile application is coming soon' => 'انتظروا تطبيقنا على الهاتف',
     'All' => 'الكل',
     'No Data Found' => 'لا يوجد بيانات',
+    'You do not have permission' => 'لا تملك صلاحية للوصول',
+    'Starts at' => '',
 ];

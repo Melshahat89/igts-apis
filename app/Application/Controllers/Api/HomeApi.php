@@ -4,6 +4,7 @@ namespace App\Application\Controllers\Api;
 
 
 use App\Application\Controllers\Controller;
+use App\Application\Model\BecomeInstructor;
 use App\Application\Model\Contact;
 use App\Application\Model\Homesettings;
 use App\Application\Model\Partners;

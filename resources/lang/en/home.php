@@ -82,10 +82,7 @@ return [
     'UserType12' => 'SEO',
     'UserType13' => 'Customer Service',
     'UserType14' => 'HR',
-
     'Our Team' => 'Our Team',
-
-
     'IGTS' => 'International Group For Training Services',
     'diplomas' => 'Diplomas',
     'courses' => 'Courses',
@@ -100,7 +97,6 @@ return [
     'business management' => 'Business Management',
     'child education' => 'Child Education',
     'specialities' => 'Specialities',
-    'home' => 'Home',
     'blog' => 'Blog',
     'webinar' => 'Webinars',
     'analysis' => 'Analysis',
@@ -146,4 +142,7 @@ return [
     'Order_type_online' => 'Online',
     'Order_type_offline' => 'Offline',
     'accreditations' => 'Accreditations',
+    'MeduoHomeTitle' => '',
+    'MeduoHomeDescription' => '',
+    'MeduoHomeKeywords' => '',
 ];

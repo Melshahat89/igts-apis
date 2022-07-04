@@ -72,8 +72,6 @@ return [
     'build_your_lms_desc_2' => 'سيتم إنشاء النظام الأساسي الخاص بك باستخدام أحدث التقنيات والأطر لتأمين موقع ويب
     سريع الاستجابة وآمن',
     'contact_sales' => 'تواصل مع فريق المبيعات',
-   
-
     'Business Services' => 'خدمات الشركات',
     'IGTS WEB SERVICES' => 'خدمات الويب - IGTS',
     'Build your own custom' => 'انشأ موقع خاص غني بالمميزات و آمن باستخدام أحدث التقنيات وادخل في مجال الأعمال علي الفور',
@@ -85,7 +83,6 @@ return [
     'Easy Content Management Sub' => 'التحكم بسهولة في نظام ادارة المحتوي, حيث يمكنك التحكم في صفحات الموقع, تنسيق الخطوط, اضافة صور و فيديوهات في المحتوى',
     'Technical Support' => 'الدعم الفني',
     'Technical Support Sub' => 'تعيين موظف عم فني خاص بك اثناء مرحلة اطلاق موقعك الخاص',
-
     'Our Services' => 'تعرف علي خدماتنا',
     'Web Design' => 'تصميم مواقع الويب',
     'Web Development' => 'نطوير مواقع الويب',
@@ -158,23 +155,21 @@ return [
     'Copyright' => 'حقوق النشر',
     'All rights reserved.' => 'جميع الحقوق محفوظة',
     'For Business' => 'للشركات',
-
     'The idea behind IGTS was to build a dedicated platform to publish our courses on and provide our users with a life-time accessibilty so they can watch our courses and do the entire online learning lifecycle at their own pace.' => 'الفكرة الرئيسية خلف IGTS هي بناء منصة متكاملة لنشر دوراتنا من خلالها و توفير امكانية وصل مدى الحياة لعملائنا لمشاهدة دوراتنا و ممارسة العملية التعليمية كاملة في الوقت المناسب لهم.',
     'It provides social login with Facebook and Google for easy accessibilty.' => 'تمكين العملاء من التسجيل علي الموقع باستخدام منصات التواصل الاجتماعي',
     'IGTS was built from scratch using PHP programming language.' => 'تم بناء الموقع بالكامل باستخدام لغة برمجة PHP',
     'The website supports multi-currency and online payment integration with Visa & MasterCard to suit the global customers from different countries.' => 'يدعم الموقع نظام تعدد العملات و امكانة القيام بعمليات الدفع علي الموقع باستخدام فيزا وماستر كارد',
-    'The users will be provided with certificate of completion upon passing the course exams.' => 'يتم اعطاء الدراسين شهادة اتمام دراسة بعد اجتيازهم الاخبار بنجاح.',
-    'The exams module is built to support MCQ and True/False questions with the ability set an exam timer and passing percentage of each exam.' => 'تم بناء نظام الاختبارات لدعم اسئلة الاختيار من متعدد و اسئلة الصح والخطأ.',
+    'The users will be provided with certificate of completion upon passing the course exams.' => 'يتم اعطاء الدراسين شهادة اتمام دراسة بعد اجتيازهم الاخبار بنجاح',
+    'The exams module is built to support MCQ and True/False questions with the ability set an exam timer and passing percentage of each exam.' => 'تم بناء نظام الاختبارات لدعم اسئلة الاختيار من متعدد و اسئلة الصح والخطأ',
     'Meduo required an LMS platform that provides speed, elegent and simple design, security and flexbility.' => 'احتاجت ميديو ان يكون يوفر السرعه, الاناقة و البساطة في التصميم, بالاضافة الى الحماية العالية و المرونة.  ',
     'It provides social login with Facebook Google and Twitter for easy accessibilty.' => 'تمكين العملاء من التسجيل علي الموقع باستخدام منصات التواصل الاجتماعي',
     'The website supports multi-currency and online payment integrations with multiple payment gateway providers, such as Visa & MasterCard, Fawry, Mobile Wallet.' => 'تم بناء الموقع ليدعم نظام تعدد اللغات و العملات, مع توفير وسائل الدفع الاونلاين المختلفة مثل الفيزا وماستر كار, وفوري, و المحافظ الالكترونية.',
     'Meduos customers are able to choose from different subscription plan for each of their courses, such as monthly, yearly and life-time plans.' => 'يوفر الموفع للمستخدمين شراء الدورات بنظام الاشتراك الشهري او السنوي او مدى الحياة لكل دورة على حدى.',
-    'The users will be provided with certificate of completion upon passing the course exams.' => 'يتم اعطاء الدراسين شهادة اتمام دراسة بعد اجتيازهم الاخبار بنجاح',
-    'The exams module is built to support MCQ and True/False questions with the ability set an exam timer and passing percentage of each exam.' => 'تم بناء نظام الاختبارات لدعم اسئلة الاختيار من متعدد و اسئلة الصح والخطأ',
     'Ihtiraf required an LMs platform where they can published their courses on' => 'تواصلت معنا اكاديمية احتراف لنوفر لهم منصة تعليم الكتروني خاصه بهم لنشر دوراتهم عليها.',
     'Ihtirafs web design was the result of intensive research using the top LMS platforms as reference to come up with a design that is elgent, simple and responsive on all devices.' => 'تصميم الموقع كان نتاج بحث مكثف باستخدام اشهر منصات التعليم الاكتروني كمرجع لنتمكن من توفير تصميم بسيط و انيق يدعم جميع الاجهزة باختلاف احجامها. ',
     'The website supports multi-currency and online payment integrations with multiple payment gateway providers.' => 'يدعم الموقع وسائل الدفع الاكتروني المختلفة',
     'Ihtirafs customers are able to choose from different subscription plan for all of their courses, such as monthly and yearly plans.' => 'يمكن الموقع لمستخدمينه من الاختيار بين نظام الاشتراك الشهري او السنوي لكل دورات الموقع.',
     'The exams module is built to support MCQ, True/False and essay questions with the ability to set the passing percentage and the mark of each question.' => 'تم بناء نظام الاختبارات ليدعم اسئلة الاختيار من متعدد و اسئلة الصح والخطأ و الاسئلة المقالية مع تحديد نسبة نجاح كل اختبار.',
     'contact whatsapp' => 'تواصل معنا عبر الوتساب',
+    'You will be included in each and every step in the project lifecycle, from the planning phase through the development and launching phases' => '',
 ];

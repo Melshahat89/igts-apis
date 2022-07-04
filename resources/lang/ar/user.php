@@ -40,4 +40,5 @@ return [
     'sub-specialization' => 'التخصص الثانوي',
     'other-specialization' => 'تخصص آخر',
     'sort' => 'الترتيب',
+    'Instructor' => '',
 ];

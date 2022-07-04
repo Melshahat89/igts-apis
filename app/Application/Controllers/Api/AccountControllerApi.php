@@ -19,9 +19,11 @@ use App\Application\Model\Transactions;
 use App\Application\Model\User;
 use App\Application\Repository\InterFaces\UserInterface;
 use App\Application\Requests\Admin\User\UpdateRequestUser;
+use App\Application\Transformers\CourseAnalysisTransformers;
 use App\Application\Transformers\CoursesTransformers;
 use App\Application\Transformers\MyCoursesTransformers;
 use App\Application\Transformers\QuizstudentsstatusTransformers;
+use App\Application\Transformers\TransactionsTransformers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -201,14 +203,82 @@ class AccountControllerApi extends Controller
     }
 
     public function generalSettings(Request $request){
-
         return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
+    }
 
+    public function getGeneralSettings(){
+        $data = [
+            'learning_reminders' => '1',
+            'download_wifi_only'=>'1',
+            'download_to_sd'=>'1',
+            'video_download_quality'=>'720',
+            'notification_course_related'=>'1',
+            'notification_learning_reminders'=>'1'
+        ];
+        return response(apiReturn($data, '', ''), 200);
     }
 
     public function recommendedTopics(Request $request){
 
+        $validator = Validator::make($request->all(), [
+            'Category' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $user = Auth::guard('api')->user();
+        $user->categories = json_encode($request->Category);
+        $user->save();
+
         return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
+
+    }
+    public function getRecommendedTopics(){
+        $categories = json_decode(Auth::guard('api')->user()->categories);
+        return response(apiReturn($categories, '', ''), 200);
+
+    }
+    public function instructorDashboard(Request $request){
+        $user = Auth::guard('api')->user();
+        if ($user->group_id != User::TYPE_INSTRUCTOR) {
+            return response(apiReturn('', '', trans('website.You do not have permission'),), 403);
+        }
+        $this->data['enrolledStudents'] = $user->EnrolledCountStudents;
+        $this->data['totalRevenue'] =  $user->transactionsInstructorAll->sum('amount');
+        $this->data['instructorCourses'] =  count($user->instructorCourses);
+        $this->data['InstructorRating'] =  $user->InstructorRating;
+
+//        $this->data['Affiliate1Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE1)->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+//        $this->data['Affiliate2Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE2)->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+//        $this->data['Affiliate3Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE3)->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+//        $this->data['Affiliate4Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE4)->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+        $this->data['myCourses'] = CourseAnalysisTransformers::transform(Courses::where('instructor_id',$user->id)->get()) ;
+        $Transactions = Transactions::where('user_id', $user->id)->where('price', '>', 0)->where('amount', '>', 0)->get();
+        $this->data['transactions'] = TransactionsTransformers::transform($Transactions);
+
+        if($request->has('from') && $request->has('to')){
+            $this->data['from'] = $from = $request->get('from');
+            $this->data['to'] = $to = $request->get('to');
+            $enrolledStudentsSum = 0;
+            $instructorCourses = $user->instructorCourses;
+
+            foreach($instructorCourses as $course){
+                $enrolledStudentsSum += Transactions::where('courses_id', $course->id)->where('user_id', $user->id)->where('price', '>', 0)->whereBetween('date', [$from, $to])->count();
+            }
+
+            $this->data['enrolledStudents'] = $enrolledStudentsSum;
+            $this->data['totalRevenue'] = $user->transactionsInstructorAll->filter(function($item) use($from, $to) {
+                if($item->date >= $from && $item->date <= $to){
+                    return $item;
+                }
+            })->sum('amount');
+//            $this->data['Affiliate1Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE1)->whereBetween('date', [$from, $to])->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+//            $this->data['Affiliate2Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE2)->whereBetween('date', [$from, $to])->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+//            $this->data['Affiliate3Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE3)->whereBetween('date', [$from, $to])->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+//            $this->data['Affiliate4Courses']= Transactions::where('user_id',$user->id)->where('type',Transactions::AFFILIATE4)->whereBetween('date', [$from, $to])->selectRaw('sum(amount) sumAmount,courses_id')->groupBy('courses_id')->get();
+
+        }
+        return response(apiReturn($this->data, '', ''), 200);
 
     }
 

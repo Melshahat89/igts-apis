@@ -206,5 +206,12 @@ return [
     'Sign in to join this webinar' => 'قم بتسجيل الدخول للاشتراك',
     'Best the first and type in your question in the box below' => 'كن الأول و اكتب سؤالك الآن في الاسفل',
     'add question' => 'اكتب سؤالك هنا',
-
+    'vdocipher_tag' => '',
+    'accreditation_text' => '',
+    'diplomas_discount' => '',
+    'masters_discount' => '',
+    'courses_discount' => '',
+    'bundles_discount' => '',
+    'bundle_discount' => '',
+    'seo_title' => '',
 ];

@@ -82,10 +82,7 @@ return [
     'UserType12' => 'SEO',
     'UserType13' => 'Customer Service',
     'UserType14' => 'HR',
-
     'Our Team' => 'فريقنا',
-
-
     'IGTS' => 'المجموعة الدولية لخدمات التدريب',
     'diplomas' => 'دبلومات',
     'courses' => 'دورات تدريبية',
@@ -100,7 +97,6 @@ return [
     'business management' => 'ادارة الاعمال',
     'child education' => 'تربية الأبناء',
     'specialities' => 'التخصصات',
-    'home' => 'الرئيسية',
     'blog' => 'المدونة',
     'webinar' => 'بث مباشر',
     'analysis' => 'الاحصائيات',
@@ -135,7 +131,6 @@ return [
     'pay now' => 'ادفع الآن',
     'wishlist' => 'قائمة الامنيات',
     'certificates' => 'شهادات اتمام دراسة',
-    
     'in courses' => 'بحث في الدورات: ',
     'in diplomas' => 'بحث في الدبلومات: ',
     'in masters' => 'بحث في الماجستير: ',
@@ -147,5 +142,7 @@ return [
     'Order_type_online' => 'اونلاين',
     'Order_type_offline' => 'اوفلاين',
     'accreditations' => 'الأعتمادات',
-
+    'MeduoHomeTitle' => '',
+    'MeduoHomeDescription' => '',
+    'MeduoHomeKeywords' => '',
 ];

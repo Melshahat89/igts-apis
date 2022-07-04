@@ -432,3 +432,10 @@
 //Route::post('careersresponses/add', 'CareersresponsesApi@add');
 //Route::post('careersresponses/update/{id}', 'CareersresponsesApi@update');
 //Route::get('careersresponses', 'CareersresponsesApi@index');
+
+#becomeinstructor
+Route::get('becomeinstructor/getById/{id}', 'BecomeinstructorApi@getById');
+Route::get('becomeinstructor/delete/{id}', 'BecomeinstructorApi@delete');
+Route::post('becomeinstructor/add', 'BecomeinstructorApi@add');
+Route::post('becomeinstructor/update/{id}', 'BecomeinstructorApi@update');
+Route::get('becomeinstructor', 'BecomeinstructorApi@index');

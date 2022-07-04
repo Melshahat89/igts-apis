@@ -95,7 +95,6 @@ return [
     'build_your_lms_desc_2' => 'Your platform will be built using the latest technolgoies and
     frameworks to insure a responsive and secure website',
     'contact_sales' => 'Contact Sales',
-
     'Business Services' => 'Business Services',
     'IGTS WEB SERVICES' => 'IGTS WEB SERVICES',
     'Build your own custom' => 'Build your own custom, feature-rich, secure LMS website with the latest technologies and get into business right away.',
@@ -107,7 +106,6 @@ return [
     'Easy Content Management Sub' => 'An easy-to-use CMS where you can customize your web pages, format your text and insert photos and videos',
     'Technical Support' => 'Technical Support',
     'Technical Support Sub' => 'A dedicated technical support agent will be assigned to you during your website launching phase',
-
     'Our Services' => 'Our Services',
     'Web Design' => 'Web Design',
     'Web Development' => 'Web Development',
@@ -190,13 +188,11 @@ return [
     'It provides social login with Facebook Google and Twitter for easy accessibilty.' => 'It provides social login with Facebook Google and Twitter for easy accessibilty.',
     'The website supports multi-currency and online payment integrations with multiple payment gateway providers, such as Visa & MasterCard, Fawry, Mobile Wallet.' => 'The website supports multi-currency and online payment integrations with multiple payment gateway providers, such as Visa & MasterCard, Fawry, Mobile Wallet.',
     'Meduos customers are able to choose from different subscription plan for each of their courses, such as monthly, yearly and life-time plans.' => 'Meduo\'s customers are able to choose from different subscription plan for each of their courses, such as monthly, yearly and life-time plans.',
-    'The users will be provided with certificate of completion upon passing the course exams.' => 'The users will be provided with certificate of completion upon passing the course exams.',
-    'The exams module is built to support MCQ and True/False questions with the ability set an exam timer and passing percentage of each exam.' => 'The exams module is built to support MCQ and True/False questions with the ability set an exam timer and passing percentage of each exam.',
     'Ihtiraf required an LMs platform where they can published their courses on' => 'Ihtiraf required an LMs platform where they can published their courses on',
     'Ihtirafs web design was the result of intensive research using the top LMS platforms as reference to come up with a design that is elgent, simple and responsive on all devices.' => 'Ihtiraf\'s web design was the result of intensive research using the top LMS platforms as reference to come up with a design that is elgent, simple and responsive on all devices.',
     'The website supports multi-currency and online payment integrations with multiple payment gateway providers.' => 'The website supports multi-currency and online payment integrations with multiple payment gateway providers.',
     'Ihtirafs customers are able to choose from different subscription plan for all of their courses, such as monthly and yearly plans.' => 'Ihtiraf\'s customers are able to choose from different subscription plan for all of their courses, such as monthly and yearly plans.',
     'The exams module is built to support MCQ, True/False and essay questions with the ability to set the passing percentage and the mark of each question.' => 'The exams module is built to support MCQ, True/False and essay questions with the ability to set the passing percentage and the mark of each question.',
     'contact whatsapp' => 'Contact Us On WhatsApp',
-
+    'You will be included in each and every step in the project lifecycle, from the planning phase throught the development and launching phases' => '',
 ];

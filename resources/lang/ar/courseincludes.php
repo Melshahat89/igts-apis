@@ -6,4 +6,5 @@ return [
     'edit' => '',
     'show' => '',
     'delete' => '',
+    'events' => '',
 ];

@@ -40,4 +40,5 @@ return [
     'sub-specialization' => 'Sub-Specialization',
     'other-specialization' => 'Other Specialization',
     'sort' => 'Sort',
+    'Instructor' => '',
 ];
