@@ -41,6 +41,13 @@ Route::middleware("localization")->group(function () {
             Route::post('exam', 'CoursesApi@exam');
             Route::post('examResult', 'CoursesApi@examResult');
 
+            Route::prefix('course')->group(function () {
+                Route::post('/addNotes', 'CoursesApi@addNotes');
+                Route::post('/deleteNotes', 'CoursesApi@deleteNotes');
+            });
+
+
+
 
             Route::prefix('account')->group(function () {
                 Route::post('/myExams', 'AccountControllerApi@myExams');
@@ -49,7 +56,10 @@ Route::middleware("localization")->group(function () {
                 Route::post('/readAllNotifications', 'AccountControllerApi@readAllNotifications');
                 Route::post('/notificationsCount', 'AccountControllerApi@notificationsCount');
                 Route::post('/generalSettings', 'AccountControllerApi@generalSettings');
+                Route::get('/getGeneralSettings', 'AccountControllerApi@getGeneralSettings');
                 Route::post('/recommendedTopics', 'AccountControllerApi@recommendedTopics');
+                Route::get('/getRecommendedTopics', 'AccountControllerApi@getRecommendedTopics');
+                Route::get('/instructorDashboard', 'AccountControllerApi@instructorDashboard');
             });
         });
 
@@ -78,7 +88,6 @@ Route::middleware("localization")->group(function () {
             Route::post('/addReview', 'CoursesApi@addReview');
             Route::post('/addReport', 'CoursesApi@addReport');
             Route::post('/notes', 'CoursesApi@notes');
-            Route::post('/addNotes', 'CoursesApi@addNotes');
         });
 
 

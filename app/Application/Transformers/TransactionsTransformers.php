@@ -11,27 +11,13 @@ class TransactionsTransformers extends AbstractTransformer
     {
         return [
             "id" => $modelOrCollection->id,
+            "course_title" => $modelOrCollection->courses['title_lang'],
 			"price" => $modelOrCollection->price,
 			"currency" => $modelOrCollection->currency,
 			"percent" => $modelOrCollection->percent,
 			"amount" => $modelOrCollection->amount,
 			"type" => $modelOrCollection->type,
 			"date" => $modelOrCollection->date,
-
-        ];
-    }
-
-    public function transformModelAr(Model $modelOrCollection)
-    {
-        return [
-           "id" => $modelOrCollection->id,
-			"price" => $modelOrCollection->price,
-			"currency" => $modelOrCollection->currency,
-			"percent" => $modelOrCollection->percent,
-			"amount" => $modelOrCollection->amount,
-			"type" => $modelOrCollection->type,
-			"date" => $modelOrCollection->date,
-
         ];
     }
 

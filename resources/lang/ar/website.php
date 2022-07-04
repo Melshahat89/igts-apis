@@ -361,4 +361,5 @@ return [
     'Our mobile application is coming soon' => 'انتظروا تطبيقنا على الهاتف',
     'All' => 'الكل',
     'No Data Found' => 'لا يوجد بيانات',
+    'You do not have permission' => 'لا تملك صلاحية للوصول',
 ];

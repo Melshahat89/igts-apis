@@ -1,5 +1,6 @@
 <?php
 namespace App\Application\Model;
+use App\Application\Transformers\CourselecturesTransformers;
 use App\Application\Transformers\CourseTransformers;
 use App\Application\Transformers\SimpleCourseTransformers;
 use Illuminate\Database\Eloquent\Model;
@@ -1020,5 +1021,10 @@ class Courses extends Model
         $filtered = $this->courserelated->pluck('related_course_id');
         $courses = $this->whereIn('id',$filtered)->limit(3)->get();
         return SimpleCourseTransformers::transform($courses);
+    }
+
+    public function getLectureFreeAttribute(){
+        $lecture = Courselectures::where('courses_id',$this->id)->where('is_free',1)->first();
+        return $lecture ? CourselecturesTransformers::transform($lecture) : null;
     }
 }

@@ -339,6 +339,40 @@ class CoursesApi extends Controller
             return response(apiReturn('', '', trans('website.No Data Found')), 401);
         }
     }
+    public function deleteNotes(Request $request){
+        $validator = Validator::make($request->all(), [
+            'note_id' => 'required|int|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+
+        $note = Coursenotes::where('user_id',Auth::guard('api')->user()->id)->find($request->note_id);
+
+        if($note){
+            $delete = $note->delete();
+            if($delete){
+                return response(apiReturn(trans('messages.deleteMessageSuccess'), '', ''), 200);
+            }
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+
+
+
+
+        $Coursenotes= Coursenotes::create([
+            'courses_id' => $request->course_id,
+            'user_id' => Auth::guard('api')->user()->id,
+            'notes' => $request->notes,
+        ]);
+
+        if($Coursenotes){
+            return response(apiReturn(trans('website.Your note has been added successfully'), '', ''), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+    }
 
 
     public function exam(Request $request){

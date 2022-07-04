@@ -361,4 +361,5 @@ return [
     'Our mobile application is coming soon' => 'Our mobile application is coming soon',
     'All' => 'All',
     'No Data Found' => 'No Data Found',
+    'You do not have permission' => 'You do not have permission',
 ];
