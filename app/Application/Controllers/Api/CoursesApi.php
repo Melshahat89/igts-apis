@@ -532,6 +532,15 @@ class CoursesApi extends Controller
 
 
         if($isPassed == 1 || $alreadyPassed){
+
+            $studentExam->status = 4;
+            $studentExam->end_time = time();
+            $studentExam->passed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+            $studentExam->save();
+
+
+
+
             $certificate = $studentExam->certificate;
             if(!$certificate){
 //                $certificate = Quizstudentsstatus::generateCertificate($exam->courses,Auth::guard('api')->user()->fullname,$studentExam->id);
