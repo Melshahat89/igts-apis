@@ -418,6 +418,7 @@ use Laravel\Passport\HasApiTokens;
                 'description' => 'This diploma targets basic legal information in general for all groups, whether they are law students or not',
                 'image' => '25495_1649936490.jpg',
                 'slug' => 'الدبلومة-القانونية-الشاملة',
+                'course_id' => 142,
                 'progress' => 80,
             ];
         }
