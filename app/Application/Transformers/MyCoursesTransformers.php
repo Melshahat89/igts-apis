@@ -37,6 +37,7 @@ class MyCoursesTransformers extends AbstractTransformer
             "courseCountRating" => $modelOrCollection['courses']->CourseCountRating,
             "priceBase" => $modelOrCollection['courses']->PriceBase,
             "progress" => $modelOrCollection['courses']->CourseProgress,
+            "courseLectures" => $modelOrCollection['courses']->CourseCountLectures,
         ];
     }
 }
