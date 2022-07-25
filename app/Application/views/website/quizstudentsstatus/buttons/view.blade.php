@@ -1,3 +1,0 @@
-<a href="{{ url('quizstudentsstatus/'.$id.'/view') }}" class="btn btn-warning">
-    <i class="fa fa-eye"></i>
-</a>

@@ -129,7 +129,9 @@ class AccountControllerApi extends Controller
 
         if(request()->hasfile('image') && request()->file('image') != ''){
             $file = request()->file('image');
-            $name= $file->getClientOriginalName();
+            // $name= $file->getClientOriginalName();
+           $extension = $file->getClientOriginalExtension();
+            $name = rand(11111,99999).'_'.time().'.'.$extension;
             $file->move(env('SAVE_IMAGE').'/', $name);
             $user->image = $name;
         }
@@ -241,7 +243,7 @@ class AccountControllerApi extends Controller
     public function instructorDashboard(Request $request){
         $user = Auth::guard('api')->user();
         if ($user->group_id != User::TYPE_INSTRUCTOR) {
-            return response(apiReturn('', '', trans('website.You do not have permission'),), 403);
+            return response(apiReturn('', '', trans('website.You do not have permission')), 403);
         }
         $this->data['enrolledStudents'] = $user->EnrolledCountStudents;
         $this->data['totalRevenue'] =  $user->transactionsInstructorAll->sum('amount');

@@ -17,7 +17,7 @@ Route::any('site/FawryConfirmationCallback' , 'PaymentsApi@actionFawryConfirmati
 
 Route::middleware("localization")->group(function () {
     Route::group(array('prefix' => 'v1'), function () {
-
+        Route::post('test', 'HomeApi@test');
         Route::prefix('auth')->group(function () {
             Route::post('/register', 'AuthControllerApi@register');
             Route::post('/login', 'AuthControllerApi@login');

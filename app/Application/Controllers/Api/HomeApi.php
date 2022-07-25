@@ -118,4 +118,10 @@ class HomeApi extends Controller
         return response(apiReturn('', '', 'No Data Found'), 200);
     }
 
+    public function test(Request $request){
+
+        dd(auth()->guard('api')->user());
+       dd(342);
+    }
+
 }
