@@ -3,6 +3,10 @@ function getFileFieldsName()
 {
     return fileFields() + getImageFields();
 }
+function allowExtentions()
+{
+    return array_merge(allowExtentionsFiles() , allowExtentionsImage());
+}
 
 function fileFields()
 {
@@ -132,17 +136,30 @@ function checkIfFiledFile($array)
 
 function convertToImage($input)
 {
+
     if (!is_array($input)) {
         $input = [$input];
     }
     $array = [];
     foreach ($input as $in) {
+//        dd($in);
         if ($in != '') {
             $image = $in;
-            $image = base64_decode($image);
-            $NewName = str_random(10) . rand(0, 10);
-            file_put_contents(public_path(env('UPLOAD_PATH_1')) . '/' . $NewName . '.jpg', $image);
-            $array[] = $NewName . '.jpg';
+//            $image = base64_decode($image);
+//            $NewName = str_random(10) . rand(0, 10);
+//            file_put_contents(public_path(env('UPLOAD_PATH_1')) . '/' . $NewName . '.jpg', $image);
+
+
+            $extension = $image->getClientOriginalExtension();
+            if(in_array($extension , allowExtentions())){
+                $name = rand(11111,99999).'_'.time().'.'.$extension;
+                $image->move(env('SAVE_IMAGE').'/', $name);
+//            $user->image = $name;
+
+//            $array[] = $NewName . '.jpg';
+                $array[] = $name;
+            }
+
         }
     }
     return $array;

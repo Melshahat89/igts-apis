@@ -1,3 +1,7 @@
+ # Handle Authorization Header
+ RewriteCond %{HTTP:Authorization} .
+ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -Indexes
@@ -8,7 +12,7 @@
         
         # Force Redirect Https 
         RewriteCond %{HTTPS} !=on
-        RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE] 
+        RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 
     </IfModule>
 

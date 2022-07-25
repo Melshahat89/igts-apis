@@ -1,1 +1,0 @@
-{{usersTypes()[$group_id]}}
