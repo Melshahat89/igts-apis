@@ -148,7 +148,6 @@ function convertToImage($input)
 //            $image = base64_decode($image);
 //            $NewName = str_random(10) . rand(0, 10);
 //            file_put_contents(public_path(env('UPLOAD_PATH_1')) . '/' . $NewName . '.jpg', $image);
-            
 
             $extension = $image->getClientOriginalExtension();
             if(in_array($extension , allowExtentions())){

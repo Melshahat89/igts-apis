@@ -129,8 +129,10 @@ class AccountControllerApi extends Controller
 
         if(request()->hasfile('image') && request()->file('image') != ''){
             $file = request()->file('image');
-            // $name= $file->getClientOriginalName();
-           $extension = $file->getClientOriginalExtension();
+
+
+//            $name= $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
             $name = rand(11111,99999).'_'.time().'.'.$extension;
             $file->move(env('SAVE_IMAGE').'/', $name);
             $user->image = $name;
