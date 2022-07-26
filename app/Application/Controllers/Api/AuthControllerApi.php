@@ -65,26 +65,6 @@ class AuthControllerApi extends Controller
     }
     public function login(Request $request){
         $this->validatorLogin($request->all())->validate();
-
-        $credentials = [
-            'email' => 'admin@gmail.com',
-            'banned' => 0,
-            'password' => '111111'
-        ];
-//
-//        if (Auth::guard('web')->attempt($credentials)) {
-//            return ['result' => 'ok'];
-//        }
-
-
-//
-//        if(Auth::guard('api')->attempt(['email' => request('email'), 'password' => request('password'), 'banned' => 0])) {
-//            $user = Auth::guard('api')->user();
-//        }
-////dd(Auth::check(['email' => $email, 'password' => $password]));
-//        dd($user);
-
-
         if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'banned' => 0])){
             $user = Auth::user();
             if ($user) {
