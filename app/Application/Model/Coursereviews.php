@@ -19,6 +19,6 @@
      'courses_id',
    'user_id',
         'review','rating','type','manual_name','manual_image',
-         'is_report'
+         'is_report','show_app'
    ];
   }

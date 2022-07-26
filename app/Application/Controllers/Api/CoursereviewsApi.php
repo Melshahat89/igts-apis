@@ -21,6 +21,16 @@ class CoursereviewsApi extends Controller
         /// $this->middleware('authApi')->only();
     }
 
+    public function index()
+    {
+        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
+        $data = $this->model->where('show_app',1)->orderBy('id' , 'desc')->paginate($limit);
+        if ($data) {
+            return $this->checkLanguageBeforeReturn($data , 200 , $this->paginateArray($data));
+        }
+        return response(apiReturn('', '', 'No Data Found'), 200);
+    }
+
     public function add(ApiAddRequestCoursereviews $validation){
          return $this->addItem($validation);
     }
@@ -31,9 +41,6 @@ class CoursereviewsApi extends Controller
 
     protected function checkLanguageBeforeReturn($data , $status_code = 200, $paginate = [])
     {
-       if (request()->has('lang') && request()->get('lang') == 'ar') {
-            return response(apiReturn(array_values(CoursereviewsTransformers::transformAr($data) + $paginate)), $status_code);
-        }
         return response(apiReturn(array_values(CoursereviewsTransformers::transform($data) + $paginate)), $status_code);
     }
 
