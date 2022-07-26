@@ -2,6 +2,7 @@
 
 namespace App\Application\Transformers;
 
+use App\Application\Model\Coursereviews;
 use Illuminate\Database\Eloquent\Model;
 
 class CoursereviewsTransformers extends AbstractTransformer
@@ -14,8 +15,8 @@ class CoursereviewsTransformers extends AbstractTransformer
 			"review" => $modelOrCollection->review,
 			"rating" => $modelOrCollection->rating,
 			"type" => $modelOrCollection->type,
-			"manual_name" => $modelOrCollection->manual_name,
-			"manual_image" => $modelOrCollection->manual_image,
+			"manual_name" => (($modelOrCollection->type == Coursereviews::TYPE_DYNAMIC) && isset($modelOrCollection->user)) ? $modelOrCollection->user['name']:$modelOrCollection->manual_name,
+			"manual_image" => (($modelOrCollection->type == Coursereviews::TYPE_DYNAMIC) && isset($modelOrCollection->user)) ? $modelOrCollection->user['image']:$modelOrCollection->manual_image,
 
         ];
     }
