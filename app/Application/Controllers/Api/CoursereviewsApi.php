@@ -25,9 +25,14 @@ class CoursereviewsApi extends Controller
     {
         $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
         $data = $this->model->where('show_app',1)->orderBy('id' , 'desc')->paginate($limit);
-        if ($data) {
-            return $this->checkLanguageBeforeReturn($data , 200 , $this->paginateArray($data));
+
+
+        if ($data AND count($data) > 0) {
+            return response(apiReturn(['items' => array_values(CoursereviewsTransformers::transform($data))] + $this->paginateArray($data)), 200);
         }
+//        if ($data) {
+//            return $this->checkLanguageBeforeReturn($data , 200 , $this->paginateArray($data));
+//        }
         return response(apiReturn('', '', 'No Data Found'), 200);
     }
 
