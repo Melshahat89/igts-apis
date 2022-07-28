@@ -152,7 +152,7 @@ class AccountControllerApi extends Controller
     public function getAllNotifications(){
         $userId = Auth::guard('api')->user()->id;
         $factory = (new Factory)
-            ->withServiceAccount(__DIR__.'/../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+            ->withServiceAccount(__DIR__.'/../../../../storage/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
             ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
         $database = $factory->createDatabase();
         $reference = $database->getReference('notifications/'.$userId);
