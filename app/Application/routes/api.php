@@ -37,7 +37,7 @@ Route::middleware("localization")->group(function () {
             Route::post('toggleFavourite', 'UserApi@toggleFavourite');
             Route::post('myLearning', 'AccountControllerApi@myLearning');
             Route::get('myCertifications', 'AccountControllerApi@myCertifications');
-
+            Route::get('checkoutApi', 'HomeApi@checkoutApi');
             Route::post('exam', 'CoursesApi@exam');
             Route::post('examResult', 'CoursesApi@examResult');
 

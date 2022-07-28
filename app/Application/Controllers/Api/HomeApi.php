@@ -14,6 +14,7 @@ use App\Application\Requests\Website\Homesettings\ApiUpdateRequestHomesettings;
 use App\Application\Transformers\PartnersTransformers;
 use App\Application\Transformers\QuizstudentsstatusTransformers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class HomeApi extends Controller
@@ -122,6 +123,16 @@ class HomeApi extends Controller
 
         dd(auth()->guard('api')->user());
        dd(342);
+    }
+
+    public function checkoutApi(Request $request){
+
+        $user = Auth::guard('api')->user();
+        Auth::guard()->login($user);
+//        dd($user);
+        return response(apiReturn(['url'=>'https://igtsservice.com/cart'], '', ''), 200);
+
+//        return redirect('site/payments');
     }
 
 }

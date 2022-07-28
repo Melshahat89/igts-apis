@@ -100,6 +100,3 @@ Route::get('directpay', 'HomeController@directPay');
 Route::get('directpay/{id}', 'HomeController@directPay2');
 
 Route::get('allcourses/category/{slug?}', 'CoursesController@allCourses');
-
-
-Route::get('api/v1/checkoutApi', 'HomeController@checkoutApi');
