@@ -122,14 +122,17 @@ class HomeApi extends Controller
     public function test(Request $request){
 
         dd(auth()->guard('api')->user());
-       dd(342);
+//       dd(342);
     }
 
     public function checkoutApi(Request $request){
 
         $user = Auth::guard('api')->user();
         Auth::guard()->login($user);
-//        dd($user);
+//        dd($user->token);
+
+        $request->headers->set('Authorization', `Bearer $request->cookie('accessToken')`);
+
         return response(apiReturn(['url'=>'https://igtsservice.com/cart'], '', ''), 200);
 
 //        return redirect('site/payments');

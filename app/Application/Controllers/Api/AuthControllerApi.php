@@ -3,9 +3,13 @@
 namespace App\Application\Controllers\Api;
 
 use App\Application\Controllers\Controller;
+use App\Application\Model\Businessdata;
+use App\Application\Model\Businessdomains;
+use App\Application\Model\Social;
 use App\Application\Model\User;
 use App\Application\Transformers\InstructorsTransformers;
 use App\Application\Transformers\UserTransformers;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -46,21 +50,21 @@ class AuthControllerApi extends Controller
         if ($validator->fails()) {
             return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
         }
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'mobile' => $request->mobile,
-                'password' =>  bcrypt($request->password),
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'password' =>  bcrypt($request->password),
 //                'categories' => $request->categories,
-                'group_id' => env('DEFAULT_GROUP'),
-                'activated' => env('DEFAULT_activated'),
-                'businessdata_id' => isset($request->businessdata_id) ?$request->businessdata_id:null,
-            ]);
+            'group_id' => env('DEFAULT_GROUP'),
+            'activated' => env('DEFAULT_activated'),
+            'businessdata_id' => isset($request->businessdata_id) ?$request->businessdata_id:null,
+        ]);
         $user = User::find($user->id);
         if($user){
 //            $user = Auth::user();
             Auth::login($user);
-                return response(apiReturn((UserTransformers::transform($user))), 200);
+            return response(apiReturn((UserTransformers::transform($user))), 200);
         }
     }
     public function login(Request $request){
@@ -75,6 +79,89 @@ class AuthControllerApi extends Controller
             return response(apiReturn('', '', 'Unauthorised'), 200);
         }
     }
+
+    public function callback(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'identifier' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()],'error', ['error'=>$validator->errors()] ), 401);
+        }
+
+        $user = User::where('facebook_identifier',$request->identifier)->first();
+
+//        $user = User::whereEmail($fbuser->getEmail())->first();
+        if ($user){
+            auth()->login($user);
+            return response(apiReturn((UserTransformers::transform($user))), 200);
+        }else{
+
+            $account = new Social([
+                'identifier' => $request->identifier,
+                'provider' => $request->provider,
+                'token' => $request->token
+            ]);
+
+            $user = User::whereEmail($request->email)->first();
+
+            if (!$user) {
+                $time = Carbon::now()->timestamp;
+
+                if ($request->email) {
+                    // check if partnership
+                    if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+                        $list = list($user, $domain) = explode('@', $request->email);
+                        $businessdomains =     Businessdomains::where('status', 1)->where('domainname', '=', $domain)->first();
+                        if ($businessdomains) {
+                            $businessdata = Businessdata::where('status', 1)->find($businessdomains->businessdata_id);
+                            if ($businessdata) {
+                                $businessdata_id = $businessdata->id;
+                            }
+                        }
+                    }
+                }
+                $user = new User();
+                //$user->name = $request->email ? $request->email : str_slug($request->name, '-') . $time;
+                $user->name = ($request->name) ? $request->name : $request->email;
+                $user->email = $request->email ? $request->email : $request->provider . rand(000, 999) . '@example.com';
+                $user->first_name = json_encode([
+                    'en' => (App::isLocale('en')) ? $request->name : '',
+                    'ar' => (App::isLocale('ar')) ? $request->name : ''
+                ], JSON_UNESCAPED_UNICODE);
+
+                $user->password = bcrypt($request->identifier . rand(000, 999));
+                $user->group_id = env('DEFAULT_GROUP');
+                $user->verified = env('DEFAULT_verified');
+                $user->activated = env('DEFAULT_activated');
+                $user->facebook_identifier = $request->identifier;
+                // $user->image = saveImageAvatar(str_replace('http://','https://',$fbuser->getAvatar()));
+                $user->businessdata_id = isset($businessdata_id) ? $businessdata_id : null;
+//                dd(23);
+
+                $user->save();
+//                dd($user);
+//                dd($account);
+                if($user){
+                    $account->user_id = $user->id;
+                    $account->save();
+
+
+                    Auth::login($user);
+                    return response(apiReturn((UserTransformers::transform($user))), 200);
+                }
+            }
+
+            auth()->login($user);
+            return response(apiReturn((UserTransformers::transform($user))), 200);
+
+        }
+    }
+
+
+
+
+
     public function forgotPassword(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
@@ -383,10 +470,10 @@ class AuthControllerApi extends Controller
                     ]);
                 }else{
                     $user->forceFill([
-                            'password' => Hash::make($request->password)
-                        ])->setRememberToken(Str::random(60));
-                        $user->save();
-                        event(new PasswordReset($user));
+                        'password' => Hash::make($request->password)
+                    ])->setRememberToken(Str::random(60));
+                    $user->save();
+                    event(new PasswordReset($user));
                 }
 
 

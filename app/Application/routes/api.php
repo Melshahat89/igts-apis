@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\Application\Controllers\Website\SocialController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,6 +21,7 @@ Route::middleware("localization")->group(function () {
         Route::prefix('auth')->group(function () {
             Route::post('/register', 'AuthControllerApi@register');
             Route::post('/login', 'AuthControllerApi@login');
+            Route::post('login-social', 'AuthControllerApi@callback');
             Route::post('/forgotPassword',  'AuthControllerApi@forgotPassword');
             Route::post('/confirm', 'AuthControllerApi@confirm');
             Route::post('/resetPasswordRequest', 'AuthControllerApi@resetPasswordRequest');
@@ -93,6 +94,9 @@ Route::middleware("localization")->group(function () {
             Route::post('/notes', 'CoursesApi@notes');
         });
 
+        ######### SocialController #########
+//        Route::get('social/redirect/{service}', [SocialController::class, 'redirect']);
+//        Route::get('social/callback/{service}', [SocialController::class, 'callback']);
 
 
 
