@@ -69,19 +69,19 @@ class HomeApi extends Controller
                     'name' => 'Become',
                     'title' => 'an instructor',
                     'link' => 'https://igtsservice.com/joinAsInstructor',
-                    'image' => 'https://igtsservice.com/public/website/images/joininstructor3.jpg',
+                    'image' => 'https://igtsservice.com/website/images/joininstructor3.jpg',
                 ],
                 [
                     'name' => 'ًWork',
                     'title' => 'with us',
                     'link' => 'https://igtsservice.com/en/careers',
-                    'image' => 'https://igtsservice.com/public/uploads/files/medium/41556_1651057576.jpg',
+                    'image' => 'https://igtsservice.com/uploads/files/medium/41556_1651057576.jpg',
                 ],
                 [
                     'name' => 'Our',
                     'title' => 'partners',
                     'link' => 'https://igtsservice.com/en/partners',
-                    'image' => 'https://igtsservice.com/public/uploads/files/medium/67995_1649936390.jpg',
+                    'image' => 'https://igtsservice.com/uploads/files/medium/67995_1649936390.jpg',
                 ],
 
         ]), 200);
