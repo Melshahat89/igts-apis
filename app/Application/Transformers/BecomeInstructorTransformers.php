@@ -17,7 +17,7 @@ class BecomeInstructorTransformers extends AbstractTransformer
 			"title" => $modelOrCollection->title,
 			"specialist" => $modelOrCollection->specialist,
 			"yourCourses" => $modelOrCollection->yourCourses,
-			"cv" => $modelOrCollection->cv,
+			"cv" => large($modelOrCollection->cv),
 			"socialAccount" => $modelOrCollection->socialAccount,
 
         ];

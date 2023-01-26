@@ -14,7 +14,7 @@ class TestimonialsTransformers extends AbstractTransformer
 			"name" => $modelOrCollection->{lang("name" , "en")},
 			"title" => $modelOrCollection->{lang("title" , "en")},
 			"message" => $modelOrCollection->{lang("message" , "en")},
-			"image" => $modelOrCollection->image,
+			"image" => large($modelOrCollection->image),
 
         ];
     }

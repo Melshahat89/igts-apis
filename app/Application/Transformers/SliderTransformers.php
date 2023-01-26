@@ -13,10 +13,10 @@ class SliderTransformers extends AbstractTransformer
             "id" => $modelOrCollection->id,
 			"title" => $modelOrCollection->{lang("title" , "en")},
 			"description" => $modelOrCollection->{lang("description" , "en")},
-			"image_m_ar" => $modelOrCollection->image_m_ar,
-			"image_m_en" => $modelOrCollection->image_m_en,
-			"image_d_ar" => $modelOrCollection->image_d_ar,
-			"image_d_en" => $modelOrCollection->image_d_en,
+			"image_m_ar" => large($modelOrCollection->image_m_ar),
+			"image_m_en" => large($modelOrCollection->image_m_en),
+			"image_d_ar" => large($modelOrCollection->image_d_ar),
+			"image_d_en" => large($modelOrCollection->image_d_en),
 			"status" => $modelOrCollection->status,
 
         ];

@@ -25,10 +25,10 @@ class TalksTransformers extends AbstractTransformer
 			"doctor_name" => $modelOrCollection->{lang("doctor_name" , "en")},
 			"seo_desc[]" => $modelOrCollection->{lang("seo_desc[]" , "en")},
 			"seo_keys[]" => $modelOrCollection->{lang("seo_keys[]" , "en")},
-			"search_keys[]" => $modelOrCollection->search_keys[],
-			"image" => $modelOrCollection->image,
-			"promoPoster" => $modelOrCollection->promoPoster,
-			"cover" => $modelOrCollection->cover,
+			"search_keys[]" => $modelOrCollection->search_keys,
+			"image" => large($modelOrCollection->image),
+			"promoPoster" => large($modelOrCollection->promoPoster),
+			"cover" => large($modelOrCollection->cover),
 
         ];
     }
@@ -51,7 +51,7 @@ class TalksTransformers extends AbstractTransformer
 			"doctor_name" => $modelOrCollection->{lang("doctor_name" , "ar")},
 			"seo_desc[]" => $modelOrCollection->{lang("seo_desc[]" , "ar")},
 			"seo_keys[]" => $modelOrCollection->{lang("seo_keys[]" , "ar")},
-			"search_keys[]" => $modelOrCollection->search_keys[],
+			"search_keys[]" => $modelOrCollection->search_keys,
 			"image" => $modelOrCollection->image,
 			"promoPoster" => $modelOrCollection->promoPoster,
 			"cover" => $modelOrCollection->cover,

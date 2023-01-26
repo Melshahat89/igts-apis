@@ -14,7 +14,7 @@ class CareersresponsesTransformers extends AbstractTransformer
 			"name" => $modelOrCollection->name,
 			"email" => $modelOrCollection->email,
 			"mobile" => $modelOrCollection->mobile,
-			"file" => $modelOrCollection->file,
+			"file" => large($modelOrCollection->file),
 
         ];
     }

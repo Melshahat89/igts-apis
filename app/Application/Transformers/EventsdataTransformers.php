@@ -13,7 +13,7 @@ class EventsdataTransformers extends AbstractTransformer
             "id" => $modelOrCollection->id,
 			"name" => $modelOrCollection->{lang("name" , "en")},
 			"email" => $modelOrCollection->email,
-			"logo" => $modelOrCollection->logo,
+			"logo" => large($modelOrCollection->logo),
 			"website" => $modelOrCollection->website,
 			"about" => $modelOrCollection->{lang("about" , "en")},
 			"status" => $modelOrCollection->status,

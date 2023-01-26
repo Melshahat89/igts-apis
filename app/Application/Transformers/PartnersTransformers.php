@@ -13,7 +13,7 @@ class PartnersTransformers extends AbstractTransformer
             "id" => $modelOrCollection->id,
 			"title" => $modelOrCollection->title_lang,
 			"description" => $modelOrCollection->description_lang,
-			"logo" => $modelOrCollection->logo,
+			"logo" => large($modelOrCollection->logo),
 
         ];
     }

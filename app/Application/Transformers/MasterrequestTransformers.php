@@ -16,7 +16,7 @@ class MasterrequestTransformers extends AbstractTransformer
 			"section" => $modelOrCollection->section,
 			"g_year" => $modelOrCollection->g_year,
 			"address" => $modelOrCollection->address,
-			"documentation[]" => $modelOrCollection->documentation[],
+			"documentation[]" => $modelOrCollection->documentation,
 
         ];
     }
@@ -30,7 +30,7 @@ class MasterrequestTransformers extends AbstractTransformer
 			"section" => $modelOrCollection->section,
 			"g_year" => $modelOrCollection->g_year,
 			"address" => $modelOrCollection->address,
-			"documentation[]" => $modelOrCollection->documentation[],
+			"documentation[]" => $modelOrCollection->documentation,
 
         ];
     }

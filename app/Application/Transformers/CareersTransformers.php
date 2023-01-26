@@ -13,7 +13,7 @@ class CareersTransformers extends AbstractTransformer
             "id" => $modelOrCollection->id,
 			"title" => $modelOrCollection->{lang("title" , "en")},
 			"description" => $modelOrCollection->{lang("description" , "en")},
-			"image" => $modelOrCollection->image,
+			"image" => large($modelOrCollection->image),
 
         ];
     }

@@ -15,8 +15,8 @@ class CoursereviewsTransformers extends AbstractTransformer
 			"review" => $modelOrCollection->review,
 			"rating" => $modelOrCollection->rating,
 			"type" => $modelOrCollection->type,
-			"manual_name" => (($modelOrCollection->type == Coursereviews::TYPE_DYNAMIC) && isset($modelOrCollection->user)) ? $modelOrCollection->user['name']:$modelOrCollection->manual_name,
-			"manual_image" => (($modelOrCollection->type == Coursereviews::TYPE_DYNAMIC) && isset($modelOrCollection->user)) ? $modelOrCollection->user['image']:$modelOrCollection->manual_image,
+			"manual_name" => (($modelOrCollection->type == Coursereviews::TYPE_DYNAMIC) && isset($modelOrCollection->user)) ? $modelOrCollection->user['name']:large($modelOrCollection->manual_name),
+			"manual_image" => (($modelOrCollection->type == Coursereviews::TYPE_DYNAMIC) && isset($modelOrCollection->user)) ? $modelOrCollection->user['image']:large($modelOrCollection->manual_image),
 
         ];
     }

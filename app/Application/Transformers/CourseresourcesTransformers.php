@@ -12,7 +12,7 @@ class CourseresourcesTransformers extends AbstractTransformer
         return [
             "id" => $modelOrCollection->id,
 			"title" => $modelOrCollection->title_lang,
-			"file" => $modelOrCollection->file,
+			"file" => large($modelOrCollection->file),
 
         ];
     }

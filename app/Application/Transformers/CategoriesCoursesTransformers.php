@@ -19,9 +19,9 @@ class CategoriesCoursesTransformers extends AbstractTransformer
 			"status" => $modelOrCollection->status,
 			"show_home" => $modelOrCollection->show_home,
 			"show_menu" => $modelOrCollection->show_menu,
-			"m_image" => $modelOrCollection->m_image,
-			"d_image" => $modelOrCollection->d_image,
-			"image" => $modelOrCollection->image,
+			"m_image" => large($modelOrCollection->m_image),
+			"d_image" => large($modelOrCollection->d_image),
+			"image" => large($modelOrCollection->image),
 			"courses" => array_slice(CoursesTransformers::transform($modelOrCollection->courses->where('published',1)), 0, 5)
         ,
 
