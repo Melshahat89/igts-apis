@@ -77,6 +77,11 @@ use Laravel\Passport\HasApiTokens;
         return $this->belongsTo(Businessdata::class, "businessdata_id");
     }
 
+        public function lastLecture()
+        {
+            return $this->belongsTo(Courselectures::class, "last_lecture_id");
+        }
+
 
     public function instructorCourses()
     {
@@ -190,7 +195,8 @@ use Laravel\Passport\HasApiTokens;
         'mobile', 'verified', 'activated', 'activation_code', 'activation_date', 'banned', 'hidden', 'first_name', 'last_name',
         'gender', 'birthdate', 'is_affiliate', 'affiliate_id', 'title', 'about', 'additional_info', 'description',
         'image', 'cover','instructorname',
-         'slug', 'specialization', 'sub_specialization', 'other_specialization', 'businessdata_id','facebook_identifier','sort','categories','otp'
+         'slug', 'specialization', 'sub_specialization', 'other_specialization', 'businessdata_id','facebook_identifier','sort','categories','otp',
+         'last_lecture_id'
     ];
     protected $hidden = [
         'password', 'remember_token',
@@ -413,6 +419,19 @@ use Laravel\Passport\HasApiTokens;
 
         public function getLastcourseAttribute()
         {
+            if(Auth::user()->last_lecture_id){
+                $lastCourse = Courses::find($this->lastLecture->courses_id);
+                return [
+                    'title' => $lastCourse->title_lang,
+                    'description' => $lastCourse->description_lang,
+                    'image' => large($lastCourse->image),
+                    'slug' => $lastCourse->slug,
+                    'course_id' => $lastCourse->id,
+                    'progress' => 100,
+                ];
+
+            }
+
             return [
                 'title' => 'Comprehensive Legal Diploma',
                 'description' => 'This diploma targets basic legal information in general for all groups, whether they are law students or not',

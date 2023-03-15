@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 {
      public function transformModel(Model $modelOrCollection)
      {
+
+         $dateNow = date('Y-m-d H:i:s');
          return [
              'id' => $modelOrCollection->id,
 //             'slug' => $modelOrCollection->slug,
@@ -26,7 +28,9 @@ use Illuminate\Database\Eloquent\Model;
              'businessdata_id' => $modelOrCollection->businessdata_id,
              'facebook_identifier' => $modelOrCollection->facebook_identifier,
              'token' => $modelOrCollection->createToken('MyApp')->accessToken,
-             'enrolled_courses' => count($modelOrCollection->courseenrollment),
+             'enrolled_courses' => count($modelOrCollection->courseenrollment()->whereDate('start_time', '<=', $dateNow)
+                 ->whereDate('end_time', '>=', $dateNow)
+                 ->where('status', 1)->get()->toArray()),
              'last_course' => $modelOrCollection->lastcourse,
              'reviews' => $modelOrCollection->Userreviews,
              'cart_count' => $modelOrCollection->cartcount,

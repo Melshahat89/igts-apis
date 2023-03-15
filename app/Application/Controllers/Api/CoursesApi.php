@@ -165,8 +165,17 @@ class CoursesApi extends Controller
         if ($validator->fails()) {
             return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
         }
+
+
+
 //        $course = $this->model->where('id',$request->course_id)->first();
         $lecture = Courselectures::where('id',$request->lecture_id)->first();
+
+        if (Auth::guard('api')->check()){
+            $user = Auth::guard('api')->user();
+            $user->last_lecture_id = $request->lecture_id;
+            $user->save();
+        }
 
         if($lecture){
             return response(apiReturn(CourselectureTransformers::transform($lecture)), 200);
