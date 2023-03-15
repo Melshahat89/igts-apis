@@ -26,7 +26,7 @@ class CategoriesApi extends Controller
     public function index()
     {
 //        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
-        $data = $this->model->orderBy('id' , 'desc')->get();
+        $data = $this->model->orderBy('id' , 'asc')->get();
         if ($data) {
             return response(apiReturn(CategoriesTransformers::transform($data) ), 200);
         }
