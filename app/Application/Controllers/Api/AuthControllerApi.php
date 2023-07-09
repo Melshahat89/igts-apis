@@ -72,6 +72,7 @@ class AuthControllerApi extends Controller
         if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'banned' => 0])){
             $user = Auth::user();
             if ($user) {
+                Auth::logoutOtherDevices(request('password'));
                 return response(apiReturn((UserTransformers::transform($user))), 200);
             }
         }
