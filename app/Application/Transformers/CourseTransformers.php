@@ -52,6 +52,8 @@ class CourseTransformers extends AbstractTransformer
             "exam_id" => $modelOrCollection->quiz?$modelOrCollection->quiz['id']:null,
             "coursereviews" => $modelOrCollection->coursereviews ? CoursereviewsTransformers::transform($modelOrCollection->coursereviews) :null,
             "Lecture_free" => $modelOrCollection->LectureFree,
+            "created_at" => $modelOrCollection->created_at,
+            "updated_at" => $modelOrCollection->updated_at,
         ];
     }
 }
