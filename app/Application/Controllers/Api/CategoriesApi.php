@@ -52,7 +52,7 @@ class CategoriesApi extends Controller
 
     public function categoriesInHome(){
 //        $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
-        $data = Categories::where('status',1)->where('show_home',1)->orderBy('id' , 'desc')->get();
+        $data = Categories::where('status',1)->where('show_home',1)->orderBy('id' , 'asc')->get();
         if ($data) {
             return response(apiReturn(CategoriesCoursesTransformers::transform($data) ), 200);
         }

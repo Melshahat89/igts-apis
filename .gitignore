@@ -7,6 +7,24 @@
 node_modules/
 dist/
 
+public/uploads/files/*
+blog/*
+IGTS-Laravel-Old-Theme/*
+IGTS-Yii-Backup/*
+stage/*
+stage
+storage
+igts-apis
+error_log
+vendor/dompdf/*
+*.htaccess
+*.user.ini
+php.ini
+dev/*
+dev
+contactus
+vendor
+public/blog
 # Compiled Java class files
 *.class
 
@@ -16,8 +34,12 @@ dist/
 # Log files
 *.log
 
+# env files
+*.env
+
 # Package files
 *.jar
+*.zip
 
 # Maven
 target/
@@ -47,7 +69,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-*.htaccess
-*.env
-
