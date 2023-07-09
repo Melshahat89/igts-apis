@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
              'enrolledCountStudents' => $modelOrCollection->EnrolledCountStudents,
              'instructorRating' => $modelOrCollection->InstructorRating,
              'instructorCourses' => $modelOrCollection->instructorCourses ? CoursesTransformers::transform($modelOrCollection->instructorCourses) : null,
+             'instructorCoursesCount' => $modelOrCollection->instructorCourses ? count($modelOrCollection->instructorCourses) : null,
          ];
      }
  }
