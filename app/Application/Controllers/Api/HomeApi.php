@@ -55,12 +55,13 @@ class HomeApi extends Controller
     }
     public function topSearches(){
         return response(apiReturn([
-                'Sports',
-                'Courses',
-                'Nutrition',
+                'ادارة',
+                'تمريض',
+                'الطوارئ',
                 'تغذية',
-                'Obesity',
-                'السمنة',
+                'الصحه النفسيه',
+                'التسويق',
+                'الارشاد',
         ]), 200);
     }
     public function quickLinks(){
