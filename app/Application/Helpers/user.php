@@ -792,7 +792,7 @@ function hideIncludedCourses(){
     
     $now = date('Y-m-d');
     $courses = Courses::whereHas('courseenrollment', function($query) use ($now){
-        return $query->where('user_id',Auth::guard('api')->user()->id)->whereDate('start_time', '<=', $now)
+        return $query->where('user_id',Auth::user()->id)->whereDate('start_time', '<=', $now)
         ->whereDate('end_time', '>=', $now)
         ->where('status', 1)->with('courses');
     })->get();
