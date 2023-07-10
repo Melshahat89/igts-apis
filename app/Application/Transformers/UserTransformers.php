@@ -9,9 +9,6 @@ class UserTransformers extends AbstractTransformer
 {
      public function transformModel(Model $modelOrCollection)
      {
-
-         dd(Auth::user()->id);
-
          $dateNow = date('Y-m-d H:i:s');
          return [
              'id' => $modelOrCollection->id,
