@@ -56,16 +56,31 @@ class AccountControllerApi extends Controller
             ->whereDate('end_time', '>=', $now)
             ->where('status', 1);
 
-        if (request()->has("type") && request()->get("type") != "") {
-            $data = $data->whereHas('courses', function($q){
-                $q->where("type", "=", request()->get("type"));
-            });
-        }
-
         $data = $data->get();
 
+        foreach($data as $course){
+            foreach($course->courses->courseincludes as $courseincludes){
+                foreach($data as $key => $course2){
+                    if($courseincludes->includedCourse->id == $course2->courses->id){
+                        unset($data[$key]);
+                    }
+                }
+            }
+        }
+
+        if (request()->has("type") && request()->get("type") != "") {
+            foreach($data as $key => $courses){
+                if($courses->courses->type != request()->get("type")){
+                    unset($data[$key]);
+                }
+            }
+        }
+
+        $data = initPaginate($data, 8);
+
         if ($data) {
-            return response(apiReturn(MyCoursesTransformers::transform($data)), 200);
+            return response(apiReturn(['items' => array_values(MyCoursesTransformers::transform($data))] + $this->paginateArray($data)), 200);
+//            return response(apiReturn(MyCoursesTransformers::transform($data)), 200);
         }
         return response(apiReturn('', '', 'No Data Found'), 200);
     }
@@ -198,7 +213,7 @@ class AccountControllerApi extends Controller
         $database = $factory->createDatabase();
         $reference = $database->getReference('notifications/'.$userId)
 
-        ->orderByChild('is_read')
+            ->orderByChild('is_read')
             // returns all persons being exactly 1.98 (meters) tall
             ->equalTo(0)
             ->getSnapshot();
