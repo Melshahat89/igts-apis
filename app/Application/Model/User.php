@@ -421,14 +421,16 @@ use Laravel\Passport\HasApiTokens;
         {
             if(Auth::user()->last_lecture_id){
                 $lastCourse = Courses::find($this->lastLecture->courses_id);
-                return [
-                    'title' => $lastCourse->title_lang,
-                    'description' => $lastCourse->description_lang,
-                    'image' => large($lastCourse->image),
-                    'slug' => $lastCourse->slug,
-                    'course_id' => $lastCourse->id,
-                    'progress' => 100,
-                ];
+                if($lastCourse) {
+                    return [
+                        'title' => $lastCourse->title_lang ? $lastCourse->title_lang : '',
+                        'description' => $lastCourse->description_lang,
+                        'image' => large($lastCourse->image),
+                        'slug' => $lastCourse->slug,
+                        'course_id' => $lastCourse->id,
+                        'progress' => 100,
+                    ];
+                }
 
             }
 

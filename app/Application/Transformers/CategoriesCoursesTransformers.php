@@ -22,7 +22,7 @@ class CategoriesCoursesTransformers extends AbstractTransformer
 			"m_image" => large($modelOrCollection->m_image),
 			"d_image" => large($modelOrCollection->d_image),
 			"image" => large($modelOrCollection->image),
-			"courses" => array_slice(CoursesTransformers::transform($modelOrCollection->courses->where('published',1)->shuffle()), 0, 5)
+			"courses" => array_slice(CoursesTransformers::transform($modelOrCollection->courses->where('published',1)->whereNotIn('type', [5])->shuffle()), 0, 5)
         ,
 
         ];

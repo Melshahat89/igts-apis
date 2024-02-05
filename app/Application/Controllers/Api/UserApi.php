@@ -89,7 +89,7 @@ class UserApi extends Controller
 
     public function instructors(){
         $limit = request()->has('limit') &&  (int) request()->get('limit') != 0 && (int) request()->get('limit') < 30 ? request()->get('limit') : env('PAGINATE');
-        $data = $this->model->where('group_id',User::TYPE_INSTRUCTOR)->orderBy('id' , 'desc')->paginate($limit);
+        $data = $this->model->where('group_id',User::TYPE_INSTRUCTOR)->where('hidden', 0)->inRandomOrder()->paginate($limit);
 
         if ($data) {
 //            return response(apiReturn(array_values(InstructorsTransformers::transform($data) + $this->paginateArray($data))), 200);
