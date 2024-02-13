@@ -30,6 +30,7 @@ class CourseTransformers extends AbstractTransformer
 			"featured" => $modelOrCollection->featured,
 			"image" => large($modelOrCollection->image),
 			"promo_video" => $modelOrCollection->promo_video,
+			"promo_video_files" =>  Courses::getVimeoVideo( $modelOrCollection->promo_video),
 			"visits" => $modelOrCollection->visits,
 			"published" => $modelOrCollection->published,
 			"position" => $modelOrCollection->position,

@@ -842,6 +842,19 @@ class Courses extends Model
         $videosList = ($response['status'] == "200") ? $response['body'] : array();
         return ($videosList) ? $videosList['duration'] : array();
     }
+
+    public static function getVimeoVideo($id = null)
+    {
+        $client_secret = 'w8D3FUROgKkVrN1J31CQzAuA0MC0Dal8yTC1vXZZd19F9QFQrOBC9KdULCwKXSP4VMRjTjSPi2/eSL6cbG18DMu84xdq+wmYKYpkJEva/S2kBTimTMzgw5Yx/6m4dOcy';
+        $client_id = '45f3bdf1c9fbe7e1fff93e8d3134e873fa4c7465';
+        $lib = new \Vimeo\Vimeo($client_id, $client_secret);
+        $lib->setToken('260d07a1c526d4c05a0545e2cfd9453b');
+        //        $response = $lib->request('/me/videos', ['per_page' => 2], 'GET');
+        $response = $lib->request('/videos/' . $id, 'GET');
+
+        $videosList = ($response['status'] == "200") ? $response['body'] : array();
+        return ($videosList) ? $videosList : array();
+    }
     public static function getAllVimeoPromos()
     {
         $client_secret = 'w8D3FUROgKkVrN1J31CQzAuA0MC0Dal8yTC1vXZZd19F9QFQrOBC9KdULCwKXSP4VMRjTjSPi2/eSL6cbG18DMu84xdq+wmYKYpkJEva/S2kBTimTMzgw5Yx/6m4dOcy';

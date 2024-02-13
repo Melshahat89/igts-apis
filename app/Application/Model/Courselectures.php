@@ -31,7 +31,7 @@
       'user_id',
       'courses_id',
         'title','slug','description','video_file','length','is_free','position',
-        'vid_playbackInfo','vdocipher_id','start_date','webinar_link', 'event_id',
+        'vid_playbackInfo','vdocipher_id','start_date','webinar_link', 'event_id','video_type'
    ];
   public function getTitleLangAttribute(){
   return is_json($this->title) && is_object(json_decode($this->title)) ?  json_decode($this->title)->{app()->getLocale()}  : $this->title;
