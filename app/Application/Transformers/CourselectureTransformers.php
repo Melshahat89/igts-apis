@@ -19,7 +19,9 @@ class CourselectureTransformers extends AbstractTransformer
 			"video_file" => $modelOrCollection->video_file,
 			"vdocipher" =>  $response =  Courses::getVdoCipherOTP( $modelOrCollection->vdocipher_id),
 			"vdocipher_id" => $modelOrCollection->vdocipher_id,
+			"vimeoVideo" => Courses::getVimeoVideo( $modelOrCollection->video_file),
 			"courses_id" => $modelOrCollection->courses_id,
+			"video_type" => $modelOrCollection->video_type, //0= videocipher , 1= vimeo
         ];
     }
 
