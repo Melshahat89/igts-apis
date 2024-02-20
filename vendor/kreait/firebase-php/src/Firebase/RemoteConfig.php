@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase;
 
-use Kreait\Firebase\Exception\RemoteConfig\ValidationFailed;
+use Beste\Json;
 use Kreait\Firebase\Exception\RemoteConfig\VersionNotFound;
-use Kreait\Firebase\Exception\RemoteConfigException;
 use Kreait\Firebase\RemoteConfig\ApiClient;
 use Kreait\Firebase\RemoteConfig\FindVersions;
 use Kreait\Firebase\RemoteConfig\Template;
 use Kreait\Firebase\RemoteConfig\Version;
 use Kreait\Firebase\RemoteConfig\VersionNumber;
-use Kreait\Firebase\Util\JSON;
+use Psr\Http\Message\ResponseInterface;
+use Traversable;
+
+use function array_shift;
+use function is_string;
 
 /**
- * The Firebase Remote Config.
+ * @internal
  *
- * @see https://firebase.google.com/docs/remote-config/use-config-rest
- * @see https://firebase.google.com/docs/remote-config/rest-reference
+ * @phpstan-import-type RemoteConfigTemplateShape from Template
  */
-class RemoteConfig
+final class RemoteConfig implements Contract\RemoteConfig
 {
-    /** @var ApiClient */
-    private $client;
+    private ApiClient $client;
 
-    /**
-     * @internal
-     */
     public function __construct(ApiClient $client)
     {
         $this->client = $client;
@@ -35,51 +33,36 @@ class RemoteConfig
 
     public function get(): Template
     {
-        return Template::fromResponse($this->client->getTemplate());
+        return $this->buildTemplateFromResponse($this->client->getTemplate());
     }
 
-    /**
-     * Validates the given template without publishing it.
-     *
-     * @param Template|array $template
-     *
-     * @throws ValidationFailed if the validation failed
-     */
-    public function validate($template)
+    public function validate($template): void
     {
-        $template = $template instanceof Template ? $template : Template::fromArray($template);
-
-        $this->client->validateTemplate($template);
+        $this->client->validateTemplate($this->ensureTemplate($template));
     }
 
-    /**
-     * @param Template|array $template
-     *
-     * @throws RemoteConfigException
-     *
-     * @return string The etag value of the published template that can be compared to in later calls
-     */
     public function publish($template): string
     {
-        $template = $template instanceof Template ? $template : Template::fromArray($template);
+        $etag = $this->client
+            ->publishTemplate($this->ensureTemplate($template))
+            ->getHeader('ETag');
 
-        $etag = $this->client->publishTemplate($template)->getHeader('ETag');
+        $etag = array_shift($etag);
 
-        return \array_shift($etag) ?: '';
+        if (!is_string($etag)) {
+            return '*';
+        }
+
+        if ($etag === '') {
+            return '*';
+        }
+
+        return $etag;
     }
 
-    /**
-     * Returns a version with the given number.
-     *
-     * @param VersionNumber|mixed $versionNumber
-     *
-     * @throws VersionNotFound
-     */
     public function getVersion($versionNumber): Version
     {
-        $versionNumber = $versionNumber instanceof VersionNumber
-            ? $versionNumber
-            : VersionNumber::fromValue($versionNumber);
+        $versionNumber = $this->ensureVersionNumber($versionNumber);
 
         foreach ($this->listVersions() as $version) {
             if ($version->versionNumber()->equalsTo($versionNumber)) {
@@ -90,30 +73,14 @@ class RemoteConfig
         throw VersionNotFound::withVersionNumber($versionNumber);
     }
 
-    /**
-     * Returns a version with the given number.
-     *
-     * @param VersionNumber|mixed $versionNumber
-     *
-     * @throws VersionNotFound
-     */
     public function rollbackToVersion($versionNumber): Template
     {
-        $versionNumber = $versionNumber instanceof VersionNumber
-            ? $versionNumber
-            : VersionNumber::fromValue($versionNumber);
+        $versionNumber = $this->ensureVersionNumber($versionNumber);
 
-        $response = $this->client->rollbackToVersion($versionNumber);
-
-        return Template::fromResponse($response);
+        return $this->buildTemplateFromResponse($this->client->rollbackToVersion($versionNumber));
     }
 
-    /**
-     * @param FindVersions|array $query
-     *
-     * @return \Generator|Version[]
-     */
-    public function listVersions($query = null): \Generator
+    public function listVersions($query = null): Traversable
     {
         $query = $query instanceof FindVersions ? $query : FindVersions::fromArray((array) $query);
         $pageToken = null;
@@ -122,10 +89,11 @@ class RemoteConfig
 
         do {
             $response = $this->client->listVersions($query, $pageToken);
-            $result = JSON::decode((string) $response->getBody(), true);
+            $result = Json::decode((string) $response->getBody(), true);
 
             foreach ((array) ($result['versions'] ?? []) as $versionData) {
                 ++$count;
+
                 yield Version::fromArray($versionData);
 
                 if ($count === $limit) {
@@ -135,5 +103,31 @@ class RemoteConfig
 
             $pageToken = $result['nextPageToken'] ?? null;
         } while ($pageToken);
+    }
+
+    /**
+     * @param Template|RemoteConfigTemplateShape $value
+     */
+    private function ensureTemplate($value): Template
+    {
+        return $value instanceof Template ? $value : Template::fromArray($value);
+    }
+
+    /**
+     * @param VersionNumber|int|string $value
+     */
+    private function ensureVersionNumber($value): VersionNumber
+    {
+        return $value instanceof VersionNumber ? $value : VersionNumber::fromValue($value);
+    }
+
+    private function buildTemplateFromResponse(ResponseInterface $response): Template
+    {
+        $etagHeader = $response->getHeader('ETag');
+        $etag = array_shift($etagHeader) ?: '*';
+
+        $data = Json::decode((string) $response->getBody(), true);
+
+        return Template::fromArray($data, $etag);
     }
 }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Exception;
 
-use Fig\Http\Message\StatusCodeInterface as StatusCode;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Kreait\Firebase\Exception\Database\ApiConnectionFailed;
 use Kreait\Firebase\Exception\Database\DatabaseError;
+use Kreait\Firebase\Exception\Database\DatabaseNotFound;
+use Kreait\Firebase\Exception\Database\PermissionDenied;
+use Kreait\Firebase\Exception\Database\PreconditionFailed;
 use Kreait\Firebase\Http\ErrorResponseParser;
+use Psr\Http\Client\NetworkExceptionInterface;
 use Throwable;
 
 /**
@@ -17,49 +19,47 @@ use Throwable;
  */
 class DatabaseApiExceptionConverter
 {
-    /** @var ErrorResponseParser */
-    private $responseParser;
+    private ErrorResponseParser $responseParser;
 
-    /**
-     * @internal
-     */
     public function __construct()
     {
         $this->responseParser = new ErrorResponseParser();
     }
 
-    /**
-     * @return DatabaseException
-     */
-    public function convertException(Throwable $exception): FirebaseException
+    public function convertException(Throwable $exception): DatabaseException
     {
         if ($exception instanceof RequestException) {
             return $this->convertGuzzleRequestException($exception);
         }
 
+        if ($exception instanceof NetworkExceptionInterface) {
+            return new ApiConnectionFailed('Unable to connect to the API: '.$exception->getMessage(), $exception->getCode(), $exception);
+        }
+
         return new DatabaseError($exception->getMessage(), $exception->getCode(), $exception);
     }
 
-    private function convertGuzzleRequestException(RequestException $e)
+    private function convertGuzzleRequestException(RequestException $e): DatabaseException
     {
         $message = $e->getMessage();
         $code = $e->getCode();
+        $response = $e->getResponse();
 
-        if ($e instanceof ConnectException) {
-            return new ApiConnectionFailed('Unable to connect to the API: '.$message, $code, $e);
-        }
-
-        if ($response = $e->getResponse()) {
+        if ($response !== null) {
             $message = $this->responseParser->getErrorReasonFromResponse($response);
             $code = $response->getStatusCode();
         }
 
         switch ($code) {
-            case StatusCode::STATUS_UNAUTHORIZED:
-            case StatusCode::STATUS_FORBIDDEN:
-                return new Database\PermissionDenied($message, $code, $e);
-            case StatusCode::STATUS_PRECONDITION_FAILED:
-                return new Database\PreconditionFailed($message, $code, $e);
+            case 401:
+            case 403:
+                return new PermissionDenied($message, $code, $e);
+
+            case 412:
+                return new PreconditionFailed($message, $code, $e);
+
+            case 404:
+                return DatabaseNotFound::fromUri($e->getRequest()->getUri());
         }
 
         return new DatabaseError($message, $code, $e);

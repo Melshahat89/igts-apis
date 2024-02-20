@@ -4,35 +4,45 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Auth\SendActionLink;
 
+use Beste\Json;
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\stream_for;
-use function GuzzleHttp\Psr7\uri_for;
+use GuzzleHttp\Psr7\Utils;
 use Kreait\Firebase\Auth\SendActionLink;
 use Kreait\Firebase\Http\WrappedPsr7Request;
 use Psr\Http\Message\RequestInterface;
 
+use const JSON_FORCE_OBJECT;
+
+use function array_filter;
+
+/**
+ * @deprecated 6.0.1
+ *
+ * @codeCoverageIgnore
+ */
 final class ApiRequest implements RequestInterface
 {
     use WrappedPsr7Request;
 
     public function __construct(SendActionLink $action)
     {
-        $uri = uri_for('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode');
+        $uri = Utils::uriFor('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode');
 
-        $data = [
+        $data = array_filter([
             'requestType' => $action->type(),
             'email' => $action->email(),
-        ] + $action->settings()->toArray();
+            'tenantId' => $action->tenantId(),
+        ]) + $action->settings()->toArray();
 
         if ($idTokenString = $action->idTokenString()) {
             $data['idToken'] = $idTokenString;
         }
 
-        $body = stream_for(\json_encode($data));
+        $body = Utils::streamFor(Json::encode($data, JSON_FORCE_OBJECT));
 
-        $headers = \array_filter([
+        $headers = array_filter([
             'Content-Type' => 'application/json; charset=UTF-8',
-            'Content-Length' => $body->getSize(),
+            'Content-Length' => (string) $body->getSize(),
             'X-Firebase-Locale' => $action->locale(),
         ]);
 

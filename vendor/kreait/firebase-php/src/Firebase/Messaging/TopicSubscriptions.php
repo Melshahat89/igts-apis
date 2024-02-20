@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Messaging;
 
 use Countable;
-use Generator;
 use IteratorAggregate;
+use Traversable;
 
+use function array_filter;
+use function count;
+
+/**
+ * @implements IteratorAggregate<TopicSubscription>
+ */
 final class TopicSubscriptions implements Countable, IteratorAggregate
 {
     /** @var TopicSubscription[] */
-    private $subscriptions;
+    private array $subscriptions;
 
     public function __construct(TopicSubscription ...$subscriptions)
     {
@@ -20,21 +26,21 @@ final class TopicSubscriptions implements Countable, IteratorAggregate
 
     public function filter(callable $filter): self
     {
-        return new self(...\array_filter($this->subscriptions, $filter));
+        return new self(...array_filter($this->subscriptions, $filter));
     }
 
     /**
      * @codeCoverageIgnore
      *
-     * @return Generator|TopicSubscription[]
+     * @return Traversable<TopicSubscription>|TopicSubscription[]
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         yield from $this->subscriptions;
     }
 
-    public function count()
+    public function count(): int
     {
-        return \count($this->subscriptions);
+        return count($this->subscriptions);
     }
 }

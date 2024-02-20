@@ -6,6 +6,26 @@ use ArrayAccess;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 
+/**
+ * Class Location
+ *
+ * @property string|null $ip
+ * @property string|null $iso_code
+ * @property string|null $country
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $state_name
+ * @property string|null $postal_code
+ * @property float|null $lat
+ * @property float|null $lon
+ * @property string|null $timezone
+ * @property string|null $continent
+ * @property string|null $currency
+ * @property bool $default
+ * @property bool $cached
+ *
+ * @package Torann\GeoIP
+ */
 class Location implements ArrayAccess
 {
     /**
@@ -134,7 +154,7 @@ class Location implements ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->$offset);
     }
@@ -146,7 +166,7 @@ class Location implements ArrayAccess
      *
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->$offset;
     }
@@ -159,7 +179,7 @@ class Location implements ArrayAccess
      *
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->$offset = $value;
     }
@@ -171,7 +191,7 @@ class Location implements ArrayAccess
      *
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->$offset);
     }

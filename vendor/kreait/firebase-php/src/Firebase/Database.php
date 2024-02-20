@@ -9,114 +9,70 @@ use Kreait\Firebase\Database\ApiClient;
 use Kreait\Firebase\Database\Reference;
 use Kreait\Firebase\Database\RuleSet;
 use Kreait\Firebase\Database\Transaction;
+use Kreait\Firebase\Database\UrlBuilder;
 use Kreait\Firebase\Exception\InvalidArgumentException;
-use Kreait\Firebase\Exception\OutOfRangeException;
 use Psr\Http\Message\UriInterface;
 
+use function ltrim;
+use function sprintf;
+use function trim;
+
 /**
- * The Firebase Realtime Database.
- *
- * @see https://firebase.google.com/docs/reference/js/firebase.database.Database
+ * @internal
  */
-class Database
+final class Database implements Contract\Database
 {
-    const SERVER_TIMESTAMP = ['.sv' => 'timestamp'];
+    private ApiClient $client;
+    private UrlBuilder $urlBuilder;
+    private UriInterface $uri;
 
-    /** @var ApiClient */
-    private $client;
-
-    /** @var UriInterface */
-    private $uri;
-
-    /**
-     * @internal
-     */
-    public function __construct(UriInterface $uri, ApiClient $client)
+    public function __construct(UriInterface $uri, ApiClient $client, UrlBuilder $urlBuilder)
     {
         $this->uri = $uri;
         $this->client = $client;
+        $this->urlBuilder = $urlBuilder;
     }
 
-    /**
-     * Returns a Reference to the root or the specified path.
-     *
-     * @see https://firebase.google.com/docs/reference/js/firebase.database.Database#ref
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getReference(string $path = null): Reference
+    public function getReference(?string $path = null): Reference
     {
-        if ($path === null || \trim($path) === '') {
+        if ($path === null || trim($path) === '') {
             $path = '/';
         }
 
+        $path = '/'.ltrim($path, '/');
+
         try {
-            return new Reference($this->uri->withPath($path), $this->client);
+            return new Reference($this->uri->withPath($path), $this->client, $this->urlBuilder);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    /**
-     * Returns a reference to the root or the path specified in url.
-     *
-     * @see https://firebase.google.com/docs/reference/js/firebase.database.Database#refFromURL
-     *
-     * @param string|UriInterface $uri
-     *
-     * @throws InvalidArgumentException If the URL is invalid
-     * @throws OutOfRangeException If the URL is not in the same domain as the current database
-     */
     public function getReferenceFromUrl($uri): Reference
     {
         $uri = $uri instanceof UriInterface ? $uri : new Uri($uri);
 
         if (($givenHost = $uri->getHost()) !== ($dbHost = $this->uri->getHost())) {
-            throw new InvalidArgumentException(\sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The given URI\'s host "%s" is not covered by the database for the host "%s".',
-                $givenHost, $dbHost
+                $givenHost,
+                $dbHost,
             ));
         }
 
         return $this->getReference($uri->getPath());
     }
 
-    /**
-     * Retrieve Firebase Database Rules.
-     *
-     * @see https://firebase.google.com/docs/database/rest/app-management#retrieving-firebase-realtime-database-rules
-     */
     public function getRuleSet(): RuleSet
     {
-        $rules = $this->client->get($this->uri->withPath('.settings/rules'));
+        $rules = $this->client->get('/.settings/rules');
 
         return RuleSet::fromArray($rules);
     }
 
-    /**
-     * Retrieve Firebase Database Rules.
-     *
-     * @deprecated 4.32.0 Use \Kreait\Firebase\Database::getRuleSet() instead
-     * @see getRuleSet()
-     */
-    public function getRules(): RuleSet
+    public function updateRules(RuleSet $ruleSet): void
     {
-        \trigger_error(
-            __METHOD__.' is deprecated. Use \Kreait\Firebase\Database::getRuleSet() instead.',
-            \E_USER_DEPRECATED
-        );
-
-        return $this->getRuleSet();
-    }
-
-    /**
-     * Update Firebase Database Rules.
-     *
-     * @see https://firebase.google.com/docs/database/rest/app-management#updating-firebase-realtime-database-rules
-     */
-    public function updateRules(RuleSet $ruleSet)
-    {
-        $this->client->updateRules($this->uri->withPath('.settings/rules'), $ruleSet);
+        $this->client->updateRules('/.settings/rules', $ruleSet);
     }
 
     public function runTransaction(callable $callable)

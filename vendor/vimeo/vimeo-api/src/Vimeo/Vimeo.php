@@ -58,7 +58,7 @@ class Vimeo
             CURLOPT_HEADER => 1,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,
             //Certificate must indicate that the server is the server to which you meant to connect.
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_CAINFO => realpath(__DIR__ .'/../..') . self::CERTIFICATE_PATH
@@ -100,11 +100,11 @@ class Vimeo
         switch ($method) {
             case 'GET':
             case 'HEAD':
-//                if (!empty($params)) {
-//                    $query_component = '?' . http_build_query($params, '', '&');
-//                } else {
+                if (!empty($params)) {
+                    $query_component = '?' . http_build_query($params, '', '&');
+                } else {
                     $query_component = '';
-//                }
+                }
 
                 $curl_url = self::ROOT_ENDPOINT . $url . $query_component;
                 break;
@@ -137,6 +137,7 @@ class Vimeo
         $response = $this->_request($curl_url, $curl_opts);
 
         $response['body'] = json_decode($response['body'], true);
+
         return $response;
     }
 

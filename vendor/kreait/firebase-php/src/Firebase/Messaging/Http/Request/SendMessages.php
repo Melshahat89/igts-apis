@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Messaging\Http\Request;
 
-use Kreait\Firebase\Exception\InvalidArgumentException;
+use Kreait\Firebase\Contract\Messaging;
+use Kreait\Firebase\Exception\Messaging\InvalidArgument;
 use Kreait\Firebase\Http\HasSubRequests;
 use Kreait\Firebase\Http\Requests;
 use Kreait\Firebase\Http\RequestWithSubRequests;
@@ -12,16 +13,22 @@ use Kreait\Firebase\Http\WrappedPsr7Request;
 use Kreait\Firebase\Messaging\Messages;
 use Psr\Http\Message\RequestInterface;
 
+/**
+ * @internal
+ */
 final class SendMessages implements HasSubRequests, RequestInterface
 {
-    const MAX_AMOUNT_OF_MESSAGES = 500;
-
     use WrappedPsr7Request;
 
-    public function __construct(string $projectId, Messages $messages)
+    /**
+     * @deprecated 6.6.0 Use {@see Messaging::BATCH_MESSAGE_LIMIT} instead
+     */
+    public const MAX_AMOUNT_OF_MESSAGES = Messaging::BATCH_MESSAGE_LIMIT;
+
+    public function __construct(string $projectId, Messages $messages, bool $validateOnly = false)
     {
-        if ($messages->count() > self::MAX_AMOUNT_OF_MESSAGES) {
-            throw new InvalidArgumentException('Only '.self::MAX_AMOUNT_OF_MESSAGES.' can be sent at a time.');
+        if ($messages->count() > Messaging::BATCH_MESSAGE_LIMIT) {
+            throw new InvalidArgument('Only '.Messaging::BATCH_MESSAGE_LIMIT.' can be sent at a time.');
         }
 
         $subRequests = [];
@@ -29,7 +36,7 @@ final class SendMessages implements HasSubRequests, RequestInterface
         $index = 0;
 
         foreach ($messages as $message) {
-            $subRequests[] = (new SendMessage($projectId, $message))
+            $subRequests[] = (new SendMessage($projectId, $message, $validateOnly))
                 // see https://github.com/firebase/firebase-admin-node/blob/master/src/messaging/batch-request.ts#L104
                 ->withHeader('Content-ID', (string) ++$index)
                 ->withHeader('Content-Transfer-Encoding', 'binary')
@@ -38,7 +45,7 @@ final class SendMessages implements HasSubRequests, RequestInterface
 
         $this->wrappedRequest = new RequestWithSubRequests(
             'https://fcm.googleapis.com/batch',
-            new Requests(...$subRequests)
+            new Requests(...$subRequests),
         );
     }
 }

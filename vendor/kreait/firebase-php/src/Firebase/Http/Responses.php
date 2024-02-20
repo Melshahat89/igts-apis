@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Http;
 
-use Generator;
 use IteratorAggregate;
 use Psr\Http\Message\ResponseInterface;
+use Traversable;
 
+/**
+ * @internal
+ *
+ * @implements IteratorAggregate<ResponseInterface>
+ */
 final class Responses implements IteratorAggregate
 {
     /** @var ResponseInterface[] */
-    private $responses;
+    private array $responses;
 
     public function __construct(ResponseInterface ...$responses)
     {
@@ -21,9 +26,9 @@ final class Responses implements IteratorAggregate
     /**
      * @codeCoverageIgnore
      *
-     * @return Generator|ResponseInterface[]
+     * @return Traversable<ResponseInterface>|ResponseInterface[]
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         yield from $this->responses;
     }

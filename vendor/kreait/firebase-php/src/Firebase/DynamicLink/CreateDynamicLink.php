@@ -6,14 +6,15 @@ namespace Kreait\Firebase\DynamicLink;
 
 use JsonSerializable;
 use Kreait\Firebase\Value\Url;
-use Psr\Http\Message\UriInterface;
+use Stringable;
 
 final class CreateDynamicLink implements JsonSerializable
 {
-    const WITH_UNGUESSABLE_SUFFIX = 'UNGUESSABLE';
-    const WITH_SHORT_SUFFIX = 'SHORT';
+    public const WITH_UNGUESSABLE_SUFFIX = 'UNGUESSABLE';
+    public const WITH_SHORT_SUFFIX = 'SHORT';
 
-    private $data = [
+    /** @var array<string, mixed> */
+    private array $data = [
         'dynamicLinkInfo' => [],
         'suffix' => ['option' => self::WITH_UNGUESSABLE_SUFFIX],
     ];
@@ -22,6 +23,9 @@ final class CreateDynamicLink implements JsonSerializable
     {
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function fromArray(array $data): self
     {
         $action = new self();
@@ -41,27 +45,23 @@ final class CreateDynamicLink implements JsonSerializable
      * displaying a welcome screen). This link must be a well-formatted URL, be properly
      * URL-encoded, use either HTTP or HTTPS, and cannot be another Dynamic Link.
      *
-     * @param string|UriInterface|Url $url
+     * @param string|Stringable $url
      */
     public static function forUrl($url): self
     {
-        $url = Url::fromValue((string) $url);
-
         $action = new self();
-        $action->data['dynamicLinkInfo']['link'] = (string) $url;
+        $action->data['dynamicLinkInfo']['link'] = (string) Url::fromValue((string) $url);
 
         return $action;
     }
 
     /**
-     * @param string|Url|UriInterface $dynamicLinkDomain
+     * @param Stringable|string $dynamicLinkDomain
      */
     public function withDynamicLinkDomain($dynamicLinkDomain): self
     {
-        $dynamicLinkDomain = Url::fromValue((string) $dynamicLinkDomain);
-
         $action = clone $this;
-        $action->data['dynamicLinkInfo']['domainUriPrefix'] = (string) $dynamicLinkDomain;
+        $action->data['dynamicLinkInfo']['domainUriPrefix'] = (string) Url::fromValue((string) $dynamicLinkDomain);
 
         return $action;
     }
@@ -71,16 +71,22 @@ final class CreateDynamicLink implements JsonSerializable
         return (bool) ($this->data['dynamicLinkInfo']['domainUriPrefix'] ?? null);
     }
 
+    /**
+     * @param AnalyticsInfo|array<string, mixed> $data
+     */
     public function withAnalyticsInfo($data): self
     {
         $info = $data instanceof AnalyticsInfo ? $data : AnalyticsInfo::fromArray($data);
 
         $action = clone $this;
-        $action->data['dynamicLinkInfo']['analyticsInfo'] = $info;
+        $action->data['dynamicLinkInfo']['analyticsInfo'] = $info->jsonSerialize();
 
         return $action;
     }
 
+    /**
+     * @param AndroidInfo|array<string, string> $data
+     */
     public function withAndroidInfo($data): self
     {
         $info = $data instanceof AndroidInfo ? $data : AndroidInfo::fromArray($data);
@@ -91,16 +97,22 @@ final class CreateDynamicLink implements JsonSerializable
         return $action;
     }
 
+    /**
+     * @param IOSInfo|array<string, string> $data
+     */
     public function withIOSInfo($data): self
     {
         $info = $data instanceof IOSInfo ? $data : IOSInfo::fromArray($data);
 
         $action = clone $this;
-        $action->data['dynamicLinkInfo']['iosInfo'] = $info;
+        $action->data['dynamicLinkInfo']['iosInfo'] = $info->jsonSerialize();
 
         return $action;
     }
 
+    /**
+     * @param NavigationInfo|array<string, mixed> $data
+     */
     public function withNavigationInfo($data): self
     {
         $info = $data instanceof NavigationInfo ? $data : NavigationInfo::fromArray($data);
@@ -111,12 +123,15 @@ final class CreateDynamicLink implements JsonSerializable
         return $action;
     }
 
+    /**
+     * @param SocialMetaTagInfo|array<string, mixed> $data
+     */
     public function withSocialMetaTagInfo($data): self
     {
         $info = $data instanceof SocialMetaTagInfo ? $data : SocialMetaTagInfo::fromArray($data);
 
         $action = clone $this;
-        $action->data['dynamicLinkInfo']['socialMetaTagInfo'] = $info;
+        $action->data['dynamicLinkInfo']['socialMetaTagInfo'] = $info->jsonSerialize();
 
         return $action;
     }
@@ -137,7 +152,10 @@ final class CreateDynamicLink implements JsonSerializable
         return $action;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
     {
         return $this->data;
     }

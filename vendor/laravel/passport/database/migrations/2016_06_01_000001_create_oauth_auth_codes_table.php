@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOauthAuthCodesTable extends Migration
+return new class() extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateOauthAuthCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('oauth_auth_codes', function (Blueprint $table) {
+        $schema = Schema::connection($this->getConnection());
+
+        $schema->create('oauth_auth_codes', function (Blueprint $table) {
             $table->string('id', 100)->primary();
-            $table->bigInteger('user_id');
-            $table->unsignedInteger('client_id');
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('client_id');
             $table->text('scopes')->nullable();
             $table->boolean('revoked');
             $table->dateTime('expires_at')->nullable();
@@ -30,6 +32,18 @@ class CreateOauthAuthCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('oauth_auth_codes');
+        $schema = Schema::connection($this->getConnection());
+
+        $schema->dropIfExists('oauth_auth_codes');
     }
-}
+
+    /**
+     * Get the migration connection name.
+     *
+     * @return string|null
+     */
+    public function getConnection()
+    {
+        return config('passport.storage.database.connection');
+    }
+};

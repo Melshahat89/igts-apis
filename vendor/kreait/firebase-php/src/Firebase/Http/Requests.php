@@ -4,36 +4,49 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Http;
 
-use Generator;
 use IteratorAggregate;
 use Psr\Http\Message\RequestInterface;
+use Traversable;
 
+use function array_pop;
+use function explode;
+
+/**
+ * @internal
+ *
+ * @implements IteratorAggregate<RequestInterface>
+ */
 final class Requests implements IteratorAggregate
 {
     /** @var RequestInterface[] */
-    private $requests;
+    private array $requests;
 
     public function __construct(RequestInterface ...$requests)
     {
         $this->requests = $requests;
     }
 
-    /**
-     * @return RequestInterface|null
-     */
-    public function findBy(callable $callable)
+    public function findByContentId(string $contentId): ?RequestInterface
     {
-        $results = \array_filter($this->requests, $callable);
+        foreach ($this->requests as $request) {
+            $contentIdHeader = $request->getHeaderLine('Content-ID');
+            $contentIdHeaderParts = explode('-', $contentIdHeader);
+            $requestContentId = array_pop($contentIdHeaderParts);
 
-        return \array_shift($results) ?: null;
+            if ($contentId === $requestContentId) {
+                return $request;
+            }
+        }
+
+        return null;
     }
 
     /**
      * @codeCoverageIgnore
      *
-     * @return Generator|RequestInterface[]
+     * @return Traversable<RequestInterface>|RequestInterface[]
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         yield from $this->requests;
     }

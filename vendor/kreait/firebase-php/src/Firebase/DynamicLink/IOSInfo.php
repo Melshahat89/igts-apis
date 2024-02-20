@@ -8,13 +8,16 @@ use JsonSerializable;
 
 final class IOSInfo implements JsonSerializable
 {
-    /** @var array */
-    private $data = [];
+    /** @var array<string, string> */
+    private array $data = [];
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string, string> $data
+     */
     public static function fromArray(array $data): self
     {
         $info = new self();
@@ -100,7 +103,10 @@ final class IOSInfo implements JsonSerializable
         return $info;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, string>
+     */
+    public function jsonSerialize(): array
     {
         return $this->data;
     }

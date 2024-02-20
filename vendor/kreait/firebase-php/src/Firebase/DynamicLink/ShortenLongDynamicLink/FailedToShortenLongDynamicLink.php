@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\DynamicLink\ShortenLongDynamicLink;
 
-use InvalidArgumentException;
+use Beste\Json;
 use Kreait\Firebase\DynamicLink\ShortenLongDynamicLink;
 use Kreait\Firebase\Exception\FirebaseException;
-use Kreait\Firebase\Util\JSON;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use UnexpectedValueException;
 
 final class FailedToShortenLongDynamicLink extends RuntimeException implements FirebaseException
 {
-    /** @var ShortenLongDynamicLink|null */
-    private $action;
-
-    /** @var ResponseInterface|null */
-    private $response;
+    private ?ShortenLongDynamicLink $action = null;
+    private ?ResponseInterface $response = null;
 
     public static function withActionAndResponse(ShortenLongDynamicLink $action, ResponseInterface $response): self
     {
         $fallbackMessage = 'Failed to shorten long dynamic link';
 
         try {
-            $message = JSON::decode((string) $response->getBody(), true)['error']['message'] ?? $fallbackMessage;
-        } catch (InvalidArgumentException $e) {
+            $message = Json::decode((string) $response->getBody(), true)['error']['message'] ?? $fallbackMessage;
+        } catch (UnexpectedValueException $e) {
             $message = $fallbackMessage;
         }
 
@@ -36,18 +33,12 @@ final class FailedToShortenLongDynamicLink extends RuntimeException implements F
         return $error;
     }
 
-    /**
-     * @return ShortenLongDynamicLink|null
-     */
-    public function action()
+    public function action(): ?ShortenLongDynamicLink
     {
         return $this->action;
     }
 
-    /**
-     * @return ResponseInterface|null
-     */
-    public function response()
+    public function response(): ?ResponseInterface
     {
         return $this->response;
     }

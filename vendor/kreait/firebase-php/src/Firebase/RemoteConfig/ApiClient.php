@@ -4,29 +4,25 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\RemoteConfig;
 
+use Beste\Json;
 use GuzzleHttp\ClientInterface;
-use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\RemoteConfigApiExceptionConverter;
 use Kreait\Firebase\Exception\RemoteConfigException;
-use Kreait\Firebase\Http\WrappedGuzzleClient;
-use Kreait\Firebase\Util\JSON;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Throwable;
 
+use function array_filter;
+use function rtrim;
+
 /**
  * @internal
  */
-class ApiClient implements ClientInterface
+class ApiClient
 {
-    use WrappedGuzzleClient;
+    private ClientInterface $client;
+    private RemoteConfigApiExceptionConverter $errorHandler;
 
-    /** @var RemoteConfigApiExceptionConverter */
-    private $errorHandler;
-
-    /**
-     * @internal
-     */
     public function __construct(ClientInterface $client)
     {
         $this->client = $client;
@@ -34,7 +30,6 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @throws FirebaseException
      * @throws RemoteConfigException
      */
     public function getTemplate(): ResponseInterface
@@ -43,7 +38,6 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @throws FirebaseException
      * @throws RemoteConfigException
      */
     public function validateTemplate(Template $template): ResponseInterface
@@ -56,12 +50,11 @@ class ApiClient implements ClientInterface
             'query' => [
                 'validate_only' => 'true',
             ],
-            'body' => JSON::encode($template),
+            'body' => Json::encode($template),
         ]);
     }
 
     /**
-     * @throws FirebaseException
      * @throws RemoteConfigException
      */
     public function publishTemplate(Template $template): ResponseInterface
@@ -71,32 +64,31 @@ class ApiClient implements ClientInterface
                 'Content-Type' => 'application/json; UTF-8',
                 'If-Match' => $template->etag(),
             ],
-            'body' => JSON::encode($template),
+            'body' => Json::encode($template),
         ]);
     }
 
     /**
      * @see https://firebase.google.com/docs/reference/remote-config/rest/v1/projects.remoteConfig/listVersions
      *
-     * @throws FirebaseException
      * @throws RemoteConfigException
      */
-    public function listVersions(FindVersions $query, string $nextPageToken = null): ResponseInterface
+    public function listVersions(FindVersions $query, ?string $nextPageToken = null): ResponseInterface
     {
-        $uri = \rtrim((string) $this->client->getConfig('base_uri'), '/').':listVersions';
+        $uri = rtrim((string) $this->client->getConfig('base_uri'), '/').':listVersions';
 
         $since = $query->since();
         $until = $query->until();
         $lastVersionNumber = $query->lastVersionNumber();
         $pageSize = $query->pageSize();
 
-        $since = $since ? $since->format('Y-m-d\TH:i:s.v\Z') : null;
-        $until = $until ? $until->format('Y-m-d\TH:i:s.v\Z') : null;
-        $lastVersionNumber = $lastVersionNumber ? (string) $lastVersionNumber : null;
+        $since = $since !== null ? $since->format('Y-m-d\TH:i:s.v\Z') : null;
+        $until = $until !== null ? $until->format('Y-m-d\TH:i:s.v\Z') : null;
+        $lastVersionNumber = $lastVersionNumber !== null ? (string) $lastVersionNumber : null;
         $pageSize = $pageSize ? (string) $pageSize : null;
 
         return $this->requestApi('GET', $uri, [
-            'query' => \array_filter([
+            'query' => array_filter([
                 'startTime' => $since,
                 'endTime' => $until,
                 'endVersionNumber' => $lastVersionNumber,
@@ -107,12 +99,11 @@ class ApiClient implements ClientInterface
     }
 
     /**
-     * @throws FirebaseException
      * @throws RemoteConfigException
      */
     public function rollbackToVersion(VersionNumber $versionNumber): ResponseInterface
     {
-        $uri = \rtrim((string) $this->client->getConfig('base_uri'), '/').':rollback';
+        $uri = rtrim((string) $this->client->getConfig('base_uri'), '/').':rollback';
 
         return $this->requestApi('POST', $uri, [
             'json' => [
@@ -121,22 +112,16 @@ class ApiClient implements ClientInterface
         ]);
     }
 
-    /** @noinspection PhpDocMissingThrowsInspection */
-
     /**
-     * @param string $method
      * @param string|UriInterface $uri
+     * @param array<string, mixed>|null $options
      *
-     * @throws FirebaseException
      * @throws RemoteConfigException
      */
-    private function requestApi($method, $uri, array $options = null): ResponseInterface
+    private function requestApi(string $method, $uri, ?array $options = null): ResponseInterface
     {
-        $options = $options ?? [];
-
-        $options = \array_merge($options, [
-            'decode_content' => 'gzip', // sets content-type and deflates response body
-        ]);
+        $options ??= [];
+        $options['decode_content'] = 'gzip';
 
         try {
             return $this->client->request($method, $uri, $options);

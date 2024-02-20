@@ -4,24 +4,43 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\RemoteConfig;
 
+use JsonSerializable;
 use Kreait\Firebase\Exception\InvalidArgumentException;
-use Kreait\Firebase\Util\JSON;
-use Psr\Http\Message\ResponseInterface;
-use Throwable;
 
-class Template implements \JsonSerializable
+use function array_filter;
+use function array_key_exists;
+use function array_map;
+use function array_unique;
+use function array_values;
+use function in_array;
+use function sprintf;
+
+/**
+ * @phpstan-import-type RemoteConfigConditionShape from Condition
+ * @phpstan-import-type RemoteConfigParameterShape from Parameter
+ * @phpstan-import-type RemoteConfigParameterGroupShape from ParameterGroup
+ * @phpstan-import-type RemoteConfigVersionShape from Version
+ *
+ * @phpstan-type RemoteConfigTemplateShape array{
+ *     conditions?: list<RemoteConfigConditionShape>,
+ *     parameters?: array<non-empty-string, RemoteConfigParameterShape>,
+ *     version?: RemoteConfigVersionShape,
+ *     parameterGroups?: array<non-empty-string, RemoteConfigParameterGroupShape>
+ * }
+ */
+class Template implements JsonSerializable
 {
-    /** @var string */
-    private $etag = '*';
+    private string $etag = '*';
 
-    /** @var Parameter[] */
-    private $parameters = [];
+    /** @var array<non-empty-string, Parameter> */
+    private array $parameters = [];
 
-    /** @var Condition[] */
-    private $conditions = [];
+    /** @var array<non-empty-string, ParameterGroup> */
+    private array $parameterGroups = [];
 
-    /** @var Version|null */
-    private $version;
+    /** @var list<Condition> */
+    private array $conditions = [];
+    private ?Version $version = null;
 
     private function __construct()
     {
@@ -29,44 +48,33 @@ class Template implements \JsonSerializable
 
     public static function new(): self
     {
-        $template = new self();
-        $template->etag = '*';
-        $template->parameters = [];
-
-        return $template;
+        return new self();
     }
 
     /**
-     * @internal
+     * @param RemoteConfigTemplateShape $data
      */
-    public static function fromResponse(ResponseInterface $response): self
-    {
-        $etagHeader = $response->getHeader('ETag');
-        $etag = \array_shift($etagHeader) ?: '*';
-        $data = JSON::decode((string) $response->getBody(), true);
-
-        return self::fromArray($data, $etag);
-    }
-
-    public static function fromArray(array $data, string $etag = null): self
+    public static function fromArray(array $data, ?string $etag = null): self
     {
         $template = new self();
         $template->etag = $etag ?? '*';
 
-        foreach ((array) ($data['conditions'] ?? []) as $conditionData) {
-            $template->conditions[$conditionData['name']] = Condition::fromArray($conditionData);
+        foreach (($data['conditions'] ?? []) as $conditionData) {
+            $template = $template->withCondition(self::buildCondition($conditionData['name'], $conditionData));
         }
 
-        foreach ((array) ($data['parameters'] ?? []) as $name => $parameterData) {
-            $template->parameters[$name] = Parameter::fromArray([$name => $parameterData]);
+        foreach (($data['parameters'] ?? []) as $name => $parameterData) {
+            $template = $template->withParameter(self::buildParameter($name, $parameterData));
         }
 
-        if (\is_array($data['version'] ?? null)) {
-            try {
-                $template->version = Version::fromArray($data['version']);
-            } catch (Throwable $e) {
-                $template->version = null;
-            }
+        foreach (($data['parameterGroups'] ?? []) as $name => $parameterGroupData) {
+            $template = $template->withParameterGroup(self::buildParameterGroup($name, $parameterGroupData));
+        }
+
+        $versionData = $data['version'] ?? null;
+
+        if ($versionData !== null) {
+            $template->version = Version::fromArray($versionData);
         }
 
         return $template;
@@ -81,7 +89,15 @@ class Template implements \JsonSerializable
     }
 
     /**
-     * @return Parameter[]
+     * @return Condition[]
+     */
+    public function conditions(): array
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * @return array<non-empty-string, Parameter>
      */
     public function parameters(): array
     {
@@ -89,14 +105,19 @@ class Template implements \JsonSerializable
     }
 
     /**
-     * @return Version|null
+     * @return ParameterGroup[]
      */
-    public function version()
+    public function parameterGroups(): array
+    {
+        return $this->parameterGroups;
+    }
+
+    public function version(): ?Version
     {
         return $this->version;
     }
 
-    public function withParameter(Parameter $parameter): Template
+    public function withParameter(Parameter $parameter): self
     {
         $this->assertThatAllConditionalValuesAreValid($parameter);
 
@@ -106,32 +127,142 @@ class Template implements \JsonSerializable
         return $template;
     }
 
-    public function withCondition(Condition $condition): Template
+    /**
+     * @param non-empty-string $name
+     */
+    public function withRemovedParameter(string $name): self
     {
+        $parameters = $this->parameters;
+        unset($parameters[$name]);
+
         $template = clone $this;
-        $template->conditions[$condition->name()] = $condition;
+        $template->parameters = $parameters;
 
         return $template;
     }
 
-    private function assertThatAllConditionalValuesAreValid(Parameter $parameter)
+    public function withParameterGroup(ParameterGroup $parameterGroup): self
     {
-        foreach ($parameter->conditionalValues() as $conditionalValue) {
-            if (!\array_key_exists($conditionalValue->conditionName(), $this->conditions)) {
-                $message = 'The conditional value of the parameter named "%s" referes to a condition "%s" which does not exist.';
+        $template = clone $this;
+        $template->parameterGroups[$parameterGroup->name()] = $parameterGroup;
 
-                throw new InvalidArgumentException(\sprintf($message, $parameter->name(), $conditionalValue->conditionName()));
-            }
-        }
+        return $template;
     }
 
-    public function jsonSerialize()
+    public function withRemovedParameterGroup(string $name): self
     {
-        $result = [
-            'conditions' => \array_values($this->conditions),
-            'parameters' => $this->parameters,
-        ];
+        $groups = $this->parameterGroups;
+        unset($groups[$name]);
 
-        return \array_filter($result);
+        $template = clone $this;
+        $template->parameterGroups = $groups;
+
+        return $template;
+    }
+
+    public function withCondition(Condition $condition): self
+    {
+        $template = clone $this;
+        $template->conditions[] = $condition;
+
+        return $template;
+    }
+
+    /**
+     * @return list<non-empty-string>
+     */
+    public function conditionNames(): array
+    {
+        return array_values(array_unique(
+            array_map(static fn (Condition $c) => $c->name(), $this->conditions),
+        ));
+    }
+
+    /**
+     * @param non-empty-string $name
+     */
+    public function withRemovedCondition(string $name): self
+    {
+        $template = clone $this;
+        $template->conditions = array_values(
+            array_filter($this->conditions, static fn (Condition $c) => $c->name() !== $name),
+        );
+
+        return $template;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'conditions' => empty($this->conditions) ? null : array_values($this->conditions),
+            'parameters' => empty($this->parameters) ? null : $this->parameters,
+            'parameterGroups' => empty($this->parameterGroups) ? null : $this->parameterGroups,
+        ];
+    }
+
+    /**
+     * @param non-empty-string $name
+     * @param RemoteConfigConditionShape $data
+     */
+    private static function buildCondition(string $name, array $data): Condition
+    {
+        $condition = Condition::named($name)->withExpression($data['expression']);
+
+        if ($tagColor = $data['tagColor'] ?? null) {
+            return $condition->withTagColor(new TagColor($tagColor));
+        }
+
+        return $condition;
+    }
+
+    /**
+     * @param non-empty-string $name
+     * @param RemoteConfigParameterShape $data
+     */
+    private static function buildParameter(string $name, array $data): Parameter
+    {
+        $parameter = Parameter::named($name)->withDescription((string) ($data['description'] ?? ''));
+
+        if (array_key_exists('defaultValue', $data) && $data['defaultValue'] !== null) {
+            $parameter = $parameter->withDefaultValue(DefaultValue::fromArray($data['defaultValue']));
+        }
+
+        foreach ((array) ($data['conditionalValues'] ?? []) as $key => $conditionalValueData) {
+            $parameter = $parameter->withConditionalValue(new ConditionalValue($key, $conditionalValueData));
+        }
+
+        return $parameter;
+    }
+
+    /**
+     * @param non-empty-string $name
+     * @param RemoteConfigParameterGroupShape $parameterGroupData
+     */
+    private static function buildParameterGroup(string $name, array $parameterGroupData): ParameterGroup
+    {
+        $group = ParameterGroup::named($name)
+            ->withDescription((string) ($parameterGroupData['description'] ?? ''));
+
+        foreach ($parameterGroupData['parameters'] as $parameterName => $parameterData) {
+            $group = $group->withParameter(self::buildParameter($parameterName, $parameterData));
+        }
+
+        return $group;
+    }
+
+    private function assertThatAllConditionalValuesAreValid(Parameter $parameter): void
+    {
+        $conditionNames = array_map(static fn (Condition $c) => $c->name(), $this->conditions);
+
+        foreach ($parameter->conditionalValues() as $conditionalValue) {
+            if (!in_array($conditionalValue->conditionName(), $conditionNames, true)) {
+                $message = 'The conditional value of the parameter named "%s" refers to a condition "%s" which does not exist.';
+
+                throw new InvalidArgumentException(sprintf($message, $parameter->name(), $conditionalValue->conditionName()));
+            }
+        }
     }
 }

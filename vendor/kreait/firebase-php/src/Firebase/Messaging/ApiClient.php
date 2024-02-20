@@ -9,9 +9,6 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingApiExceptionConverter;
 use Kreait\Firebase\Exception\MessagingException;
-use Kreait\Firebase\Http\WrappedGuzzleClient;
-use Kreait\Firebase\Messaging\Http\Request\SendMessage;
-use Kreait\Firebase\Messaging\Http\Request\ValidateMessage;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -19,89 +16,39 @@ use Throwable;
 /**
  * @internal
  */
-class ApiClient implements ClientInterface
+class ApiClient
 {
-    use WrappedGuzzleClient;
+    private ClientInterface $client;
+    private MessagingApiExceptionConverter $errorHandler;
 
-    /** @var MessagingApiExceptionConverter */
-    private $errorHandler;
-
-    /** @var string */
-    private $projectId;
-
-    /**
-     * @internal
-     */
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client, MessagingApiExceptionConverter $errorHandler)
     {
         $this->client = $client;
-        $this->errorHandler = new MessagingApiExceptionConverter();
-
-        // Extract the project ID from the client config (this will be refactored later)
-        $baseUri = (string) $client->getConfig('base_uri');
-        $uriParts = \explode('/', $baseUri);
-        $this->projectId = (string) \array_pop($uriParts);
+        $this->errorHandler = $errorHandler;
     }
 
     /**
-     * @internal
+     * @param array<string, mixed> $options
      *
-     * @deprecated 4.29.0
-     */
-    public function getClient(): ClientInterface
-    {
-        return $this->client;
-    }
-
-    /**
-     * @deprecated 4.29.0
-     */
-    public function sendMessage(Message $message): ResponseInterface
-    {
-        return $this->send(new SendMessage($this->projectId, $message));
-    }
-
-    /**
-     * @deprecated 4.29.0
-     */
-    public function sendMessageAsync(Message $message): PromiseInterface
-    {
-        return $this->sendAsync(new SendMessage($this->projectId, $message));
-    }
-
-    /**
-     * @deprecated 4.29.0
-     */
-    public function validateMessage(Message $message): ResponseInterface
-    {
-        return $this->send(new ValidateMessage($this->projectId, $message));
-    }
-
-    /**
-     * @deprecated 4.29.0
-     */
-    public function validateMessageAsync(Message $message): PromiseInterface
-    {
-        return $this->sendAsync(new ValidateMessage($this->projectId, $message));
-    }
-
-    /**
-     * @throws MessagingException
      * @throws FirebaseException
+     * @throws MessagingException
      */
     public function send(RequestInterface $request, array $options = []): ResponseInterface
     {
         try {
-            return $this->client->send($request);
+            return $this->client->send($request, $options);
         } catch (Throwable $e) {
             throw $this->errorHandler->convertException($e);
         }
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface
     {
         return $this->client->sendAsync($request, $options)
-            ->then(null, function (Throwable $e) {
+            ->then(null, function (Throwable $e): void {
                 throw $this->errorHandler->convertException($e);
             });
     }

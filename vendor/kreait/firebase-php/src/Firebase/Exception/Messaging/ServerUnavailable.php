@@ -4,46 +4,41 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Exception\Messaging;
 
+use DateTimeImmutable;
 use Kreait\Firebase\Exception\HasErrors;
-use Kreait\Firebase\Exception\HasRequestAndResponse;
 use Kreait\Firebase\Exception\MessagingException;
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
 final class ServerUnavailable extends RuntimeException implements MessagingException
 {
-    use HasRequestAndResponse;
     use HasErrors;
+    private ?DateTimeImmutable $retryAfter = null;
 
     /**
      * @internal
      *
      * @param string[] $errors
-     *
-     * @return static
      */
-    public function withErrors(array $errors)
+    public function withErrors(array $errors): self
     {
         $new = new self($this->getMessage(), $this->getCode(), $this->getPrevious());
         $new->errors = $errors;
-        $new->response = $this->response;
+        $new->retryAfter = $this->retryAfter;
 
         return $new;
     }
 
-    /**
-     * @internal
-     *
-     * @deprecated 4.28.0
-     *
-     * @return static
-     */
-    public function withResponse(ResponseInterface $response)
+    public function withRetryAfter(DateTimeImmutable $retryAfter): self
     {
         $new = new self($this->getMessage(), $this->getCode(), $this->getPrevious());
         $new->errors = $this->errors;
-        $new->response = $response;
+        $new->retryAfter = $retryAfter;
 
         return $new;
+    }
+
+    public function retryAfter(): ?DateTimeImmutable
+    {
+        return $this->retryAfter;
     }
 }

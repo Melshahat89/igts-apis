@@ -178,16 +178,16 @@ return [
 
         App\Providers\InterFaceBind::class,
 //        Yajra\Datatables\DatatablesServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
-        UxWeb\SweetAlert\SweetAlertServiceProvider::class,
-        Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
+//        Yajra\DataTables\DataTablesServiceProvider::class,
+//        Collective\Html\HtmlServiceProvider::class,
+//        UxWeb\SweetAlert\SweetAlertServiceProvider::class,
+//        Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        ConsoleTVs\Links\LinksServiceProvider::class,
+//        ConsoleTVs\Links\LinksServiceProvider::class,
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
 //        Barryvdh\Cors\ServiceProvider::class,
-        Themsaid\Langman\LangmanServiceProvider::class,
-        Chumper\Zipper\ZipperServiceProvider::class,
+//        Themsaid\Langman\LangmanServiceProvider::class,
+//        Chumper\Zipper\ZipperServiceProvider::class,
 
 
 
@@ -210,7 +210,7 @@ return [
         //Firebase
         Kreait\Laravel\Firebase\ServiceProvider::class,
         //Shoping Cart
-        Darryldecode\Cart\CartServiceProvider::class,
+//        Darryldecode\Cart\CartServiceProvider::class,
         //Socialite
         Laravel\Socialite\SocialiteServiceProvider::class,
 

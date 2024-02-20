@@ -4,47 +4,58 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Messaging;
 
+use JsonSerializable;
 use Kreait\Firebase\Exception\InvalidArgumentException;
-use Throwable;
 
-class Notification implements \JsonSerializable
+use function array_filter;
+
+/**
+ * @phpstan-type NotificationShape array{
+ *     title?: string,
+ *     body?: string,
+ *     imageUrl?: string
+ * }
+ */
+final class Notification implements JsonSerializable
 {
-    /** @var string|null */
-    private $title;
+    private ?string $title;
+    private ?string $body;
+    private ?string $imageUrl;
 
-    /** @var string|null */
-    private $body;
-
-    /** @var string|null */
-    private $imageUrl;
-
-    private function __construct(string $title = null, string $body = null, string $imageUrl = null)
+    /**
+     * @throws InvalidArgumentException if both title and body are null
+     */
+    private function __construct(?string $title = null, ?string $body = null, ?string $imageUrl = null)
     {
         $this->title = $title;
         $this->body = $body;
         $this->imageUrl = $imageUrl;
-
-        if ($this->title === null && $this->body === null) {
-            throw new InvalidArgumentException('The title and body of a notification cannot both be NULL');
-        }
     }
 
-    public static function create(string $title = null, string $body = null, string $imageUrl = null): self
+    /**
+     * @throws InvalidArgumentException if both title and body are null
+     */
+    public static function create(?string $title = null, ?string $body = null, ?string $imageUrl = null): self
     {
         return new self($title, $body, $imageUrl);
     }
 
+    /**
+     * @param array{
+     *     title?: string,
+     *     body?: string,
+     *     image?: string
+     * } $data
+     *
+     * @throws InvalidArgumentException if both title and body are null
+     */
     public static function fromArray(array $data): self
     {
-        try {
-            return new self(
-                $data['title'] ?? null,
-                $data['body'] ?? null,
-                $data['image'] ?? null
-            );
-        } catch (Throwable $e) {
-            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
+        return new self(
+            $data['title'] ?? null,
+            $data['body'] ?? null,
+            $data['image'] ?? null,
+        );
     }
 
     public function withTitle(string $title): self
@@ -71,38 +82,30 @@ class Notification implements \JsonSerializable
         return $notification;
     }
 
-    /**
-     * @return string|null
-     */
-    public function title()
+    public function title(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @return string|null
-     */
-    public function body()
+    public function body(): ?string
     {
         return $this->body;
     }
 
-    /**
-     * @return string|null
-     */
-    public function imageUrl()
+    public function imageUrl(): ?string
     {
         return $this->imageUrl;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, string>
+     */
+    public function jsonSerialize(): array
     {
-        return \array_filter([
+        return array_filter([
             'title' => $this->title,
             'body' => $this->body,
             'image' => $this->imageUrl,
-        ], static function ($value) {
-            return $value !== null;
-        });
+        ], static fn ($value) => $value !== null);
     }
 }
