@@ -14,7 +14,7 @@ class CourseTransformers extends AbstractTransformer
             "id" => $modelOrCollection->id,
 			"title" => $modelOrCollection->title_lang,
 			"slug" => $modelOrCollection->slug,
-			"description" => htmlspecialchars(trim(strip_tags($modelOrCollection->Description_lang))),
+			"description" => (((str_replace(['&raquo;','&laquo;'], '', $modelOrCollection->Description_lang)))),
 			"welcome_message" => $modelOrCollection->welcome_message_lang,
 			"congratulation_message" => $modelOrCollection->congratulation_message_lang,
 			"type" => $modelOrCollection->type,
