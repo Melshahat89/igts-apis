@@ -6,14 +6,15 @@ namespace Kreait\Firebase\DynamicLink;
 
 use JsonSerializable;
 use Kreait\Firebase\Value\Url;
-use Psr\Http\Message\UriInterface;
+use Stringable;
 
 final class ShortenLongDynamicLink implements JsonSerializable
 {
-    const WITH_UNGUESSABLE_SUFFIX = 'UNGUESSABLE';
-    const WITH_SHORT_SUFFIX = 'SHORT';
+    public const WITH_UNGUESSABLE_SUFFIX = 'UNGUESSABLE';
+    public const WITH_SHORT_SUFFIX = 'SHORT';
 
-    private $data = [
+    /** @var array<string, mixed> */
+    private array $data = [
         'suffix' => ['option' => self::WITH_UNGUESSABLE_SUFFIX],
     ];
 
@@ -24,18 +25,19 @@ final class ShortenLongDynamicLink implements JsonSerializable
     /**
      * The long dynamic link that has been created as described in {@see https://firebase.google.com/docs/dynamic-links/create-manually}.
      *
-     * @param string|UriInterface|Url $url
+     * @param Stringable|string $url
      */
     public static function forLongDynamicLink($url): self
     {
-        $url = Url::fromValue((string) $url);
-
         $action = new self();
-        $action->data['longDynamicLink'] = (string) $url;
+        $action->data['longDynamicLink'] = (string) Url::fromValue((string) $url);
 
         return $action;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function fromArray(array $data): self
     {
         $action = new self();
@@ -60,7 +62,10 @@ final class ShortenLongDynamicLink implements JsonSerializable
         return $action;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
     {
         return $this->data;
     }

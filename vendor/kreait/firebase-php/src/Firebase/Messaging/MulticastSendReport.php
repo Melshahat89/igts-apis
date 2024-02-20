@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Messaging;
 
+use Beste\Json;
 use Countable;
 use Kreait\Firebase\Exception\InvalidArgumentException;
 use Kreait\Firebase\Exception\MessagingApiExceptionConverter;
 use Kreait\Firebase\Http\Requests;
 use Kreait\Firebase\Http\Responses;
-use Kreait\Firebase\Util\JSON;
+use Kreait\Firebase\Messaging\Http\Request\MessageRequest;
 use Psr\Http\Message\RequestInterface;
+
+use function array_filter;
+use function array_map;
+use function array_pop;
+use function array_values;
+use function count;
+use function explode;
 
 final class MulticastSendReport implements Countable
 {
     /** @var SendReport[] */
-    private $items = [];
+    private array $items = [];
 
     private function __construct()
     {
@@ -27,14 +35,14 @@ final class MulticastSendReport implements Countable
     public static function withItems(array $items): self
     {
         $report = new self();
-
-        foreach ($items as $item) {
-            $report = $report->withAdded($item);
-        }
+        $report->items = $items;
 
         return $report;
     }
 
+    /**
+     * @internal
+     */
     public static function fromRequestsAndResponses(Requests $requests, Responses $responses): self
     {
         $reports = [];
@@ -42,31 +50,23 @@ final class MulticastSendReport implements Countable
 
         foreach ($responses as $response) {
             $contentIdHeader = $response->getHeaderLine('Content-ID');
-            $contentIdHeaderParts = \explode('-', $contentIdHeader);
+            $contentIdHeaderParts = explode('-', $contentIdHeader);
 
-            if (!($responseId = \array_pop($contentIdHeaderParts) ?: null)) {
+            if (!($responseId = array_pop($contentIdHeaderParts) ?: null)) {
                 continue;
             }
 
-            $matchingRequest = $requests->findBy(static function (RequestInterface $request) use ($responseId) {
-                $contentIdHeader = $request->getHeaderLine('Content-ID');
-                $contentIdHeaderParts = \explode('-', $contentIdHeader);
-                $contentId = \array_pop($contentIdHeaderParts);
+            $matchingRequest = $requests->findByContentId($responseId);
 
-                return $contentId === $responseId;
-            });
-
-            if (!$matchingRequest) {
+            if (!$matchingRequest instanceof RequestInterface) {
                 continue;
             }
 
             try {
-                $requestData = JSON::decode((string) $matchingRequest->getBody(), true);
+                $requestData = Json::decode((string) $matchingRequest->getBody(), true);
             } catch (InvalidArgumentException $e) {
                 continue;
             }
-
-            $target = null;
 
             if ($token = $requestData['message']['token'] ?? null) {
                 $target = MessageTarget::with(MessageTarget::TOKEN, (string) $token);
@@ -78,29 +78,25 @@ final class MulticastSendReport implements Countable
                 $target = MessageTarget::with(MessageTarget::UNKNOWN, 'unknown');
             }
 
+            $message = $matchingRequest instanceof MessageRequest
+                ? $matchingRequest->message()
+                : null;
+
             if ($response->getStatusCode() < 400) {
                 try {
-                    $responseData = JSON::decode((string) $response->getBody(), true);
+                    $responseData = Json::decode((string) $response->getBody(), true);
                 } catch (InvalidArgumentException $e) {
                     $responseData = [];
                 }
 
-                $reports[] = SendReport::success($target, $responseData);
+                $reports[] = SendReport::success($target, $responseData, $message);
             } else {
                 $error = $errorHandler->convertResponse($response);
-                $reports[] = SendReport::failure($target, $error);
+                $reports[] = SendReport::failure($target, $error, $message);
             }
         }
 
         return self::withItems($reports);
-    }
-
-    public function withAdded(SendReport $report): self
-    {
-        $new = clone $this;
-        $new->items[] = $report;
-
-        return $new;
     }
 
     /**
@@ -113,16 +109,12 @@ final class MulticastSendReport implements Countable
 
     public function successes(): self
     {
-        return $this->filter(static function (SendReport $item) {
-            return $item->isSuccess();
-        });
+        return $this->filter(static fn (SendReport $item) => $item->isSuccess());
     }
 
     public function failures(): self
     {
-        return $this->filter(static function (SendReport $item) {
-            return $item->isFailure();
-        });
+        return $this->filter(static fn (SendReport $item) => $item->isFailure());
     }
 
     public function hasFailures(): bool
@@ -132,12 +124,27 @@ final class MulticastSendReport implements Countable
 
     public function filter(callable $callback): self
     {
-        return self::withItems(\array_filter($this->items, $callback));
+        $items = $this->items;
+
+        return self::withItems(array_values(array_filter($items, $callback)));
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function map(callable $callback): array
     {
-        return \array_map($callback, $this->items);
+        return array_map($callback, $this->items);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function validTokens(): array
+    {
+        return $this->successes()
+            ->filter(static fn (SendReport $report) => $report->target()->type() === MessageTarget::TOKEN)
+            ->map(static fn (SendReport $report) => $report->target()->value());
     }
 
     /**
@@ -147,11 +154,9 @@ final class MulticastSendReport implements Countable
      */
     public function unknownTokens(): array
     {
-        return $this->filter(static function (SendReport $report) {
-            return $report->messageWasSentToUnknownToken();
-        })->map(static function (SendReport $report) {
-            return $report->target()->value();
-        });
+        return $this
+            ->filter(static fn (SendReport $report) => $report->messageWasSentToUnknownToken())
+            ->map(static fn (SendReport $report) => $report->target()->value());
     }
 
     /**
@@ -161,15 +166,13 @@ final class MulticastSendReport implements Countable
      */
     public function invalidTokens(): array
     {
-        return $this->filter(static function (SendReport $report) {
-            return $report->messageTargetWasInvalid();
-        })->map(static function (SendReport $report) {
-            return $report->target()->value();
-        });
+        return $this
+            ->filter(static fn (SendReport $report) => $report->messageTargetWasInvalid())
+            ->map(static fn (SendReport $report) => $report->target()->value());
     }
 
     public function count(): int
     {
-        return \count($this->items);
+        return count($this->items);
     }
 }

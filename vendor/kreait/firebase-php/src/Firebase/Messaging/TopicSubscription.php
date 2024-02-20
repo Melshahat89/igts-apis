@@ -7,16 +7,13 @@ namespace Kreait\Firebase\Messaging;
 use DateTimeImmutable;
 use JsonSerializable;
 
+use const DATE_ATOM;
+
 final class TopicSubscription implements JsonSerializable
 {
-    /** @var Topic */
-    private $topic;
-
-    /** @var RegistrationToken */
-    private $registrationToken;
-
-    /** @var DateTimeImmutable */
-    private $subscribedAt;
+    private Topic $topic;
+    private RegistrationToken $registrationToken;
+    private DateTimeImmutable $subscribedAt;
 
     public function __construct(Topic $topic, RegistrationToken $registrationToken, DateTimeImmutable $subscribedAt)
     {
@@ -40,12 +37,15 @@ final class TopicSubscription implements JsonSerializable
         return $this->subscribedAt;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, string>
+     */
+    public function jsonSerialize(): array
     {
         return [
             'topic' => $this->topic->value(),
             'registration_token' => $this->registrationToken->value(),
-            'subscribed_at' => $this->subscribedAt->format(\DATE_ATOM),
+            'subscribed_at' => $this->subscribedAt->format(DATE_ATOM),
         ];
     }
 }

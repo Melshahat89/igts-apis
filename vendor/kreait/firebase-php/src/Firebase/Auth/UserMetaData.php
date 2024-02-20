@@ -5,16 +5,28 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Auth;
 
 use DateTimeImmutable;
+use JsonSerializable;
 use Kreait\Firebase\Util\DT;
 
-class UserMetaData implements \JsonSerializable
+use const DATE_ATOM;
+
+use function get_object_vars;
+
+class UserMetaData implements JsonSerializable
 {
-    /** @var DateTimeImmutable|null */
-    public $createdAt;
+    public ?DateTimeImmutable $createdAt = null;
+    public ?DateTimeImmutable $lastLoginAt = null;
+    public ?DateTimeImmutable $passwordUpdatedAt = null;
 
-    /** @var DateTimeImmutable|null */
-    public $lastLoginAt;
+    /**
+     * The time at which the user was last active (ID token refreshed), or null
+     * if the user was never active.
+     */
+    public ?DateTimeImmutable $lastRefreshAt = null;
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function fromResponseData(array $data): self
     {
         $metadata = new self();
@@ -24,23 +36,26 @@ class UserMetaData implements \JsonSerializable
             $metadata->lastLoginAt = DT::toUTCDateTimeImmutable($data['lastLoginAt']);
         }
 
+        if ($data['passwordUpdatedAt'] ?? null) {
+            $metadata->passwordUpdatedAt = DT::toUTCDateTimeImmutable($data['passwordUpdatedAt']);
+        }
+
+        if ($data['lastRefreshAt'] ?? null) {
+            $metadata->lastRefreshAt = DT::toUTCDateTimeImmutable($data['lastRefreshAt']);
+        }
+
         return $metadata;
     }
 
     /**
-     * @deprecated 4.33
+     * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function jsonSerialize(): array
     {
-        return \get_object_vars($this);
-    }
+        $data = get_object_vars($this);
 
-    public function jsonSerialize()
-    {
-        $data = \get_object_vars($this);
-
-        $data['createdAt'] = $this->createdAt ? $this->createdAt->format(\DATE_ATOM) : null;
-        $data['lastLoginAt'] = $this->lastLoginAt ? $this->lastLoginAt->format(\DATE_ATOM) : null;
+        $data['createdAt'] = $this->createdAt !== null ? $this->createdAt->format(DATE_ATOM) : null;
+        $data['lastLoginAt'] = $this->lastLoginAt !== null ? $this->lastLoginAt->format(DATE_ATOM) : null;
 
         return $data;
     }

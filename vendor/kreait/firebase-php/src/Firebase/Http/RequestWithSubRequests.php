@@ -6,12 +6,19 @@ namespace Kreait\Firebase\Http;
 
 use GuzzleHttp\Psr7\AppendStream;
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\stream_for;
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
+use function array_keys;
+use function implode;
+use function mb_strtolower;
+use function sha1;
+use function uniqid;
+
 /**
+ * @internal
+ *
  * This is basically a Multipart Request, except that in the parts the sub request start lines
  * are injected between the headers and the body.
  *
@@ -25,29 +32,18 @@ use Psr\Http\Message\UriInterface;
 final class RequestWithSubRequests implements HasSubRequests, RequestInterface
 {
     use WrappedPsr7Request;
-
-    /** @var string */
-    private $method = 'POST';
-
-    /** @var string */
-    private $boundary;
-
-    /** @var array */
-    private $headers;
-
-    /** @var AppendStream */
-    private $body;
-
-    /** @var Requests */
-    private $subRequests;
+    private string $method = 'POST';
+    private string $boundary;
+    private AppendStream $body;
+    private Requests $subRequests;
 
     /**
      * @param string|UriInterface $uri
      * @param string $version Protocol version
      */
-    public function __construct($uri, Requests $subRequests, $version = '1.1')
+    public function __construct($uri, Requests $subRequests, string $version = '1.1')
     {
-        $this->boundary = \sha1(\uniqid('', true));
+        $this->boundary = sha1(uniqid('', true));
 
         $headers = [
             'Content-Type' => 'multipart/mixed; boundary='.$this->boundary,
@@ -63,8 +59,8 @@ final class RequestWithSubRequests implements HasSubRequests, RequestInterface
         $this->appendStream("--{$this->boundary}--");
 
         $request = new Request($this->method, $uri, $headers, $this->body, $version);
-
         $contentLength = $request->getBody()->getSize();
+
         if ($contentLength !== null) {
             $request = $request->withHeader('Content-Length', (string) $contentLength);
         }
@@ -77,7 +73,7 @@ final class RequestWithSubRequests implements HasSubRequests, RequestInterface
         return $this->subRequests;
     }
 
-    private function appendPartForSubRequest(RequestInterface $subRequest)
+    private function appendPartForSubRequest(RequestInterface $subRequest): void
     {
         $this->appendStream("--{$this->boundary}\r\n");
         $this->appendStream($this->subRequestHeadersAsString($subRequest)."\r\n\r\n");
@@ -85,29 +81,24 @@ final class RequestWithSubRequests implements HasSubRequests, RequestInterface
         $this->appendStream($subRequest->getBody()."\r\n");
     }
 
-    private function appendStream($value)
+    private function appendStream(string $value): void
     {
-        // Objects are passed by reference, we want to ensure that they are not changed
-        if ($value instanceof StreamInterface) {
-            $value = (string) $value;
-        }
-
-        $this->body->addStream(stream_for($value));
+        $this->body->addStream(Utils::streamFor($value));
     }
 
     private function subRequestHeadersAsString(RequestInterface $request): string
     {
-        $headerNames = \array_keys($request->getHeaders());
+        $headerNames = array_keys($request->getHeaders());
 
         $headers = [];
 
         foreach ($headerNames as $name) {
-            if (\mb_strtolower($name) === 'host') {
+            if (mb_strtolower($name) === 'host') {
                 continue;
             }
             $headers[] = "{$name}: {$request->getHeaderLine($name)}";
         }
 
-        return \implode("\r\n", $headers);
+        return implode("\r\n", $headers);
     }
 }

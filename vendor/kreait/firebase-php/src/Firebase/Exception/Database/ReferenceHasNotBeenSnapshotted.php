@@ -6,20 +6,20 @@ namespace Kreait\Firebase\Exception\Database;
 
 use Kreait\Firebase\Database\Reference;
 use Kreait\Firebase\Exception\DatabaseException;
-use Kreait\Firebase\Exception\HasRequestAndResponse;
 use RuntimeException;
 use Throwable;
 
+use function trim;
+
 final class ReferenceHasNotBeenSnapshotted extends RuntimeException implements DatabaseException
 {
-    use HasRequestAndResponse;
+    private Reference $reference;
 
-    /** @var Reference */
-    private $reference;
-
-    public function __construct(Reference $query, string $message = '', int $code = 0, Throwable $previous = null)
+    public function __construct(Reference $query, string $message = '', int $code = 0, ?Throwable $previous = null)
     {
-        if (!$message) {
+        $message = trim($message);
+
+        if ($message === '') {
             $message = "The reference {$query->getPath()} has not been snapshotted.";
         }
 

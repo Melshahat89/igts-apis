@@ -6,43 +6,57 @@ namespace Kreait\Firebase\DynamicLink;
 
 use Countable;
 use IteratorAggregate;
+use Traversable;
+
+use function array_column;
+use function array_filter;
+use function array_sum;
+use function assert;
 
 /**
  * @see https://firebase.google.com/docs/reference/dynamic-links/analytics#response_body
+ *
+ * @implements IteratorAggregate<array>
  */
 final class EventStatistics implements Countable, IteratorAggregate
 {
-    const PLATFORM_ANDROID = 'ANDROID';
-    const PLATFORM_DESKTOP = 'DESKTOP';
-    const PLATFORM_IOS = 'IOS';
+    public const PLATFORM_ANDROID = 'ANDROID';
+    public const PLATFORM_DESKTOP = 'DESKTOP';
+    public const PLATFORM_IOS = 'IOS';
 
     // Any click on a Dynamic Link, irrespective to how it is handled and its destinations
-    const TYPE_CLICK = 'CLICK';
+    public const TYPE_CLICK = 'CLICK';
 
     // Attempts to redirect users, either to the App Store or Play Store to install or update the app,
     // or to some other destination
-    const TYPE_REDIRECT = 'REDIRECT';
+    public const TYPE_REDIRECT = 'REDIRECT';
 
     // Actual installs (only supported by the Play Store)
-    const TYPE_APP_INSTALL = 'APP_INSTALL';
+    public const TYPE_APP_INSTALL = 'APP_INSTALL';
 
     // First-opens after an install
-    const TYPE_APP_FIRST_OPEN = 'APP_FIRST_OPEN';
+    public const TYPE_APP_FIRST_OPEN = 'APP_FIRST_OPEN';
 
     // Re-opens of an app
-    const TYPE_APP_RE_OPEN = 'APP_RE_OPEN';
+    public const TYPE_APP_RE_OPEN = 'APP_RE_OPEN';
 
-    /** @var array[] */
-    private $events;
+    /** @var array<int, array<string, string>> */
+    private array $events;
 
-    private function __construct(array ...$events)
+    /**
+     * @param array<int, array<string, string>> $events
+     */
+    private function __construct(array $events)
     {
         $this->events = $events;
     }
 
+    /**
+     * @param array<int, array<string, string>> $events
+     */
     public static function fromArray(array $events): self
     {
-        return new self(...$events);
+        return new self($events);
     }
 
     public function onAndroid(): self
@@ -87,33 +101,35 @@ final class EventStatistics implements Countable, IteratorAggregate
 
     public function filterByType(string $type): self
     {
-        return $this->filter(static function (array $event) use ($type) {
-            return ($event['event'] ?? null) === $type;
-        });
+        return $this->filter(static fn (array $event) => ($event['event'] ?? null) === $type);
     }
 
     public function filterByPlatform(string $platform): self
     {
-        return $this->filter(static function (array $event) use ($platform) {
-            return ($event['platform'] ?? null) === $platform;
-        });
+        return $this->filter(static fn (array $event) => ($event['platform'] ?? null) === $platform);
     }
 
     public function filter(callable $filter): self
     {
-        return new self(...\array_filter($this->events, $filter));
+        return new self(array_filter($this->events, $filter));
     }
 
     /**
      * @codeCoverageIgnore
+     *
+     * @return Traversable<array<string, string>>
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         yield from $this->events;
     }
 
-    public function count()
+    public function count(): int
     {
-        return \array_sum(\array_column($this->events, 'count'));
+        $result = (int) array_sum(array_column($this->events, 'count'));
+
+        assert($result >= 0);
+
+        return $result;
     }
 }

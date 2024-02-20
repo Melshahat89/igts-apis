@@ -57,9 +57,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        dd('App');
+        $new = Auth::guard('api')->user();
 
-//        $homeSettings = Homesettings::where('id', 1)->first();
+        dd($new);
+
+        // $homeSettings = Homesettings::where('id', 1)->first();
         // $this->data['BestSeller'] = Courses::where('published', 1)->where('type', Courses::TYPE_COURSE)->where('featured', 1)->limit(8)->orderBy('sales_count', 'desc')->get();
         // $this->data['LastCourses'] = Courses::where('published', 1)
         // ->where(function ($query) {

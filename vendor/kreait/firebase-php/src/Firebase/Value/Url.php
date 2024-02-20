@@ -4,38 +4,43 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Value;
 
-use function GuzzleHttp\Psr7\uri_for;
+use GuzzleHttp\Psr7\Uri;
+use JsonSerializable;
 use Kreait\Firebase\Exception\InvalidArgumentException;
-use Kreait\Firebase\Value;
 use Psr\Http\Message\UriInterface;
+use Stringable;
 use Throwable;
 
-class Url implements \JsonSerializable, Value
+/**
+ * @internal
+ */
+final class Url implements JsonSerializable
 {
-    /** @var UriInterface */
-    private $value;
+    private UriInterface $value;
 
-    /**
-     * @internal
-     */
     public function __construct(UriInterface $value)
     {
         $this->value = $value;
     }
 
+    public function __toString()
+    {
+        return (string) $this->value;
+    }
+
     /**
-     * @param string|UriInterface|mixed $value
+     * @param Stringable|string $value
      *
      * @throws InvalidArgumentException
      */
     public static function fromValue($value): self
     {
-        if (\is_object($value) && \method_exists($value, '__toString')) {
-            $value = (string) $value;
+        if ($value instanceof UriInterface) {
+            return new self($value);
         }
 
         try {
-            return new self(uri_for($value));
+            return new self(new Uri((string) $value));
         } catch (Throwable $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
@@ -46,16 +51,14 @@ class Url implements \JsonSerializable, Value
         return $this->value;
     }
 
-    public function __toString()
+    public function jsonSerialize(): string
     {
         return (string) $this->value;
     }
 
-    public function jsonSerialize()
-    {
-        return (string) $this->value;
-    }
-
+    /**
+     * @param Stringable|string $other
+     */
     public function equalsTo($other): bool
     {
         return (string) $this->value === (string) $other;

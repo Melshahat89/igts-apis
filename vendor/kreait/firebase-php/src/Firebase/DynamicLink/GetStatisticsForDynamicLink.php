@@ -4,34 +4,26 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\DynamicLink;
 
-use Kreait\Firebase\DynamicLink;
 use Kreait\Firebase\Value\Url;
-use Psr\Http\Message\UriInterface;
+use Stringable;
 
 final class GetStatisticsForDynamicLink
 {
-    const DEFAULT_DURATION_IN_DAYS = 7;
+    public const DEFAULT_DURATION_IN_DAYS = 7;
+    private string $dynamicLink;
+    private int $durationInDays = self::DEFAULT_DURATION_IN_DAYS;
 
-    /** @var string */
-    private $dynamicLink;
-
-    /** @var int */
-    private $durationInDays;
-
-    private function __construct()
+    private function __construct(string $dynamicLink)
     {
+        $this->dynamicLink = $dynamicLink;
     }
 
     /**
-     * @param Url|UriInterface|string|DynamicLink|mixed $link
+     * @param Stringable|string $link
      */
     public static function forLink($link): self
     {
-        $action = new self();
-        $action->dynamicLink = (string) Url::fromValue((string) $link);
-        $action->durationInDays = self::DEFAULT_DURATION_IN_DAYS;
-
-        return $action;
+        return new self((string) Url::fromValue((string) $link));
     }
 
     public function withDurationInDays(int $durationInDays): self

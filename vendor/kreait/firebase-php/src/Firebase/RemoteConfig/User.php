@@ -5,57 +5,73 @@ declare(strict_types=1);
 namespace Kreait\Firebase\RemoteConfig;
 
 use GuzzleHttp\Psr7\Uri;
-use Kreait\Firebase\Value\Email;
 use Psr\Http\Message\UriInterface;
 
+/**
+ * @phpstan-type RemoteConfigUserShape array{
+ *     name?: non-empty-string,
+ *     email?: non-empty-string,
+ *     imageUrl?: non-empty-string
+ * }
+ */
 final class User
 {
-    /** @var string|null */
-    private $name;
+    /**
+     * @var non-empty-string|null
+     */
+    private ?string $name;
 
-    /** @var Email|null */
-    private $email;
+    /**
+     * @var non-empty-string|null
+     */
+    private ?string $email;
+    private ?UriInterface $imageUri;
 
-    /** @var UriInterface|null */
-    private $imageUri;
-
-    private function __construct()
+    /**
+     * @param non-empty-string|null $name
+     * @param non-empty-string|null $email
+     */
+    private function __construct(?string $name, ?string $email, ?UriInterface $imageUri)
     {
+        $this->name = $name;
+        $this->email = $email;
+        $this->imageUri = $imageUri;
     }
 
     /**
      * @internal
+     *
+     * @param RemoteConfigUserShape $data
      */
     public static function fromArray(array $data): self
     {
-        $new = new self();
-        $new->name = $data['name'] ?? null;
-        $new->email = ($data['email'] ?? null) ? new Email($data['email']) : null;
-        $new->imageUri = ($data['imageUrl'] ?? null) ? new Uri($data['imageUrl']) : null;
+        $imageUrl = $data['imageUrl'] ?? null;
+        $imageUri = $imageUrl ? new Uri($imageUrl) : null;
 
-        return $new;
+        return new self(
+            $data['name'] ?? null,
+            $data['email'] ?? null,
+            $imageUri,
+        );
     }
 
     /**
-     * @return string|null
+     * @return non-empty-string|null
      */
-    public function name()
+    public function name(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @return Email|null
+     * @return non-empty-string|null
      */
-    public function email()
+    public function email(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @return UriInterface|null
-     */
-    public function imageUri()
+    public function imageUri(): ?UriInterface
     {
         return $this->imageUri;
     }

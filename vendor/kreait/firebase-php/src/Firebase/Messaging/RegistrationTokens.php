@@ -5,14 +5,22 @@ declare(strict_types=1);
 namespace Kreait\Firebase\Messaging;
 
 use Countable;
-use Generator;
 use IteratorAggregate;
 use Kreait\Firebase\Exception\InvalidArgumentException;
+use Traversable;
 
+use function array_map;
+use function count;
+use function is_array;
+use function is_string;
+
+/**
+ * @implements IteratorAggregate<RegistrationToken>
+ */
 final class RegistrationTokens implements Countable, IteratorAggregate
 {
     /** @var RegistrationToken[] */
-    private $tokens;
+    private array $tokens;
 
     public function __construct(RegistrationToken ...$tokens)
     {
@@ -20,7 +28,7 @@ final class RegistrationTokens implements Countable, IteratorAggregate
     }
 
     /**
-     * @param mixed $values
+     * @param RegistrationTokens|RegistrationToken|RegistrationToken[]|string[]|string $values
      *
      * @throws InvalidArgumentException
      */
@@ -30,15 +38,15 @@ final class RegistrationTokens implements Countable, IteratorAggregate
             $tokens = $values->values();
         } elseif ($values instanceof RegistrationToken) {
             $tokens = [$values];
-        } elseif (\is_string($values)) {
+        } elseif (is_string($values)) {
             $tokens = [RegistrationToken::fromValue($values)];
-        } elseif (\is_array($values)) {
+        } elseif (is_array($values)) {
             $tokens = [];
 
             foreach ($values as $value) {
                 if ($value instanceof RegistrationToken) {
                     $tokens[] = $value;
-                } elseif (\is_string($value)) {
+                } elseif (is_string($value)) {
                     $tokens[] = RegistrationToken::fromValue($value);
                 }
             }
@@ -52,20 +60,20 @@ final class RegistrationTokens implements Countable, IteratorAggregate
     /**
      * @codeCoverageIgnore
      *
-     * @return Generator|RegistrationToken[]
+     * @return Traversable<RegistrationToken>|RegistrationToken[]
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         yield from $this->tokens;
     }
 
     public function isEmpty(): bool
     {
-        return \count($this->tokens) === 0;
+        return $this->tokens === [];
     }
 
     /**
-     * @return RegistrationToken[]
+     * @return array<RegistrationToken>
      */
     public function values(): array
     {
@@ -77,11 +85,27 @@ final class RegistrationTokens implements Countable, IteratorAggregate
      */
     public function asStrings(): array
     {
-        return \array_map('strval', $this->tokens);
+        return array_map('strval', $this->tokens);
     }
 
-    public function count()
+    public function count(): int
     {
-        return \count($this->tokens);
+        return count($this->tokens);
+    }
+
+    /**
+     * @param RegistrationToken|string $token
+     */
+    public function has($token): bool
+    {
+        $token = $token instanceof RegistrationToken ? $token : RegistrationToken::fromValue($token);
+
+        foreach ($this->tokens as $existing) {
+            if ($existing->value() === $token->value()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

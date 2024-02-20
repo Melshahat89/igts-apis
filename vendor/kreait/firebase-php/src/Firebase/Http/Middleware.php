@@ -4,40 +4,58 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Http;
 
+use Beste\Json;
+use Exception;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Psr7\Query;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
-class Middleware
+use function array_merge;
+use function ltrim;
+use function mb_stristr;
+use function preg_match_all;
+use function str_ends_with;
+
+/**
+ * @internal
+ */
+final class Middleware
 {
     /**
      * Ensures that the ".json" suffix is added to URIs and that the content type is set correctly.
      */
     public static function ensureJsonSuffix(): callable
     {
-        return static function (callable $handler) {
-            return static function (RequestInterface $request, array $options = null) use ($handler) {
-                $uri = $request->getUri();
-                $path = $uri->getPath();
+        return static fn (callable $handler) => static function (RequestInterface $request, ?array $options = null) use ($handler) {
+            $uri = $request->getUri();
+            $path = '/'.ltrim($uri->getPath(), '/');
 
-                if (\mb_substr($path, -5) !== '.json') {
-                    $uri = $uri->withPath($path.'.json');
-                    $request = $request->withUri($uri);
-                }
+            if (!str_ends_with($path, '.json')) {
+                $uri = $uri->withPath($path.'.json');
+                $request = $request->withUri($uri);
+            }
 
-                return $handler($request, $options ?: []);
-            };
+            return $handler($request, $options ?: []);
         };
     }
 
     /**
-     * Adds custom authentication to a request.
+     * @param array<string, mixed>|null $override
      */
-    public static function overrideAuth(Auth $override): callable
+    public static function addDatabaseAuthVariableOverride(?array $override): callable
     {
-        return static function (callable $handler) use ($override) {
-            return static function (RequestInterface $request, array $options = null) use ($handler, $override) {
-                return $handler($override->authenticateRequest($request), $options ?: []);
-            };
+        return static fn (callable $handler) => static function (RequestInterface $request, ?array $options = null) use ($handler, $override) {
+            $uri = $request->getUri();
+
+            $uri = $uri->withQuery(Query::build(
+                array_merge(Query::parse($uri->getQuery()), ['auth_variable_override' => Json::encode($override)]),
+            ));
+
+            return $handler($request->withUri($uri), $options ?: []);
         };
     }
 
@@ -46,20 +64,38 @@ class Middleware
      */
     public static function responseWithSubResponses(): callable
     {
-        return static function (callable $handler) {
-            return static function (RequestInterface $request, array $options = null) use ($handler) {
-                return $handler($request, $options ?: [])
-                    ->then(static function (ResponseInterface $response) {
-                        $isMultiPart = \mb_stristr($response->getHeaderLine('Content-Type'), 'multipart') !== false;
-                        $hasMultipleStartLines = ((int) \preg_match_all('@http/[\S]+\s@i', (string) $response->getBody())) >= 1;
+        return static fn (callable $handler) => static fn (RequestInterface $request, ?array $options = null) => $handler($request, $options ?: [])
+            ->then(static function (ResponseInterface $response) {
+                $isMultiPart = mb_stristr($response->getHeaderLine('Content-Type'), 'multipart') !== false;
+                $hasMultipleStartLines = ((int) preg_match_all('@http/[\S]+\s@i', (string) $response->getBody())) >= 1;
 
-                        if ($isMultiPart && $hasMultipleStartLines) {
-                            return new ResponseWithSubResponses($response);
-                        }
+                if ($isMultiPart && $hasMultipleStartLines) {
+                    return new ResponseWithSubResponses($response);
+                }
 
-                        return $response;
-                    });
-            };
-        };
+                return $response;
+            });
+    }
+
+    public static function log(LoggerInterface $logger, MessageFormatter $formatter, string $logLevel, string $errorLogLevel): callable
+    {
+        return static fn (callable $handler) => static fn ($request, array $options) => $handler($request, $options)->then(
+            static function (ResponseInterface $response) use ($logger, $request, $formatter, $logLevel, $errorLogLevel) {
+                $message = $formatter->format($request, $response);
+                $messageLogLevel = $response->getStatusCode() >= 400 ? $errorLogLevel : $logLevel;
+
+                $logger->log($messageLogLevel, $message);
+
+                return $response;
+            },
+            static function (Exception $reason) use ($logger, $request, $formatter, $errorLogLevel) {
+                $response = $reason instanceof RequestException ? $reason->getResponse() : null;
+                $message = $formatter->format($request, $response, $reason);
+
+                $logger->log($errorLogLevel, $message, ['request' => $request, 'response' => $response]);
+
+                return Create::rejectionFor($reason);
+            },
+        );
     }
 }

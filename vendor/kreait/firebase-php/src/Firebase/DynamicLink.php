@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase;
 
-use function GuzzleHttp\Psr7\uri_for;
+use Beste\Json;
+use GuzzleHttp\Psr7\Utils;
 use JsonSerializable;
-use Kreait\Firebase\Util\JSON;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 
+use function trim;
+
 final class DynamicLink implements JsonSerializable
 {
-    /** @var array */
-    private $data = [];
+    /** @var array<string, mixed> */
+    private array $data = [];
 
     private function __construct()
     {
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->uri();
     }
 
     /**
@@ -25,19 +32,19 @@ final class DynamicLink implements JsonSerializable
     public static function fromApiResponse(ResponseInterface $response): self
     {
         $link = new self();
-        $link->data = JSON::decode((string) $response->getBody(), true);
+        $link->data = Json::decode((string) $response->getBody(), true);
 
         return $link;
     }
 
     public function uri(): UriInterface
     {
-        return uri_for($this->data['shortLink']);
+        return Utils::uriFor($this->data['shortLink']);
     }
 
     public function previewUri(): UriInterface
     {
-        return uri_for($this->data['previewLink']);
+        return Utils::uriFor($this->data['previewLink']);
     }
 
     public function domain(): string
@@ -47,9 +54,12 @@ final class DynamicLink implements JsonSerializable
 
     public function suffix(): string
     {
-        return \trim($this->uri()->getPath(), '/');
+        return trim($this->uri()->getPath(), '/');
     }
 
+    /**
+     * @return string[]
+     */
     public function warnings(): array
     {
         return $this->data['warning'] ?? [];
@@ -60,13 +70,11 @@ final class DynamicLink implements JsonSerializable
         return !empty($this->warnings());
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
     {
         return $this->data;
-    }
-
-    public function __toString()
-    {
-        return (string) $this->uri();
     }
 }
