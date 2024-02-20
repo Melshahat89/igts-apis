@@ -30,7 +30,7 @@ class MyCoursesTransformers extends AbstractTransformer
 			"promo_video" => $modelOrCollection['courses']->promo_video,
 			"visits" => $modelOrCollection['courses']->visits,
 			"published" => $modelOrCollection['courses']->published,
-			"doctor_name" => $modelOrCollection['courses']->doctor_name_lang,
+			"doctor_name" => $modelOrCollection['courses']->instructor['Fullname_lang'],
 			"access_time" => $modelOrCollection['courses']->access_time,
 			"poster" => large($modelOrCollection['courses']->poster),
             "rating" => $modelOrCollection['courses']->CourseRating,
