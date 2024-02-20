@@ -100,11 +100,11 @@ class Vimeo
         switch ($method) {
             case 'GET':
             case 'HEAD':
-                if (!empty($params)) {
-                    $query_component = '?' . http_build_query($params, '', '&');
-                } else {
+//                if (!empty($params)) {
+//                    $query_component = '?' . http_build_query($params, '', '&');
+//                } else {
                     $query_component = '';
-                }
+//                }
 
                 $curl_url = self::ROOT_ENDPOINT . $url . $query_component;
                 break;
