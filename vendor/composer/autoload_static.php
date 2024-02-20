@@ -269,6 +269,8 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
             'Dflydev\\DotAccessData\\' => 22,
             'Defuse\\Crypto\\' => 14,
             'DeepCopy\\' => 9,
+            'Database\\Seeders\\' => 17,
+            'Database\\Factories\\' => 19,
             'DASPRiD\\Enum\\' => 13,
         ),
         'C' => 
@@ -520,8 +522,8 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -589,8 +591,8 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
-            1 => __DIR__ . '/..' . '/league/uri',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
         'League\\OAuth2\\Server\\' => 
         array (
@@ -925,6 +927,14 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/database/seeders',
+        ),
+        'Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/database/factories',
+        ),
         'DASPRiD\\Enum\\' => 
         array (
             0 => __DIR__ . '/..' . '/dasprid/enum/src',
@@ -1021,12 +1031,6 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
     );
 
     public static $classMap = array (
-        'AddItemsToMenu' => __DIR__ . '/../..' . '/database/seeds/AddItemsToMenu.php',
-        'AddMenu' => __DIR__ . '/../..' . '/database/seeds/AddMenu.php',
-        'AddPage' => __DIR__ . '/../..' . '/database/seeds/AddPage.php',
-        'AddSetting' => __DIR__ . '/../..' . '/database/seeds/AddSetting.php',
-        'AdminGroup' => __DIR__ . '/../..' . '/database/seeds/AdminGroup.php',
-        'AdminUser' => __DIR__ . '/../..' . '/database/seeds/AdminUser.php',
         'App\\Application\\Controllers\\AbstractController' => __DIR__ . '/../..' . '/app/Application/Controllers/AbstractController.php',
         'App\\Application\\Controllers\\Api\\AccountControllerApi' => __DIR__ . '/../..' . '/app/Application/Controllers/Api/AccountControllerApi.php',
         'App\\Application\\Controllers\\Api\\ApiTrait' => __DIR__ . '/../..' . '/app/Application/Controllers/Api/ApiTrait.php',
@@ -1176,6 +1180,7 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         'App\\Application\\Model\\Businessdata' => __DIR__ . '/../..' . '/app/Application/Model/Businessdata.php',
         'App\\Application\\Model\\Businessdomains' => __DIR__ . '/../..' . '/app/Application/Model/Businessdomains.php',
         'App\\Application\\Model\\Businessgroups' => __DIR__ . '/../..' . '/app/Application/Model/Businessgroups.php',
+        'App\\Application\\Model\\Businessgroupscourses' => __DIR__ . '/../..' . '/app/Application/Model/Businessgroupscourses.php',
         'App\\Application\\Model\\Businessgroupsusers' => __DIR__ . '/../..' . '/app/Application/Model/Businessgroupsusers.php',
         'App\\Application\\Model\\Businessinputfields' => __DIR__ . '/../..' . '/app/Application/Model/Businessinputfields.php',
         'App\\Application\\Model\\Businessinputfieldsresponses' => __DIR__ . '/../..' . '/app/Application/Model/Businessinputfieldsresponses.php',
@@ -1942,8 +1947,6 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
         'Carbon\\TranslatorImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/TranslatorImmutable.php',
         'Carbon\\TranslatorStrongTypeInterface' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/TranslatorStrongTypeInterface.php',
-        'Cat' => __DIR__ . '/../..' . '/database/seeds/Cat.php',
-        'CommandPage' => __DIR__ . '/../..' . '/database/seeds/CommandPage.php',
         'Composer\\Advisory\\Auditor' => __DIR__ . '/..' . '/composer/composer/src/Composer/Advisory/Auditor.php',
         'Composer\\Advisory\\IgnoredSecurityAdvisory' => __DIR__ . '/..' . '/composer/composer/src/Composer/Advisory/IgnoredSecurityAdvisory.php',
         'Composer\\Advisory\\PartialSecurityAdvisory' => __DIR__ . '/..' . '/composer/composer/src/Composer/Advisory/PartialSecurityAdvisory.php',
@@ -2276,7 +2279,6 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         'DASPRiD\\Enum\\Exception\\SerializeNotSupportedException' => __DIR__ . '/..' . '/dasprid/enum/src/Exception/SerializeNotSupportedException.php',
         'DASPRiD\\Enum\\Exception\\UnserializeNotSupportedException' => __DIR__ . '/..' . '/dasprid/enum/src/Exception/UnserializeNotSupportedException.php',
         'DASPRiD\\Enum\\NullValue' => __DIR__ . '/..' . '/dasprid/enum/src/NullValue.php',
-        'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
@@ -7335,7 +7337,6 @@ class ComposerStaticInit388c5767593a70e0cf6f05c828714b2b
         'ParagonIE\\ConstantTime\\Encoding' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Encoding.php',
         'ParagonIE\\ConstantTime\\Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Hex.php',
         'ParagonIE\\ConstantTime\\RFC4648' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/RFC4648.php',
-        'Permissions' => __DIR__ . '/../..' . '/database/seeds/Permissions.php',
         'PharIo\\Manifest\\Application' => __DIR__ . '/..' . '/phar-io/manifest/src/values/Application.php',
         'PharIo\\Manifest\\ApplicationName' => __DIR__ . '/..' . '/phar-io/manifest/src/values/ApplicationName.php',
         'PharIo\\Manifest\\Author' => __DIR__ . '/..' . '/phar-io/manifest/src/values/Author.php',

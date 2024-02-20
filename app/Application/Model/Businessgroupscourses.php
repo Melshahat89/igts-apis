@@ -1,7 +1,7 @@
 <?php
  namespace App\Application\Model;
  use Illuminate\Database\Eloquent\Model;
- class businessgroupscourses extends Model
+ class Businessgroupscourses extends Model
 {
    public $table = "businessgroupscourses";
 

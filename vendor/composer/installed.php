@@ -3,7 +3,7 @@
         'name' => 'meduo/igts',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '7a836da7a4c9f27d60ffb424bcd5ed6c2b5ed9cb',
+        'reference' => '960e0c388865228771522ffb79dd706c035a4bf6',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1029,7 +1029,7 @@
         'meduo/igts' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7a836da7a4c9f27d60ffb424bcd5ed6c2b5ed9cb',
+            'reference' => '960e0c388865228771522ffb79dd706c035a4bf6',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1480,8 +1480,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(
