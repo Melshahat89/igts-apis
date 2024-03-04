@@ -148,8 +148,16 @@ class CoursesApi extends Controller
         if ($validator->fails()) {
             return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
         }
-//        $course = $this->model->where('id',$request->course_id)->first();
+        $course = $this->model->where('id',$request->course_id)->first();
+
         $lectures = Coursesections::where('courses_id',$request->course_id)->get();
+
+        if ($course->courseincludes){
+            if (count($course->courseincludes) > 0 ){
+                $coursesIds = $course->courseincludes->pluck('included_course');
+                $lectures = Coursesections::where('courses_id',[$coursesIds])->get();
+            }
+        }
 
         if($lectures){
             return response(apiReturn(CoursesectionsTransformers::transform($lectures)), 200);
