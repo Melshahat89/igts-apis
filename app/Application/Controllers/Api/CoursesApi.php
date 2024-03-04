@@ -155,7 +155,9 @@ class CoursesApi extends Controller
         if ($course->courseincludes){
             if (count($course->courseincludes) > 0 ){
                 $coursesIds = $course->courseincludes->pluck('included_course');
-                $lectures = Coursesections::where('courses_id',[$coursesIds])->get();
+
+//                dd($coursesIds);
+                $lectures = Coursesections::whereIn('courses_id',$coursesIds)->orderBy('courses_id' , 'asc')->get();
             }
         }
 
