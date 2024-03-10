@@ -3,8 +3,10 @@
 use App\Application\Model\Businessinputfields;
 use App\Application\Model\Businessinputfieldsresponses;
 use App\Application\Model\Categories;
+use App\Application\Model\Ipcurrency;
 use App\Application\Model\Courselectures;
 use App\Application\Model\Courses;
+use App\Application\Model\Payments;
 use App\Application\Model\Slider;
 use App\Application\Model\Coursewishlist;
 use App\Application\Model\Events;
@@ -12,12 +14,18 @@ use App\Application\Model\FacebookConversionsAPI;
 use App\Application\Model\Orders;
 use App\Application\Model\Progress;
 use App\Application\Model\Quizstudentsstatus;
+use App\Application\Model\Subscriptionuser;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Session;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+
 
 function page($id = null){
     if($id != null){
@@ -34,7 +42,7 @@ function getYouTubeId($url){
 }
 
 function menuCategories(){
-    return Categories::where('status',1)->where('show_home',1)->orderBy('sort','asc')->get();
+    return Categories::where('status',1)->where('show_menu',1)->orderBy('sort','asc')->get();
 }
 
 function small($image = ''){
@@ -54,15 +62,14 @@ function getCertificateFromId($id){
 }
 
 function imageExist($imageName , $env = 'SMALL_IMAGE_PATH'){
-    return file_exists(public_path(env($env.'_1').'/'.$imageName)) ? true : false;
+    return file_exists(env($env.'_1').'/'.$imageName) ? true : false;
 }
 
 function large($image= ''){
     if($image == ''){
         $image = url(env('NONE_IMAGE'));
     }else{
-//         $image = imageExist($image , 'MEDIUM_IMAGE_PATH') ?  url('/'.env('MEDIUM_IMAGE_PATH').'/'.$image) :  url(env('NONE_IMAGE'));
-         $image = 'https://igtsservice.com/uploads/files/medium/'.$image;
+        $image = imageExist($image , 'MEDIUM_IMAGE_PATH') ?  url('/'.env('MEDIUM_IMAGE_PATH').'/'.$image) :  url(env('NONE_IMAGE'));
     }
     return $image ;
 
@@ -73,7 +80,7 @@ function large1($image= ''){
     if($image == ''){
         $image = url(env('NONE_IMAGE'));
     }else{
-         $image = imageExist($image , 'UPLOAD_PATH') ?  url('/'.env('UPLOAD_PATH').'/'.$image) :  url(env('NONE_IMAGE'));
+        $image = imageExist($image , 'UPLOAD_PATH') ?  url('/'.env('UPLOAD_PATH').'/'.$image) :  url(env('NONE_IMAGE'));
     }
     return $image ;
 
@@ -92,19 +99,134 @@ function medium($image= ''){
 
 function CourseWishlisted($Course_id,$User_id = null){
 
-        $User_id = Auth::guard('api')->user()->id;
-        $Wishlist = Coursewishlist::where('user_id',$User_id)->where('courses_id',$Course_id)->exists();
-        return $Wishlist;
+    $User_id = Auth::guard('api')->user()->id;
+    $Wishlist = Coursewishlist::where('user_id',$User_id)->where('courses_id',$Course_id)->exists();
+    return $Wishlist;
+}
+
+// function getCurrency(){
+//     $country = userCountry();
+//     return  ($country["code"] == "EG" || $country["code"] == "MU") ? "EGP" : "USD";
+
+// }
+
+function getUserCountryByAPI($ip=null){
+
+    $ip = ($ip) ? $ip : getUserIpAddr();
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => "http://ipwhois.pro/json/" . $ip . "?key=wRRIhN7RYbL0KzPE",  // test : PO3Z57akwWMy84gf  Or test : wRRIhN7RYbL0KzPE
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "Content-Type: application/json"
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $result = json_decode($response, true);
+
+    //set new ip currency details
+    if($result){
+        $ipCurrency = new Ipcurrency();
+        $ipCurrency->ip = ($ip) ? $ip : getUserIpAddr();
+        $ipCurrency->type = $result['type'] ? $result['type'] : null;
+        $ipCurrency->continent = $result['continent'] ? $result['continent'] : null;
+        $ipCurrency->continent_code = $result['continent_code'] ? $result['continent_code'] : null;
+        $ipCurrency->country = $result['country'] ? $result['country'] : null;
+        $ipCurrency->country_code = $result['country_code'] ? $result['country_code'] : null;
+        $ipCurrency->country_flag = $result['country_flag'] ? $result['country_flag'] : null;
+        $ipCurrency->region = $result['region'] ? $result['region'] : null;
+        $ipCurrency->city = $result['city'] ? $result['city'] : null;
+        $ipCurrency->timezone = $result['timezone'] ? $result['timezone'] : null;
+        $ipCurrency->currency = $result['currency'] ? $result['currency'] : null;
+        $ipCurrency->currency_code = $result['currency_code'] ? $result['currency_code'] : null;
+        $ipCurrency->currency_rates = $result['currency_rates'] ? $result['currency_rates'] : null;
+        $ipCurrency->save();
+    }
+
+    return $ipCurrency['currency_code']? $ipCurrency['currency_code']:null;
+}
+
+function userCountryAPI($ip=null){
+    $ip = ($ip) ? $ip : getUserIpAddr();
+    $response = getUserCountryByAPI($ip);
+
+    if(isset($response)){
+        switch($response) {
+            case('EGP'):
+                $currencyCode = 'EGP';
+                break;
+
+            case('AED'):
+                $currencyCode = 'AED';
+                break;
+
+            case('SAR'):
+                $currencyCode = 'SAR';
+                break;
+
+            default:
+                $currencyCode = 'USD';
+        }
+        return $currencyCode;
+    }else{
+        return "USD";
+    }
+
 }
 
 function getCurrency(){
-    $country = userCountry();
-    return  ($country["code"] == "EG" || $country["code"] == "MU") ? "EGP" : "USD";
-    
+
+    $userIpAddress = getUserIpAddr();
+
+    $wordCount = DB::table('ipcurrency')->count();
+    $currency =  Cache::remember('Ipcurrency-'.$wordCount, 216000, function() use ($userIpAddress) {
+        return Ipcurrency::where('ip', $userIpAddress)->first();
+    });
+
+    //Old Code
+//    $currency = Ipcurrency::where('ip',$userIpAddress)->first();
+    if ($currency){
+        switch($currency->currency_code) {
+            case('EGP'):
+                $currencyCode = 'EGP';
+                break;
+
+            case('AED'):
+                $currencyCode = 'AED';
+                break;
+
+            case('SAR'):
+                $currencyCode = 'SAR';
+                break;
+
+            default:
+                $currencyCode = 'USD';
+        }
+
+        return $currencyCode;
+    }else{
+        return userCountryAPI($userIpAddress);
+    }
 }
 
+function getCurrencyOld(){
+    if(Session::get('ip') == getUserIpAddr() && Session::get('currency')){
+        $currency = Session::get('currency');
+    }else{
+        $currency = userCountryAPI();
+    }
+    return $currency;
+}
 
- function userCountry2(){
+function userCountry2(){
     $ip = getUserIpAddr();
 
 
@@ -113,7 +235,7 @@ function getCurrency(){
         '127.0.0.1',
         '::1'
     );
-    
+
     if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
         $ip = '41.44.79.142'; //Egypt
         // $ip = '5.42.224.0'; //Saudi
@@ -143,27 +265,27 @@ function getCurrency(){
     //     $countryCity = 'CAIRO' ;
     // }
 
-        // Geo Location Free
-        // Country Code
-        if(isset(getLocationInfoByIp($ip)['geoplugin_countryCode'])){
-            $countryCode = getLocationInfoByIp($ip)['geoplugin_countryCode'];
-        }else{
-            $countryCode = 'EG' ;
-        }
+    // Geo Location Free
+    // Country Code
+    if(isset(getLocationInfoByIp($ip)['geoplugin_countryCode'])){
+        $countryCode = getLocationInfoByIp($ip)['geoplugin_countryCode'];
+    }else{
+        $countryCode = 'EG' ;
+    }
 
-        // country Name
-        if(isset(getLocationInfoByIp($ip)['geoplugin_countryName'])){
-            $countryName = getLocationInfoByIp($ip)['geoplugin_countryName'];
-        }else{
-            $countryName = 'EGYPT' ;
-        }
+    // country Name
+    if(isset(getLocationInfoByIp($ip)['geoplugin_countryName'])){
+        $countryName = getLocationInfoByIp($ip)['geoplugin_countryName'];
+    }else{
+        $countryName = 'EGYPT' ;
+    }
 
-        // country City
-        if(isset(getLocationInfoByIp($ip)['geoplugin_city'])){
-            $countryCity = getLocationInfoByIp($ip)['geoplugin_city'];
-        }else{
-            $countryCity = 'CAIRO' ;
-        }
+    // country City
+    if(isset(getLocationInfoByIp($ip)['geoplugin_city'])){
+        $countryCity = getLocationInfoByIp($ip)['geoplugin_city'];
+    }else{
+        $countryCity = 'CAIRO' ;
+    }
 
 
 
@@ -173,7 +295,7 @@ function getCurrency(){
     // $countryCity = isset(getLocationInfoByIp($ip)['geoplugin_city']) ?getLocationInfoByIp($ip)['geoplugin_city'] :'CAIRO';
     if(!isset($countryCode))
         return array("code" => "EG", "country" => "EGYPT");
-    
+
     return array("code" => $countryCode, "country" => $countryName, "city" => $countryCity);
 }
 
@@ -189,8 +311,8 @@ function userCountry()
     );
 
     if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
-         $ip = '197.41.26.244'; //Egypt
-    //    $ip = '5.42.224.0'; //Saudi
+        //  $ip = '197.41.26.244'; //Egypt
+        $ip = '5.42.224.0'; //Saudi
     }
 
 
@@ -505,7 +627,7 @@ function userCountry()
 
     foreach ($ranges as $range) {
         $ok = ip_in_range($ip, $range);
-        
+
         if($ok){
             // dd(11);
             return array("code" => "EG", "country" => "EGYPT");
@@ -531,42 +653,56 @@ function getLocationInfoByIp($ip){
         $ip_data = [];
     }
 
-    // $ip_data = json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip)); 
-    // $ip_data = []; 
+    // $ip_data = json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));
+    // $ip_data = [];
     return $ip_data;
 
 }
 
 
 function getUserIpAddr(){
-    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-        //ip from share internet
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-        //ip pass from proxy
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+    $whitelist = array(
+        '127.0.0.1',
+        '::1'
+    );
+
+    if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+//        $ip = '41.222.128.0'; //Egypt
+        $ip = '103.84.120.1'; //Saudi
+//        $ip = '206.71.50.230'; //USA
+//        $ip = '83.110.250.231'; //Dubai
     }else{
-        $ip = $_SERVER['REMOTE_ADDR'];
+
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+            //ip from share internet
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+            //ip pass from proxy
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }else{
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
     }
 
     return $ip;
 }
 
-function createRandomCode() { 
+function createRandomCode() {
 
-    $chars = "I02G34T567S89"; 
-    srand((double)microtime()*1000000); 
-    $i = 0; 
-    $code = '' ; 
+    $chars = "I02G34T567S89";
+    srand((double)microtime()*1000000);
+    $i = 0;
+    $code = '' ;
 
-    while ($i <= 15) { 
-        $num = rand() % 33; 
-        $tmp = substr($chars, $num, 1); 
-        $code = $code . $tmp; 
-        $i++; 
-    } 
+    while ($i <= 15) {
+        $num = rand() % 33;
+        $tmp = substr($chars, $num, 1);
+        $code = $code . $tmp;
+        $i++;
+    }
 
-    return $code; 
+    return $code;
 
 }
 
@@ -587,22 +723,22 @@ function getEventStatus($data){
     // if($data->end_date == null){
     //     return "going";
     // }
-    
+
     $endDate = new DateTime($startDate);
     $endDate = $endDate->add(new DateInterval('PT3H'));
     $endDate = $endDate->format('Y-m-d H:i:s');
 
-    
+
     $passed = false;
     $going = false;
-    
+
 
     if($currentDate > $startDate){
-        
+
 
         if($currentDate < $endDate){
 
-            
+
             $going = true;
 
             return "going";
@@ -613,7 +749,7 @@ function getEventStatus($data){
             return "passed";
         }
 
-        
+
 
     }else{
 
@@ -669,44 +805,44 @@ function localizeDate($datetime){
     switch ($month){
         case 'January':
             $month = 'يناير';
-        break;
+            break;
         case 'February':
             $month = 'فبراير';
-        break;
+            break;
         case 'March':
             $month = 'مارس';
-        break;
+            break;
         case 'April':
             $month = 'ابريل';
-        break;
+            break;
         case 'May':
             $month = 'مايو';
-        break;
+            break;
         case 'June':
             $month = 'يونيو';
-        break;
+            break;
         case 'July':
             $month = 'يوليو';
-        break;
+            break;
         case 'August':
             $month = 'اغسطس';
-        break;
+            break;
         case 'September':
             $month = 'سبتمبر';
-        break;
+            break;
         case 'October':
             $month = 'اكتوبر';
-        break;
+            break;
         case 'November':
             $month = 'نوفبمر';
-        break;
+            break;
         case 'December':
             $month = 'ديسمبر';
-        break;
+            break;
     }
 
     return $day . " " . $month;
-    
+
 }
 
 function isMobile() {
@@ -756,7 +892,6 @@ function getInstructors($course){
 
     return $instructors;
 }
-
 function tabsContainerItemsWidth(){
 
     $courses = (Courses::where('type', Courses::TYPE_COURSE)->where('published', 1)->where('soon', 0)->count() > 0) ? 1 : 0;
@@ -807,24 +942,24 @@ function defaultSeoKeys($title){
 
 function getCourseTypeText($course){
 
-    
+
     switch ($course->type){
-        
+
         case Courses::TYPE_COURSE:
             $type = 'courses';
-        break;
+            break;
 
         case Courses::TYPE_DIPLOMAS:
             $type = 'diplomas';
-        break;
+            break;
 
         case Courses::TYPE_MASTERS:
             $type = 'masters';
-        break;
+            break;
 
         case Courses::TYPE_BUNDLES:
             $type = 'bundles';
-        break;
+            break;
 
         default:
             $type = 'courses';
@@ -846,4 +981,140 @@ function currentYear(){
     $now = Carbon::now();
 
     return $now->year;
+}
+
+function sortCourses($items){
+
+    if(request()->has('sort') && request()->get('sort') == 1){
+        $items = $items->orderBy('created_at', 'ASC');
+    }else{
+        $items = $items->orderBy('created_at', 'DESC');
+    }
+
+    return $items;
+}
+
+function filterCriteria($items){
+
+
+    if (request()->has('rating') && request()->get('rating') != '') {
+        $data['rating'] = $_GET['rating'];
+        $items = $items->filter(function ($item) use($data) {
+
+            if ($item->CourseRating > ((int) $data['rating'] - 1) and $item->CourseRating <= (int) $data['rating']) {
+                return $item;
+            }
+        });
+    } else {
+        $data['rating'] = '';
+    }
+
+    if (request()->has('duration') && request()->get('duration') != '') {
+        $duration = explode(":", request()->get('duration'));
+        //dd($duration);
+        $items = $items->filter(function ($item) use ($duration) {
+            if (($item->CourseDuration > ($duration[0] * 60 * 60)) and ($item->CourseDuration <= ($duration[1] * 60 * 60))) {
+                return $item;
+            }
+        });
+        $data['duration'] = $_GET['duration'];
+    } else {
+        $data['duration'] = '';
+    }
+
+    $data['categories'] = '';
+    return ['items' => $items, 'criteria' => $data];
+}
+
+
+function liveWireFilterCriteria($items, $criteria){
+    if ($criteria['rating']) {
+        $data['rating'] = $criteria['rating'];
+        $items = $items->filter(function ($item) use($data) {
+            if ($item->CourseRating > ((int) $data['rating'] - 1) and $item->CourseRating <= (int) $data['rating']) {
+                return $item;
+            }
+        });
+    } else {
+        $data['rating'] = '';
+    }
+
+    if ($criteria['duration']) {
+        $duration = explode(":", $criteria['duration']);
+        $items = $items->filter(function ($item) use ($duration) {
+            if (($item->CourseDuration > ($duration[0] * 60 * 60)) and ($item->CourseDuration <= ($duration[1] * 60 * 60))) {
+                return $item;
+            }
+        });
+        $data['duration'] = $criteria['duration'];
+    } else {
+        $data['duration'] = '';
+    }
+
+    if ($criteria['speciality']) {
+        $speciality = $criteria['speciality'];
+        $items = $items->filter(function ($item) use ($speciality) {
+            if ($item->categories->slug == $speciality) {
+                return $item;
+            }
+        });
+        $data['speciality'] = $criteria['speciality'];
+    } else {
+        $data['speciality'] = '';
+    }
+
+    $data['categories'] = '';
+    return ['items' => $items, 'criteria' => $data];
+}
+
+function getCurrentandNextMonthNumbers(){
+    $currentMonth = Carbon::now()->month;
+    $nextMonth = $currentMonth + 1;
+
+    if($nextMonth > 12){
+        $result = [
+            $currentMonth,
+            $nextMonth - 12
+        ];
+    }else{
+        $result = [
+            $currentMonth,
+            $nextMonth
+        ];
+    }
+
+    return $result;
+}
+
+function durationCalc($duration){
+    if($duration >= 3600){
+        return gmdate("H:i:s",$duration);
+    }else{
+        return gmdate("i:s",$duration);
+    }
+
+}
+
+function calculateExchangeRate($currency, $amount, $method){
+
+    if($method == Orders::METHOD_PAYMOB)
+        $amount = ceil($amount) * 100;
+
+
+
+
+    return ceil(($currency == "EGP") ? $amount : Payments::exchangeRate() * $amount);
+//    return ceil($amount / $currency->ExchangeRateOnPayment);
+}
+
+function checkSubscriptionActive($subscriptionID){
+    $now = Carbon::now()->toDateString();
+    return Subscriptionuser::where('id',$subscriptionID)
+        ->where('is_active',1)
+        ->where('b_type',Orders::TYPE_B2C)
+        ->where(function($query) use ($now){
+            $query->where('end_date', '>=', date($now))
+                ->where('start_date', '<=', date($now));
+        })
+        ->latest()->first();
 }

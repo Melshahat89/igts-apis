@@ -8,6 +8,7 @@ use App\Application\Model\BecomeInstructor;
 use App\Application\Model\Contact;
 use App\Application\Model\Homesettings;
 use App\Application\Model\Partners;
+use App\Application\Model\Payments;
 use App\Application\Transformers\HomesettingsTransformers;
 use App\Application\Requests\Website\Homesettings\ApiAddRequestHomesettings;
 use App\Application\Requests\Website\Homesettings\ApiUpdateRequestHomesettings;
@@ -15,6 +16,7 @@ use App\Application\Transformers\PartnersTransformers;
 use App\Application\Transformers\QuizstudentsstatusTransformers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class HomeApi extends Controller
@@ -129,14 +131,44 @@ class HomeApi extends Controller
     public function checkoutApi(Request $request){
 
         $user = Auth::guard('api')->user();
+
+//        dd($user);
         Auth::guard()->login($user);
-//        dd($user->token);
+
+
+//        if (Auth::guard($user)->check()) {
+//         dd(22);
+//        }
+
+        if(function_exists('shell_exec')) {
+            echo "shell_exec is enabled";
+        } else {
+            echo "shell_exec is disabled";
+        }
+        dd(Auth::user());
+
+
+        dd(Session::get('variableName'));
 
         $request->headers->set('Authorization', `Bearer $request->cookie('accessToken')`);
 
         return response(apiReturn(['url'=>'https://igtsservice.com/cart'], '', ''), 200);
 
 //        return redirect('site/payments');
+    }
+
+
+    public function subscriptions(){
+
+        $homeSettings = Homesettings::where('id', 1)->first();
+        $this->data['subscription_monthly'] = round($homeSettings->MonthlyB2cSubscriptionPrice);
+        $this->data['subscription_yearly_after'] = round($homeSettings->YearlyB2cSubscriptionPrice);
+        $this->data['subscription_yearly_before'] = round(($homeSettings->MonthlyB2cSubscriptionPrice * 12));
+        $this->data['currency'] = getCurrency();
+        $this->data['link'] = 'https://igtsservice.com/ar/subscriptions#pricing';
+
+
+        return response(apiReturn([$this->data]), 200);
     }
 
 }

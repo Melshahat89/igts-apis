@@ -78,6 +78,7 @@ Route::middleware("localization")->group(function () {
         Route::get('partners', 'HomeApi@partners');
         Route::post('becomeInstructor', 'BecomeInstructorApi@add');
         Route::post('careers', 'BecomeInstructorApi@careers');
+        Route::get('subscriptions', 'HomeApi@subscriptions');
 
 
         Route::prefix('course')->group(function () {
