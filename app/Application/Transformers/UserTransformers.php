@@ -35,6 +35,7 @@ class UserTransformers extends AbstractTransformer
              'last_course' => $modelOrCollection->lastcourse,
              'reviews' => $modelOrCollection->Userreviews,
              'cart_count' => $modelOrCollection->cartcount,
+             'subscription' => $modelOrCollection->subscription,
          ];
      }
 }

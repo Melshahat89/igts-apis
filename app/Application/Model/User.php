@@ -2,6 +2,7 @@
 namespace App\Application\Model;
 
 use App\Mail\Otp;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -451,6 +452,23 @@ use Laravel\Passport\HasApiTokens;
         {
             return  count(getShoppingCart());
             //todo
+        }
+
+
+        public function getSubscriptionAttribute()
+        {
+            return $this->checkSubscriptionActive($this->id);
+        }
+        public function checkSubscriptionActive($userID){
+            $now = Carbon::now()->toDateString();
+            return Subscriptionuser::where('user_id',$userID)
+                ->where('is_active',1)
+                ->where('b_type',Orders::TYPE_B2C)
+                ->where(function($query) use ($now){
+                    $query->where('end_date', '>=', date($now))
+                        ->where('start_date', '<=', date($now));
+                })
+                ->latest()->first();
         }
 
 
