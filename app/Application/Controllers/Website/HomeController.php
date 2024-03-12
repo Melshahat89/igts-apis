@@ -132,7 +132,7 @@ class HomeController extends Controller
 
     public function deleteImage($model, $id, Request $request)
     {
-        if (auth()->check()) {
+        if (Auth::guard('api')->check()) {
 
             if (file_exists(public_path(env('UPLOAD_PATH_1') . DS . $request->name))) {
                 $model = 'App\\Application\\Model\\' . ucfirst($model);

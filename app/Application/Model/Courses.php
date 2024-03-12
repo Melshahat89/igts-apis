@@ -387,8 +387,11 @@ class Courses extends Model
         } else {
             $promoPrice = $priceAfterInternalDescount;
         }
+
+
         //Check Promo Business
-        if (auth()->check()) {
+        if (Auth::guard('api')->check()) {
+
             if (Auth::guard('api')->user()->businessdata_id) {
                 $businessdata = Businessdata::where('status', 1)->find(Auth::guard('api')->user()->businessdata_id);
                 if ($businessdata) {
