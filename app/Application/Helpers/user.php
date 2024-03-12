@@ -89,18 +89,20 @@ function getShoppingCartCost($userId=null){
     
 }
 
-function getCurrentPromoCode($userId=null){
+function getCurrentPromoCode($userId=null, $type=null){
     if(!Auth::check() AND !($userId)){
         return FALSE;
-    }   
-        $userId = ($userId) ? $userId : Auth::guard('api')->user()->id;
-        $promo = Promotionactive::where('user_id', $userId)->where('status',1)->orderBy('id', 'ASC')->first();
-        if(!$promo){
-            return  FALSE;
-        }
-
-        return ($promo) ? $promo  : FALSE;
-    
+    }
+    $userId = ($userId) ? $userId : Auth::user()->id;
+    if($type){
+        $promo = Promotionactive::where('user_id', $userId)->where('status',1)->where('type', $type)->orderBy('id', 'ASC')->first();
+    }else{
+        $promo = Promotionactive::where('user_id', $userId)->where('status',1)->whereNull('type')->orderBy('id', 'ASC')->first();
+    }
+    if(!$promo){
+        return  FALSE;
+    }
+    return ($promo) ? $promo  : FALSE;
 }
 
 function connectPromoWithOrder($promotionObj, $order_id, $userId=null){

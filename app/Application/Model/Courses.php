@@ -343,11 +343,11 @@ class Courses extends Model
     {
         // $country = userCountry();
         $currency = getCurrency();
-        if ($currency == "EGP") {
+        if ($currency == 'EGP'){
             $price = $this->price;
             $discount = $this->discount_egp;
-        } else {
-            $price = $this->price_in_dollar;
+        }else{
+            $price = Currencies::getAmountcentsByCurrencyID('USD' , $currency, $this->price_in_dollar);
             $discount = $this->discount_usd;
         }
         ////////////////////////////////////////////
@@ -369,7 +369,7 @@ class Courses extends Model
                     foreach ($appliedCourses as $appliedCourse) {
                         $promoCourses[] = $appliedCourse->courses_id;
                     }
-                    if (in_array($this->id, $promoCourses)) {
+                    if (in_array($this->id, $promoCourses) or $promoRow->include_courses == '0' ) {
                         if ($discountType == 1) {
                             $discountPrice = $discountValue * $priceAfterInternalDescount / 100;
                             $promoPrice = $priceAfterInternalDescount - $discountPrice;
@@ -389,11 +389,18 @@ class Courses extends Model
         }
         //Check Promo Business
         if (auth()->check()) {
-            if (auth()->user()->businessdata_id) {
-                $businessdata = Businessdata::where('status', 1)->find(auth()->user()->businessdata_id);
+            if (Auth::guard('api')->user()->businessdata_id) {
+                $businessdata = Businessdata::where('status', 1)->find(Auth::guard('api')->user()->businessdata_id);
                 if ($businessdata) {
                     //Check if Course in business
                     $businessCourses = Businesscourses::where('courses_id', $this->id)->where('businessdata_id', $businessdata->id)->first();
+                    if(!Auth::guard('api')->user()->businessgroupsusersuser->isEmpty()){
+                        if (Auth::guard('api')->user()->businessgroupsusersuser[0]->businessgroups){
+                            $businessgroupscourses = Businessgroups::where('id',Auth::user()->businessgroupsusersuser[0]->businessgroups['id'])->first();
+                            $businessCourses = Businessgroupscourses::where('businessgroups_id',Auth::user()->businessgroupsusersuser[0]->businessgroups['id'])
+                                ->where('businesscourses_id',$this->id)->first();
+                        }
+                    }
                     if ($businessCourses) {
                         $discountValueBusiness = (getCurrency() == "EGP") ? (int) $businessdata->discount_value : (int) $businessdata->discount_value_dollar;
                         if ($businessdata->discount_type == Businessdata::TYPE_PERCENTAGE) {
@@ -407,8 +414,18 @@ class Courses extends Model
                         $discount = $discount + $discountPriceBusiness;
                     }
                 }
+            }elseif (Auth::guard('api')->user()->subscription && $this->type == Courses::TYPE_COURSE){
+                $promoPrice = 0;
+                $discount = 100;
+                $type = null;
             }
         }
+        //Check Additional Discounts
+//        if(Auth::check() && getAdditionalDiscount()){
+//            $discountValue = (getCurrency() == "EGP") ? getAdditionalDiscount()->egp_disc : getAdditionalDiscount()->usd_disc;
+//            $discountPrice = $discountValue * $promoPrice / 100;
+//            $promoPrice = $promoPrice - $discountPrice;
+//        }
         return (['discount' => $discount, 'price' => round($price), 'currency' => $currency, 'promoPrice' => round($promoPrice)]);
     }
     public function getPriceTextAttribute()
