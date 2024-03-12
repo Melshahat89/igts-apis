@@ -69,7 +69,8 @@ function large($image= ''){
     if($image == ''){
         $image = url(env('NONE_IMAGE'));
     }else{
-        $image = imageExist($image , 'MEDIUM_IMAGE_PATH') ?  url('/'.env('MEDIUM_IMAGE_PATH').'/'.$image) :  url(env('NONE_IMAGE'));
+//         $image = imageExist($image , 'MEDIUM_IMAGE_PATH') ?  url('/'.env('MEDIUM_IMAGE_PATH').'/'.$image) :  url(env('NONE_IMAGE'));
+         $image = 'https://igtsservice.com/uploads/files/medium/'.$image;
     }
     return $image ;
 
