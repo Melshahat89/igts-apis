@@ -140,15 +140,15 @@ class HomeApi extends Controller
 //         dd(22);
 //        }
 
-        if(function_exists('shell_exec')) {
-            echo "shell_exec is enabled";
-        } else {
-            echo "shell_exec is disabled";
-        }
-        dd(Auth::user());
-
-
-        dd(Session::get('variableName'));
+//        if(function_exists('shell_exec')) {
+//            echo "shell_exec is enabled";
+//        } else {
+//            echo "shell_exec is disabled";
+//        }
+//        dd(Auth::user());
+//
+//
+//        dd(Session::get('variableName'));
 
         $request->headers->set('Authorization', `Bearer $request->cookie('accessToken')`);
 
