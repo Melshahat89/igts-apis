@@ -4,7 +4,10 @@ namespace App\Application\Controllers\Api;
 
 
 use App\Application\Controllers\Controller;
+use App\Application\Model\Businesscourses;
+use App\Application\Model\Businessdata;
 use App\Application\Model\Categories;
+use App\Application\Model\Courseenrollment;
 use App\Application\Model\Courselectures;
 use App\Application\Model\Coursenotes;
 use App\Application\Model\Coursereport;
@@ -12,6 +15,9 @@ use App\Application\Model\Coursereviews;
 use App\Application\Model\Courses;
 use App\Application\Model\Coursesections;
 use App\Application\Model\Lecturequestions;
+use App\Application\Model\Orders;
+use App\Application\Model\Ordersposition;
+use App\Application\Model\Payments;
 use App\Application\Model\Quiz;
 use App\Application\Model\Quizstudentsanswers;
 use App\Application\Model\Quizstudentsstatus;
@@ -650,7 +656,7 @@ class CoursesApi extends Controller
             if($studentExam->exam_anytime == 1){
 
                 $studentExam = new Quizstudentsstatus();
-                $studentExam->user_id = auth()->user()->id;
+                $studentExam->user_id = Auth::guard('api')->user()->id;
                 $studentExam->quiz_id = $exam->id;
                 $studentExam->start_time = time();
                 $studentExam->status = 1;
@@ -686,12 +692,154 @@ class CoursesApi extends Controller
                     'examPassPercentage' => $examPassPercentage,
                     'certificate' => $studentExam->certificate,
                 ], '', ''), 200);
+        }
+    }
 
+
+    public function enrollnowfree($id){
+
+        $course = Courses::findOrfail($id);
+        $price = $course->OriginalPrice;
+
+        if($price == 0){
+
+            $freeOrder = new Orders();
+            $freeOrder->status = Orders::STATUS_SUCCEEDED;
+            $freeOrder->user_id = Auth::guard('api')->user()->id;
+            $freeOrder->is_free = 1;
+
+
+            $freeOrder->currency = getCurrency();
+
+            if($freeOrder->save()){
+
+
+                //save the payement
+                $payment = new Payments();
+                $payment->operation = Payments::OPERATION_DEPOSIT;
+                $payment->amount = 0;
+                $payment->currency_id = "EGP";
+                $payment->user_id = Auth::guard('api')->user()->id;
+                $payment->receiver_id = 1;
+                $payment->status = Payments::STATUS_SUCCEEDED;
+                $payment->orders_id = $freeOrder->id;
+
+                if($payment->save()){
+
+                    //Save the item in the cart
+                    $orderPosition = new Ordersposition();
+                    $orderPosition->amount =  $price;
+                    $orderPosition->quantity = 1;
+                    $orderPosition->unit_price = $course->OriginalPrice;
+                    $orderPosition->orders_id = $freeOrder->id;
+                    $orderPosition->courses_id = $course->id;
+                    $orderPosition->user_id = Auth::guard('api')->user()->id;
+                    $orderPosition->type = Ordersposition::TYPE_Course;
+                    $orderPosition->save();
+
+
+                    $enrolled = Courses::isEnrolledCourse($course->id);
+
+
+
+                    if (!$enrolled) {
+                        $enroll = new Courseenrollment();
+                        $enroll->user_id = Auth::guard('api')->user()->id;
+                        $enroll->courses_id = $course->id;
+
+
+                        //Check Business Data
+                        if (Auth::guard('api')->user()->businessdata_id) {
+                            $dateNow = date('Y-m-d H:i:s');
+                            $businessdata = Businessdata::where('status', 1)->whereDate('start_time', '<=', $dateNow)
+                                ->whereDate('end_time', '>=', $dateNow)->find(Auth::guard('api')->user()->businessdata_id);
+                            if ($businessdata) {
+                                // Check if Course in business
+                                $businessCourses = Businesscourses::where('courses_id', $course->id)->where('businessdata_id', $businessdata->id)->first();
+                                if ($businessCourses) {
+                                    $enroll->type = Courseenrollment::TYPE_B2B;
+                                    $enroll->businessdata_id = Auth::guard('api')->user()->businessdata_id;
+                                    if ($businessdata->discount_type == Businessdata::TYPE_PERCENTAGE AND $businessdata->discount_value == 100) {
+                                        $businessEndDate = $businessdata->end_time;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        //End date
+                        if ($course->full_access == Courses::FULL_TIME_ACCESS) {
+                            $Addational_time = 3600;
+                        } else {
+                            $Addational_time = ($course->access_time ? $course->access_time : 3600);
+                        }
+                        $date = date('Y-m-d H:i:s');
+                        $yesterday = date('Y-m-d H:i:s', strtotime($date . "-4 hours"));
+
+                        $enroll->start_time = $yesterday;
+                        $date = strtotime($date);
+
+                        $date = strtotime("+" . $Addational_time . " day", $date);
+                        $date = date('Y-m-d H:i:s', $date);
+                        $enddate = date('Y-m-d H:i:s', strtotime($date . "+4 hours"));
+                        $enroll->end_time = (isset($businessEndDate))?$businessEndDate:$enddate ;
+
+
+                        $enroll->save();
+
+                    }
+
+                    //Caheck id this is abundle, we should also assign the included courses to the user:
+
+                    if ($course->type == Courses::TYPE_BUNDLES) {
+
+                        //Fetch the included Courses
+
+                        foreach ($course->Courseincludes as $insideCourse) {
+                            $enrolledInside = Courses::isEnrolledCourse($insideCourse->includedCourse->id);
+                            if (!$enrolledInside) {
+                                $enroll = new Courseenrollment();
+                                $enroll->user_id = Auth::guard('api')->user()->id;
+                                $enroll->courses_id = $insideCourse->includedCourse->id;
+
+                                //End date
+                                if ($course->full_access == Courses::FULL_TIME_ACCESS) {
+                                    $Addational_time = 3600;
+                                } else {
+                                    $Addational_time = $course->access_time;
+                                }
+                                $date = date('Y-m-d H:i:s');
+                                $yesterday = date('Y-m-d H:i:s', strtotime($date . "-4 hours"));
+
+                                $enroll->start_time = $yesterday;
+                                $date = strtotime($date);
+                                $date = strtotime("+" . $Addational_time . " day", $date);
+                                $date = date('Y-m-d H:i:s', $date);
+                                $enddate = date('Y-m-d H:i:s', strtotime($date . "+4 hours"));
+                                $enroll->end_time = $enddate;
+                                $enroll->save();
+                            }
+                        }
+                    }
+
+                    return response(apiReturn(
+                        [
+
+                        ], '', ''), 200);
+
+                }
+
+
+            }
         }
 
-
-
-
+        return response(apiReturn(
+            [
+                'data' =>'no thing'
+            ], '', ''), 200);
     }
+
+
+
 
 }

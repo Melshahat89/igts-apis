@@ -349,10 +349,12 @@ function updatePromoUsage($itemsArr, $order){
 
 function getCurrentOrder($userId=null){
 
-    $order = Orders::where('user_id', ($userId) ? $userId : Auth::guard('api')->user()->id)->
-    where(function ($query) {
-        $query->where('status', Orders::STATUS_PENDING);
-    })->orderBy('id', 'DESC')->first();
+
+    $order = Orders::where('user_id', ($userId) ? $userId : Auth::guard('api')->user()->id)
+        ->where('status', Orders::STATUS_PENDING)
+        ->whereNull('subscription_type')
+        ->orderBy('id', 'DESC')->first();
+
 
     return (isset($order)) ? $order : null;
 }
