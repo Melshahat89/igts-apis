@@ -156,14 +156,14 @@ class CoursesApi extends Controller
         }
         $course = $this->model->where('id',$request->course_id)->first();
 
-        $lectures = Coursesections::where('courses_id',$request->course_id)->get();
+        $lectures = Coursesections::where('courses_id',$request->course_id)->orderBy('position' , 'desc')->get();
 
         if ($course->courseincludes){
             if (count($course->courseincludes) > 0 ){
                 $coursesIds = $course->courseincludes->pluck('included_course');
 
 //                dd($coursesIds);
-                $lectures = Coursesections::whereIn('courses_id',$coursesIds)->orderBy('courses_id' , 'asc')->get();
+                $lectures = Coursesections::whereIn('courses_id',$coursesIds)->orderBy('position' , 'desc')->get();
             }
         }
 
