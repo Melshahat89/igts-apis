@@ -462,13 +462,13 @@ class CoursesApi extends Controller
 
                 return response(apiReturn(
                     [
-                            'isPassed' => $isPassed,
-                            'totalQuestions' => $totalQuestions,
-                            'answeredQuestions' => $answeredQuestions,
-                            'correctansweredQuestions' => $CorrectansweredQuestions,
-                            'percentage' => $percentage,
-                            'examPassPercentage' => $examPassPercentage,
-                            'certificate' => $studentExam->certificate,
+                        'isPassed' => $isPassed,
+                        'totalQuestions' => $totalQuestions,
+                        'answeredQuestions' => $answeredQuestions,
+                        'correctansweredQuestions' => $CorrectansweredQuestions,
+                        'percentage' => $percentage,
+                        'examPassPercentage' => $examPassPercentage,
+                        'certificate' => $studentExam->certificate,
 //                        'exam' => $exam,
 
                     ], '201', ''), 201);
@@ -492,13 +492,13 @@ class CoursesApi extends Controller
                 return response(apiReturn(
                     [
 
-                            'isPassed' => $isPassed,
-                            'totalQuestions' => $totalQuestions,
-                            'answeredQuestions' => $answeredQuestions,
-                            'correctansweredQuestions' => $CorrectansweredQuestions,
-                            'percentage' => $percentage,
-                            'examPassPercentage' => $examPassPercentage,
-                            'certificate' => $studentExam->certificate,
+                        'isPassed' => $isPassed,
+                        'totalQuestions' => $totalQuestions,
+                        'answeredQuestions' => $answeredQuestions,
+                        'correctansweredQuestions' => $CorrectansweredQuestions,
+                        'percentage' => $percentage,
+                        'examPassPercentage' => $examPassPercentage,
+                        'certificate' => $studentExam->certificate,
 
 //                        'exam' => $exam,
 
@@ -538,22 +538,22 @@ class CoursesApi extends Controller
         $alreadyPassed = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->where('passed', 1)->first();
 
 
-            if ($studentExam){
+        if ($studentExam){
 
-                $quizTotalScore = $exam->quizSum;
-                $studentScore = Quiz::currentStudentMark($studentExam->id);
-                $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
+            $quizTotalScore = $exam->quizSum;
+            $studentScore = Quiz::currentStudentMark($studentExam->id);
+            $percentage = round( (( $studentScore * 100 ) / $quizTotalScore), 1);
 
 
-                $examPassPercentage = $exam->pass_percentage;
-                $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
-                $totalQuestions = $exam->quizQuestionsCount;
+            $examPassPercentage = $exam->pass_percentage;
+            $isPassed = ( $percentage >= $examPassPercentage) ? 1 : 0;
+            $totalQuestions = $exam->quizQuestionsCount;
 
-                //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
-                $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
-                $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
+            //$answeredQuestions = $exam->currentStudentAnswerdQuestionsCount( array( 'condition'=>'student_exam_instant_id=:studentExamInstantId', 'params'=>array( ':studentExamInstantId'=>$studentExam->id ) ) );
+            $answeredQuestions = $studentExam->studentAnswerdQuestionsCount;
+            $CorrectansweredQuestions = $studentExam->studentAnswerdCorrectQuestionsCount;
 
-            }
+        }
 
 
         if($isPassed == 1 || $alreadyPassed){
@@ -840,6 +840,40 @@ class CoursesApi extends Controller
     }
 
 
+    public function createCertificate($course_id){
 
+
+        $course = $this->model->where('id', $course_id)->firstOrFail();
+
+        $enrolled = Courses::isEnrolledCourse($course->id);
+        if ((!$enrolled)) {
+            return response(apiReturn(
+                [
+                    'done' => 'You don\'t have permission to access this page',
+                ], '', ''), 403);
+        }
+        $exam = Quiz::where('type', 1)->where('courses_id', $course->id)->firstOrFail();
+        /////////////////// studentExamStatus ///////////////////
+        $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
+        $alreadyPassed = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->where('passed', 1)->first();
+        //////////////////////////////////////
+
+        $quizTotalScore = $exam->quizSum;
+        $certificate = $studentExam->certificate;
+        if($alreadyPassed){
+            if(!$certificate && isset($_POST['name'])){
+                $certificate = Quizstudentsstatus::generateCertificate($exam->courses, $_POST['name'],$studentExam->id);
+            }
+        }
+
+
+
+        return response(apiReturn(
+            [
+
+                'done' => 'Done',
+            ], '', ''), 200);
+
+    }
 
 }

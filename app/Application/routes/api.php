@@ -41,6 +41,7 @@ Route::middleware("localization")->group(function () {
             Route::get('checkoutApi', 'HomeApi@checkoutApi');
             Route::get('/enrollnowfree/{id}', 'CoursesApi@enrollnowfree');
             Route::post('exam', 'CoursesApi@exam');
+            Route::post('createCertificate/{id}', 'CoursesApi@createCertificate');
             Route::post('examResult', 'CoursesApi@examResult');
 
             Route::prefix('course')->group(function () {
