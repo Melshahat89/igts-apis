@@ -863,6 +863,14 @@ class CoursesApi extends Controller
         if($alreadyPassed){
             if(!$certificate && isset($_POST['name'])){
                 $certificate = Quizstudentsstatus::generateCertificate($exam->courses, $_POST['name'],$studentExam->id);
+
+                return response(apiReturn(
+                    [
+
+                        'done' => 'Done',
+                        'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate->certificate,
+                    ], '', ''), 200);
+
             }
         }
 
