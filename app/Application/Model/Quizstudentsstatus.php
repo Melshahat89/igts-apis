@@ -109,7 +109,7 @@ class Quizstudentsstatus extends Model
         $studentExamStatus->certificate = $fileName . '.pdf';
         $studentExamStatus->save();
 
-        User::addNotification([auth()->user()->id], trans('messages.notificationNewCertificateTitle'), trans('messages.notificationNewCertificateDescription'), '/account/myCertificates');
+//        User::addNotification([auth()->user()->id], trans('messages.notificationNewCertificateTitle'), trans('messages.notificationNewCertificateDescription'), '/account/myCertificates');
             
         return $studentExamStatus->certificate;
 
