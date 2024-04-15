@@ -845,6 +845,8 @@ class CoursesApi extends Controller
 
         $course = $this->model->where('id', $course_id)->firstOrFail();
 
+
+
         $enrolled = Courses::isEnrolledCourse($course->id);
         if ((!$enrolled)) {
             return response(apiReturn(
@@ -858,27 +860,35 @@ class CoursesApi extends Controller
         $alreadyPassed = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->where('passed', 1)->first();
         //////////////////////////////////////
 
-        $quizTotalScore = $exam->quizSum;
         $certificate = $studentExam->certificate;
-        if($alreadyPassed){
-            if(!$certificate && isset($_POST['name'])){
-                $certificate = Quizstudentsstatus::generateCertificate($exam->courses, $_POST['name'],$studentExam->id);
 
-                return response(apiReturn(
-                    [
 
-                        'done' => 'Done',
-                        'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate,
-                    ], '', ''), 200);
+        if(isset($certificate)){
 
+            return response(apiReturn(
+                [
+                    'done' => 'Done',
+                    'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate,
+                ], '', ''), 200);
+        }else{
+            if($alreadyPassed){
+                if(!$certificate && isset($_POST['name'])){
+                    $certificate = Quizstudentsstatus::generateCertificate($exam->courses, $_POST['name'],$studentExam->id);
+                    return response(apiReturn(
+                        [
+                            'done' => 'Done',
+                            'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate,
+                        ], '', ''), 200);
+
+                }
             }
         }
 
 
 
+
         return response(apiReturn(
             [
-
                 'done' => 'Done',
             ], '', ''), 200);
 
