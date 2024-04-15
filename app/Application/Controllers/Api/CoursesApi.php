@@ -868,7 +868,7 @@ class CoursesApi extends Controller
                     [
 
                         'done' => 'Done',
-                        'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate->certificate,
+                        'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate,
                     ], '', ''), 200);
 
             }
