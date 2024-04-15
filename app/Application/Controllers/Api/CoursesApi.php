@@ -498,7 +498,7 @@ class CoursesApi extends Controller
                         'correctansweredQuestions' => $CorrectansweredQuestions,
                         'percentage' => $percentage,
                         'examPassPercentage' => $examPassPercentage,
-                        'certificate' => $studentExam->certificate,
+                        'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$studentExam->certificate,
 
 //                        'exam' => $exam,
 
