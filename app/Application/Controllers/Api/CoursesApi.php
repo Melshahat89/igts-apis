@@ -873,7 +873,27 @@ class CoursesApi extends Controller
         }else{
             if($alreadyPassed){
                 if(!$certificate && isset($_POST['name'])){
-                    $certificate = Quizstudentsstatus::generateCertificate($exam->courses, $_POST['name'],$studentExam->id);
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'http://igtsservice.com/api/createAppCertificate',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => array('course_id' => $course_id,'name' => $_POST['name'] , 'studentExamStatusID'=> $studentExam->id),
+                    ));
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    $result = json_decode($response, true);
+
+                    if($result){
+                        $certificate = $result;
+                    }
+//                    $certificate = Quizstudentsstatus::generateCertificate($exam->courses, $_POST['name'],$studentExam->id);
                     return response(apiReturn(
                         [
                             'done' => 'Done',

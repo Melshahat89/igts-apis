@@ -339,7 +339,7 @@ use Laravel\Passport\HasApiTokens;
     {
          $user_id = ($id == null)? auth()->user()->id : $id;
         $factory = (new Factory)
-            ->withServiceAccount(__DIR__.'/../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+            ->withServiceAccount(__DIR__.'/../../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
             ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
          $database = $factory->createDatabase();
         $reference = $database->getReference('notifications/'.$user_id);
@@ -354,7 +354,7 @@ use Laravel\Passport\HasApiTokens;
      static function addNotification($users_arr , $title , $body , $link){
          
          $factory = (new Factory)
-        ->withServiceAccount(__DIR__.'/../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+        ->withServiceAccount(__DIR__.'/../../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
         ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
          $database = $factory->createDatabase();
          foreach ($users_arr as $user){
@@ -378,7 +378,7 @@ use Laravel\Passport\HasApiTokens;
      static function readNotification($user_id , $notification_key){
          $update = ['is_read'  =>1];
          $factory = (new Factory)
-        ->withServiceAccount(__DIR__.'/../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+        ->withServiceAccount(__DIR__.'/../../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
         ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
          $database = $factory->createDatabase();
          $database->getReference('notifications/'.$user_id.'/'.$notification_key) // this is the root reference
