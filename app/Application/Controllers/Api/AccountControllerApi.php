@@ -93,7 +93,7 @@ class AccountControllerApi extends Controller
         return response(apiReturn('', '', 'No Data Found'), 200);
     }
     public function myExams(){
-        $data = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('status',4)->whereNotNull('certificate')->get();
+        $data = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('status',4)->get();
         if ($data) {
             return response(apiReturn(QuizstudentsstatusTransformers::transform($data)), 200);
         }
