@@ -876,7 +876,7 @@ class CoursesApi extends Controller
 
                     $curl = curl_init();
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://igtsservice.com/api/createAppCertificate',
+                        CURLOPT_URL => 'https://igtsservice.com/api/createAppCertificate',
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
