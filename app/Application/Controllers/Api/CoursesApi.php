@@ -884,7 +884,7 @@ class CoursesApi extends Controller
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                         CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => array('course_id' => $course_id,'name' => $_POST['name'] , 'studentExamStatusID'=> $studentExam->id),
+                        CURLOPT_POSTFIELDS => array('course_id' => $course_id,'name' => $_POST['name'] , 'user_id'=> Auth::guard('api')->user()->id, 'studentExamStatusID'=> $studentExam->id),
                     ));
                     $response = curl_exec($curl);
                     curl_close($curl);
