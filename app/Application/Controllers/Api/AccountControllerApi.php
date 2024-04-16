@@ -86,7 +86,7 @@ class AccountControllerApi extends Controller
     }
 
     public function myCertifications(){
-        $data = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('status',4)->whereNotNull('certificate')->get();
+        $data = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('status',4)->get();
         if ($data) {
             return response(apiReturn(QuizstudentsstatusTransformers::transform($data)), 200);
         }
