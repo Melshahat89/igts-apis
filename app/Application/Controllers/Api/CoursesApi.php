@@ -900,6 +900,12 @@ class CoursesApi extends Controller
                             'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$certificate,
                         ], '', ''), 200);
 
+                }else{
+                    return response(apiReturn(
+                        [
+                            'done' => 'You don\'t have name',
+                            'certificate' => null,
+                        ], '', ''), 202);
                 }
             }
         }
