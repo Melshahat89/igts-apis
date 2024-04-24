@@ -12,7 +12,7 @@ class QuizstudentsstatusTransformers extends AbstractTransformer
         return [
             "id" => $modelOrCollection->id,
             "studentPercentage" => $modelOrCollection->CurrentStudentPercentage,
-            "certificate" => 'https://igtsservice.com/uploads/files/certificate/'.$modelOrCollection->certificate,
+            "certificate" => $modelOrCollection->certificate ? 'https://igtsservice.com/uploads/files/certificate/'.$modelOrCollection->certificate : null,
             "title" => $modelOrCollection['quiz']['courses']['title_lang'],
             "course_id" => $modelOrCollection['quiz']['courses']['id'],
 			"start_time" => $modelOrCollection->start_time,
