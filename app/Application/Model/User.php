@@ -206,6 +206,11 @@ use Laravel\Passport\HasApiTokens;
     {
         return $this->belongsToMany('App\Application\Model\Permission', 'permission_user');
     }
+
+        public function businessgroupsusersuser()
+        {
+            return $this->hasMany(Businessgroupsusers::class, "user_id");
+        }
     public function role()
     {
         return $this->belongsToMany('App\Application\Model\Role', 'role_user');
