@@ -399,8 +399,8 @@ class Courses extends Model
                     $businessCourses = Businesscourses::where('courses_id', $this->id)->where('businessdata_id', $businessdata->id)->first();
                     if(!Auth::guard('api')->user()->businessgroupsusersuser->isEmpty()){
                         if (Auth::guard('api')->user()->businessgroupsusersuser[0]->businessgroups){
-                            $businessgroupscourses = Businessgroups::where('id',Auth::user()->businessgroupsusersuser[0]->businessgroups['id'])->first();
-                            $businessCourses = Businessgroupscourses::where('businessgroups_id',Auth::user()->businessgroupsusersuser[0]->businessgroups['id'])
+                            $businessgroupscourses = Businessgroups::where('id',Auth::guard('api')->user()->businessgroupsusersuser[0]->businessgroups['id'])->first();
+                            $businessCourses = Businessgroupscourses::where('businessgroups_id',Auth::guard('api')->user()->businessgroupsusersuser[0]->businessgroups['id'])
                                 ->where('businesscourses_id',$this->id)->first();
                         }
                     }
@@ -598,7 +598,7 @@ class Courses extends Model
 
     public static function isBusinessCourse($course_id){
 
-        $businessdata_id = Auth::user()->businessdata_id;
+        $businessdata_id = Auth::guard('api')->user()->businessdata_id;
 
         if($businessdata_id) {
 
@@ -620,7 +620,7 @@ class Courses extends Model
 
     public static function isBusinessProfileInComplete() {
 
-        $businessdata_id = Auth::user()->businessdata_id;
+        $businessdata_id = Auth::guard('api')->user()->businessdata_id;
 
         if($businessdata_id) {
 
