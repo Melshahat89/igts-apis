@@ -402,7 +402,7 @@ class CoursesApi extends Controller
 
     public function exam(Request $request){
         $validator = Validator::make($request->all(), [
-            'exam_id' => 'required|integer|max:255',
+            'exam_id' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
@@ -410,11 +410,11 @@ class CoursesApi extends Controller
 
         $exam = Quiz::where('id',$request->exam_id)->first();
 
-        $enrolled = Courses::isEnrolledCourse($exam['courses']['id']);
-
-        if ((!$enrolled)) {
-            return response(apiReturn('', '', 'You don\'t have permission to access this page'), 403);
-        }
+//        $enrolled = Courses::isEnrolledCourse($exam['courses']['id']);
+//
+//        if ((!$enrolled)) {
+//            return response(apiReturn('', '', 'You don\'t have permission to access this page'), 403);
+//        }
 
         $studentExam = Quizstudentsstatus::where('user_id',Auth::guard('api')->user()->id)->where('quiz_id',$exam->id)->orderBy('created_at', 'desc')->first();
 
@@ -468,7 +468,7 @@ class CoursesApi extends Controller
                         'correctansweredQuestions' => $CorrectansweredQuestions,
                         'percentage' => $percentage,
                         'examPassPercentage' => $examPassPercentage,
-                        'certificate' => $studentExam->certificate,
+                        'certificate' => $studentExam->certificate ? 'https://igtsservice.com/uploads/files/certificate/'.$studentExam->certificate : null,
 //                        'exam' => $exam,
 
                     ], '201', ''), 201);
@@ -498,7 +498,7 @@ class CoursesApi extends Controller
                         'correctansweredQuestions' => $CorrectansweredQuestions,
                         'percentage' => $percentage,
                         'examPassPercentage' => $examPassPercentage,
-                        'certificate' => 'https://igtsservice.com/uploads/files/certificate/'.$studentExam->certificate,
+                        'certificate' => $studentExam->certificate ? 'https://igtsservice.com/uploads/files/certificate/'.$studentExam->certificate : null,
 
 //                        'exam' => $exam,
 
