@@ -635,14 +635,14 @@ class CoursesApi extends Controller
                 $done = ( ($quizTime - $spentTime) > 0 ) ? FALSE : TRUE;
             }
 
-            if($done == TRUE){
+//            if($done == TRUE){
                 $studentExam->status = 4;
                 $studentExam->end_time = time();
 
                 // Pass or fail/////////////////////////////////////
                 $quizTotalScore = $exam->quizSum;
                 //                    $studentScore = $exam->currentStudentMark;
-                $studentScore = $studentExam->CurrentStudentMark;
+                $studentScore = Quiz::currentStudentMark($studentExam->id);
 
                 $percentage = round( (( $studentScore * 100 ) / $quizTotalScore),1 ) ;
                 $examPassPercentage = $exam->pass_percentage;
@@ -650,7 +650,7 @@ class CoursesApi extends Controller
                 $studentExam->save();
 
 //                return redirect("/courses/examResults/" . $slug);
-            }
+//            }
 
             // Start New Exam if the admin anabled the student to retry again
             if($studentExam->exam_anytime == 1){
