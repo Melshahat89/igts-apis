@@ -68,23 +68,42 @@ class HomeApi extends Controller
     }
     public function quickLinks(){
         return response(apiReturn([
+
                 [
-                    'name' => 'Become',
-                    'title' => 'an instructor',
-                    'link' => 'https://igtsservice.com/joinAsInstructor',
-                    'image' => 'https://igtsservice.com/website/images/joininstructor3.jpg',
-                ],
-                [
-                    'name' => 'ًWork',
-                    'title' => 'with us',
-                    'link' => 'https://igtsservice.com/en/careers',
+                    'name' => 'Our',
+                    'title' => 's   tudents review',
+                    'link' => 'https://igtsservice.com/ar/testimonials',
                     'image' => 'https://igtsservice.com/uploads/files/medium/41556_1651057576.jpg',
                 ],
                 [
-                    'name' => 'Our',
-                    'title' => 'partners',
-                    'link' => 'https://igtsservice.com/en/partners',
+                    'name' => 'Verify',
+                    'title' => 'certificate',
+                    'link' => 'https://igtsservice.com/ar/verifycertificate',
+                    'image' => 'https://igtsservice.com/website/images/joininstructor3.jpg',
+                ],
+                [
+                    'name' => 'IGTS',
+                    'title' => 'business',
+                    'link' => 'https://igtsservice.com/ar/business',
+                    'image' => 'https://igtsservice.com/uploads/files/medium/41556_1651057576.jpg',
+                ],
+                [
+                    'name' => 'F&Q',
+                    'title' => '',
+                    'link' => 'https://igtsservice.com/ar/faq',
                     'image' => 'https://igtsservice.com/uploads/files/medium/67995_1649936390.jpg',
+                ],
+                [
+                    'name' => 'Our',
+                    'title' => 'instructors',
+                    'link' => 'https://igtsservice.com/ar/instructors/All',
+                    'image' => 'https://igtsservice.com/website/images/joininstructor3.jpg',
+                ],
+                [
+                    'name' => 'Join',
+                    'title' => 'as instructor',
+                    'link' => 'https://igtsservice.com/ar/joinAsInstructor',
+                    'image' => 'https://igtsservice.com/uploads/files/medium/41556_1651057576.jpg',
                 ],
 
         ]), 200);
