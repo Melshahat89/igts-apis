@@ -49,10 +49,10 @@ class HomeApi extends Controller
 
     public function countersHome(){
         return response(apiReturn([
-            'Students' => "+200,000",
-            'Courses' => "+400",
-            'Hours' => "+2000",
-            'Comments' => "180",
+            'Students' => 200000,
+            'Courses' => 400,
+            'Hours' => 2000,
+            'Comments' => 180,
         ]), 200);
     }
     public function topSearches(){
