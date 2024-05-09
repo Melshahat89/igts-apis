@@ -49,7 +49,7 @@ class HomeApi extends Controller
 
     public function countersHome(){
         return response(apiReturn([
-            'Students' => 200.000,
+            'Students' => 200000,
             'Courses' => 400,
             'Hours' => 2000,
             'Comments' => 180,
