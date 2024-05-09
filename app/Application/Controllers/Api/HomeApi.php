@@ -71,7 +71,7 @@ class HomeApi extends Controller
 
                 [
                     'name' => 'Our',
-                    'title' => 's   tudents review',
+                    'title' => 'students review',
                     'link' => 'https://igtsservice.com/ar/testimonials',
                     'image' => 'https://igtsservice.com/uploads/files/medium/41556_1651057576.jpg',
                 ],
