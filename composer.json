@@ -8,39 +8,40 @@
     "type": "project",
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.3||^8.0",
-        "aporat/store-receipt-validator": "dev-master",
-        "barryvdh/laravel-dompdf": "dev-master",
-        "doctrine/dbal": "2.13.9",
-        "facade/ignition": "2.17.7",
-        "fideloper/proxy": "4.4.2",
-        "firebase/php-jwt": "v6.10.0",
-        "fruitcake/laravel-cors": "2.2.x-dev",
-        "guzzlehttp/guzzle": "7.9.x-dev",
-        "inertiajs/inertia-laravel": "dev-master",
-        "intervention/image": "2.7.x-dev",
-        "jantinnerezo/livewire-range-slider": "dev-main",
-        "kreait/laravel-firebase": "4.2.0",
-        "laravel/framework": "8.x-dev",
-        "laravel/horizon": "dev-master",
-        "laravel/jetstream": "v2.9.0",
-        "laravel/legacy-factories": "dev-master",
-        "laravel/passport": "10.x-dev",
-        "laravel/sanctum": "2.x-dev",
-        "laravel/socialite": "5.x-dev",
-        "laravel/telescope": "dev-master",
-        "laravel/tinker": "2.x-dev",
-        "laravel/ui": "3.x-dev",
+        "php": "^8.1",
+        "aporat/store-receipt-validator": "^1.0",
+        "barryvdh/laravel-dompdf": "^1.0",
+        "doctrine/dbal": "^2.13.9",
+        "facade/ignition": "^2.17.7",
+        "fideloper/proxy": "^4.4.2",
+        "firebase/php-jwt": "^6.10.0",
+        "fruitcake/laravel-cors": "^2.2",
+        "guzzlehttp/guzzle": "^7.9",
+        "imdhemy/laravel-purchases": "1.x-dev",
+        "inertiajs/inertia-laravel": "^0.5",
+        "intervention/image": "^2.7",
+        "jantinnerezo/livewire-range-slider": "^1.0",
+        "kreait/laravel-firebase": "^4.2.0",
+        "laravel/framework": "^8.0",
+        "laravel/horizon": "^5.0",
+        "laravel/jetstream": "^2.9.0",
+        "laravel/legacy-factories": "^1.0",
+        "laravel/passport": "^10.0",
+        "laravel/sanctum": "^2.0",
+        "laravel/socialite": "^5.0",
+        "laravel/telescope": "^4.0",
+        "laravel/tinker": "^2.0",
+        "laravel/ui": "^3.0",
         "mcamara/laravel-localization": "^1.7.0",
         "nunomaduro/collision": "^5.0",
-        "torann/geoip": "^3.0.2",
-        "vimeo/vimeo-api": "^2.0.5"
+        "torann/geoip": "^3.0",
+        "vimeo/vimeo-api": "^2.0"
     },
     "require-dev": {
-        "composer/composer": "^2.0@dev",
-        "filp/whoops": "~2.0",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~7.0"
+        "composer/composer": "^2.0",
+        "filp/whoops": "^2.0",
+        "mockery/mockery": "^1.4",
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
@@ -85,7 +86,7 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.4"
+            "php": "8.1"
         },
         "allow-plugins": {
             "kylekatarnls/update-helper": true

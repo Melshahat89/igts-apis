@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Doctrine\\Deprecations\\": "lib/Doctrine/Deprecations"
+            "Doctrine\\Deprecations\\": "src"
         }
     },
     "autoload-dev": {
