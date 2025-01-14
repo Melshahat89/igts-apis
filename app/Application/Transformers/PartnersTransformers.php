@@ -13,7 +13,7 @@ class PartnersTransformers extends AbstractTransformer
             "id" => $modelOrCollection->id,
 			"title" => $modelOrCollection->title_lang,
 			"description" => $modelOrCollection->description_lang,
-			"logo" => 'https://igtsservice.com/website/images/logos/'.$modelOrCollection->logo,
+			"logo" => 'https://igtsservice.com/uploads/files/medium/'.$modelOrCollection->logo,
 
         ];
     }
