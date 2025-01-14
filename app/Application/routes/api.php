@@ -104,6 +104,11 @@ Route::middleware("localization")->group(function () {
 
 
 
+        Route::prefix('subscriptions')->group(function () {
+            Route::post('/verify', 'SubscriptionsApi@verify');
+        });
+
+
         require __DIR__.'/appendApi.php';
     });
 });
