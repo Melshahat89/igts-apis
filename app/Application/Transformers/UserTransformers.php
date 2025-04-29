@@ -10,6 +10,11 @@ class UserTransformers extends AbstractTransformer
      public function transformModel(Model $modelOrCollection)
      {
          $dateNow = date('Y-m-d H:i:s');
+         // 🔐 Generate API Token
+         $accessToken = $modelOrCollection->createToken('MyApp')->accessToken;
+
+         // 💾 Store the Token in the database
+         $modelOrCollection->update(['api_token' => $accessToken]);
          return [
              'id' => $modelOrCollection->id,
 //             'slug' => $modelOrCollection->slug,
@@ -27,7 +32,9 @@ class UserTransformers extends AbstractTransformer
              'cover' => large($modelOrCollection->cover),
              'businessdata_id' => $modelOrCollection->businessdata_id,
              'facebook_identifier' => $modelOrCollection->facebook_identifier,
-             'token' => $modelOrCollection->createToken('MyApp')->accessToken,
+//             'token' => $modelOrCollection->createToken('MyApp')->accessToken,
+             // 🔑 Returning Token
+             'token' => $accessToken,
 //             'enrolled_courses' => count($modelOrCollection->courseenrollment()->whereDate('start_time', '<=', $dateNow)
 //                 ->whereDate('end_time', '>=', $dateNow)
 //                 ->where('status', 1)->get()->toArray()),

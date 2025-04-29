@@ -76,3 +76,4 @@ Thumbs.db
 *.zip
 
 */vendor
+/vendor/

@@ -3,7 +3,7 @@
         'name' => 'meduo/igts',
         'pretty_version' => '8.x-dev',
         'version' => '8.9999999.9999999.9999999-dev',
-        'reference' => 'a4a975185237f1d4db538abc4087a568091d5ab9',
+        'reference' => '49e0958eac3b1cc109ee8f3fc9e6824a2e05bb81',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -58,9 +58,9 @@
             'dev_requirement' => false,
         ),
         'beste/json' => array(
-            'pretty_version' => '1.5.0',
-            'version' => '1.5.0.0',
-            'reference' => '3ed7d6be039617e5ea63a835a792a811c7fba0ff',
+            'pretty_version' => '1.5.1',
+            'version' => '1.5.1.0',
+            'reference' => '0e9a0dc74fa6d1bb4f9883ef64fa9f36b7b6b934',
             'type' => 'library',
             'install_path' => __DIR__ . '/../beste/json',
             'aliases' => array(),
@@ -87,7 +87,7 @@
         'composer/ca-bundle' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bc0593537a463e55cadf45fd938d23b75095b7e1',
+            'reference' => '08c50d5ec4c6ced7d0271d2862dec8c1033283e6',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(
@@ -109,7 +109,7 @@
         'composer/composer' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '666dc93fcc1090efffee82d78e4553caca682087',
+            'reference' => 'f5e7a8390d700d09c87ae2ed79d5aea1e4153cd3',
             'type' => 'library',
             'install_path' => __DIR__ . '/./composer',
             'aliases' => array(
@@ -232,7 +232,7 @@
         'doctrine/deprecations' => array(
             'pretty_version' => '1.1.x-dev',
             'version' => '1.1.9999999.9999999-dev',
-            'reference' => '0d0c25d81be87f7143d1dfc635974d255e26291c',
+            'reference' => '7014f6c1c322bb040c7db23ed44516b9a4535d20',
             'type' => 'library',
             'install_path' => __DIR__ . '/../doctrine/deprecations',
             'aliases' => array(),
@@ -259,7 +259,7 @@
         'doctrine/instantiator' => array(
             'pretty_version' => '2.0.x-dev',
             'version' => '2.0.9999999.9999999-dev',
-            'reference' => 'a9e64e5ea80184e14a66c262e5bcf3c2cb4a94d7',
+            'reference' => '139dfa4ac9355bc99d37ae9f94c268f3bcb0c8c1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../doctrine/instantiator',
             'aliases' => array(),
@@ -389,9 +389,9 @@
             'dev_requirement' => false,
         ),
         'google/auth' => array(
-            'pretty_version' => 'v1.43.0',
-            'version' => '1.43.0.0',
-            'reference' => 'b6a80acd906492086db59aada9196dcfb9c512fe',
+            'pretty_version' => 'v1.44.0',
+            'version' => '1.44.0.0',
+            'reference' => '5670e56307d7a2eac931f677c0e59a4f8abb2e43',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/auth',
             'aliases' => array(),
@@ -407,27 +407,27 @@
             'dev_requirement' => false,
         ),
         'google/cloud-storage' => array(
-            'pretty_version' => 'v1.44.0',
-            'version' => '1.44.0.0',
-            'reference' => 'ebdec855364c1df9e81755e9626e3ff4687263f4',
+            'pretty_version' => 'v1.46.0',
+            'version' => '1.46.0.0',
+            'reference' => 'e551043bb7e812c3c222d6edc0b264e4aed55a50',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/cloud-storage',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'google/common-protos' => array(
-            'pretty_version' => '4.8.3',
-            'version' => '4.8.3.0',
-            'reference' => '38a9a8bb459fa618da797d25d7bf36bb21d1103d',
+            'pretty_version' => '4.9.0',
+            'version' => '4.9.0.0',
+            'reference' => 'a2d1a583819286db5ef9403c6a2bfa29c9636c46',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/common-protos',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'google/gax' => array(
-            'pretty_version' => 'v1.35.0',
-            'version' => '1.35.0.0',
-            'reference' => '21d038043e50498c42f8f060ab2d6949066480f3',
+            'pretty_version' => 'v1.35.1',
+            'version' => '1.35.1.0',
+            'reference' => '336005867c0ca3e2ad95183cf9dd74fa67915dd9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/gax',
             'aliases' => array(),
@@ -443,18 +443,18 @@
             'dev_requirement' => false,
         ),
         'google/longrunning' => array(
-            'pretty_version' => '0.4.5',
-            'version' => '0.4.5.0',
-            'reference' => '062eab0f3b9310da9498bfe20b273f074580b916',
+            'pretty_version' => '0.4.6',
+            'version' => '0.4.6.0',
+            'reference' => '4eb04d47bba8095d5a47f75334b9204c2a4a7ac6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/longrunning',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'google/protobuf' => array(
-            'pretty_version' => 'v4.29.0',
-            'version' => '4.29.0.0',
-            'reference' => '0ef6b2eb74b782f3f9023276c324d22e440f7587',
+            'pretty_version' => 'v4.29.3',
+            'version' => '4.29.3.0',
+            'reference' => 'ab5077c2cfdd1f415f42d11fdbdf903ba8e3d9b7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/protobuf',
             'aliases' => array(),
@@ -649,7 +649,7 @@
         'hamcrest/hamcrest-php' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '515bc471fce72631265184d96d1777770f16d230',
+            'reference' => 'ea3c21ca78e9696dbd7d8f16e1141ca7be241e6a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../hamcrest/hamcrest-php',
             'aliases' => array(
@@ -864,7 +864,7 @@
         'imdhemy/laravel-purchases' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
-            'reference' => '9b44d0fd4dc98b83f129a42073cf6256f5343958',
+            'reference' => '1e6bc7f299033e759efffc4d453b0446f183b786',
             'type' => 'library',
             'install_path' => __DIR__ . '/../imdhemy/laravel-purchases',
             'aliases' => array(),
@@ -969,7 +969,7 @@
         'laravel/framework' => array(
             'pretty_version' => '8.x-dev',
             'version' => '8.9999999.9999999.9999999-dev',
-            'reference' => 'd841a226a50c715431952a10260ba4fac9e91cc4',
+            'reference' => 'eab1e939474458e7faa1f3c2f96a37a9b92b4d1e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/framework',
             'aliases' => array(),
@@ -1034,7 +1034,7 @@
         'laravel/socialite' => array(
             'pretty_version' => '5.x-dev',
             'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => '8b32227b8c64269d1d6ca964c996238a09357448',
+            'reference' => 'd1267db69e970d7c973683e6844a67147acacb4a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/socialite',
             'aliases' => array(),
@@ -1088,11 +1088,11 @@
         'league/commonmark' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bbef3301fda0b97bbd8d7a897800424fb5937c9e',
+            'reference' => 'dfe07db97886facb6d9b93be98cb8ca26448e67f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/commonmark',
             'aliases' => array(
-                0 => '2.6.x-dev',
+                0 => '2.7.x-dev',
             ),
             'dev_requirement' => false,
         ),
@@ -1135,18 +1135,18 @@
             'dev_requirement' => false,
         ),
         'league/oauth1-client' => array(
-            'pretty_version' => 'v1.10.1',
-            'version' => '1.10.1.0',
-            'reference' => 'd6365b901b5c287dd41f143033315e2f777e1167',
+            'pretty_version' => 'v1.11.0',
+            'version' => '1.11.0.0',
+            'reference' => 'f9c94b088837eb1aae1ad7c4f23eb65cc6993055',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/oauth1-client',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'league/oauth2-server' => array(
-            'pretty_version' => '8.5.4',
-            'version' => '8.5.4.0',
-            'reference' => 'ab7714d073844497fd222d5d0a217629089936bc',
+            'pretty_version' => '8.5.x-dev',
+            'version' => '8.5.9999999.9999999-dev',
+            'reference' => 'cc8778350f905667e796b3c2364a9d3bd7a73518',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/oauth2-server',
             'aliases' => array(),
@@ -1161,7 +1161,7 @@
         'league/uri' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'eb091b8f0b7660ff6e0c6bc2aa2c6aa085bb6bee',
+            'reference' => '56c43b2221e93e439694238e7edcf5e6bb19e480',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/uri',
             'aliases' => array(
@@ -1172,7 +1172,7 @@
         'league/uri-interfaces' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '48e741e55ee6551e2dcb646771e26fafa9a4046f',
+            'reference' => 'de49377166b2696c138916acd73c0cfaa02dc6cb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/uri-interfaces',
             'aliases' => array(
@@ -1187,9 +1187,9 @@
             ),
         ),
         'mcamara/laravel-localization' => array(
-            'pretty_version' => 'V1.8.0',
-            'version' => '1.8.0.0',
-            'reference' => '9b1779a963c1779d1977d8ad0558a681608e3ec1',
+            'pretty_version' => '1.x-dev',
+            'version' => '1.9999999.9999999.9999999-dev',
+            'reference' => 'afe2e677f280dfdb19ceebb5f8cfe894fb036c17',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mcamara/laravel-localization',
             'aliases' => array(),
@@ -1198,7 +1198,7 @@
         'meduo/igts' => array(
             'pretty_version' => '8.x-dev',
             'version' => '8.9999999.9999999.9999999-dev',
-            'reference' => 'a4a975185237f1d4db538abc4087a568091d5ab9',
+            'reference' => '49e0958eac3b1cc109ee8f3fc9e6824a2e05bb81',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1260,7 +1260,7 @@
         'nesbot/carbon' => array(
             'pretty_version' => '2.x-dev',
             'version' => '2.9999999.9999999.9999999-dev',
-            'reference' => '4df0fdd3dcaf1f70477705d0770f8e1a0db53066',
+            'reference' => '9228ce90e1035ff2f0db84b40ec2e023ed802075',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nesbot/carbon',
             'aliases' => array(),
@@ -1278,7 +1278,7 @@
         'nette/utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '736c567e257dbe0fcf6ce81b4d6dbe05c6899f96',
+            'reference' => '2b48b24abf3b59c3699ca99e144deb5c0020208f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nette/utils',
             'aliases' => array(
@@ -1287,9 +1287,9 @@
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
-            'pretty_version' => 'v5.3.1',
-            'version' => '5.3.1.0',
-            'reference' => '8eea230464783aa9671db8eea6f8c6ac5285794b',
+            'pretty_version' => 'v5.4.0',
+            'version' => '5.4.0.0',
+            'reference' => '447a020a1f875a434d62f2a401f53b82a396e494',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nikic/php-parser',
             'aliases' => array(),
@@ -1316,14 +1316,12 @@
             'dev_requirement' => false,
         ),
         'opis/closure' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+            'pretty_version' => '3.x-dev',
+            'version' => '3.9999999.9999999.9999999-dev',
             'reference' => '3d81e4309d2a927abbe66df935f4bb60082805ad',
             'type' => 'library',
             'install_path' => __DIR__ . '/../opis/closure',
-            'aliases' => array(
-                0 => '3.6.x-dev',
-            ),
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'paragonie/constant_time_encoding' => array(
@@ -1402,7 +1400,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'ad709d815fdada7ec4e488ecd480c450099cf1d6',
+            'reference' => 'ec5b843c254a9ec675c12e8d03dfec42a3c0bd8b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -1456,7 +1454,7 @@
         'phpunit/phpunit' => array(
             'pretty_version' => '9.6.x-dev',
             'version' => '9.6.9999999.9999999-dev',
-            'reference' => '5e58fee65c32a3eb5df82b1f5bc3a711cf7fa96f',
+            'reference' => '01e8295d406558f44bf5e07136737bfd7fd72fa8',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(),
@@ -1612,14 +1610,14 @@
         'psr/simple-cache-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '1.0|2.0|3.0',
+                0 => '1.0|2.0|3.0',
+                1 => '1.0',
             ),
         ),
         'psy/psysh' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'c4f9b5f7e97890d8e4c50a382fc4cff06ab51c16',
+            'reference' => 'd73fa3c74918ef4522bb8a3bf9cab39161c4b57c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psy/psysh',
             'aliases' => array(
@@ -2081,7 +2079,7 @@
         'symfony/polyfill-mbstring' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
-            'reference' => '2369cb908b33d7b7518cce042615de430142497f',
+            'reference' => '6d857f4d76bd4b343eac26d6b539585d2bc56493',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
@@ -2217,11 +2215,11 @@
         'tijsverkoyen/css-to-inline-styles' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '97b4134400745eacabe50513f5b4d52e4b9356df',
+            'reference' => '0d72ac1c00084279c1816675284073c5a337c20d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tijsverkoyen/css-to-inline-styles',
             'aliases' => array(
-                0 => '2.2.x-dev',
+                0 => '2.x-dev',
             ),
             'dev_requirement' => false,
         ),

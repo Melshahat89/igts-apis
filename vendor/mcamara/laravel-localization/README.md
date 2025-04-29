@@ -43,10 +43,9 @@ The package offers the following:
  4.1.x        | 0.13.x
  4.2.x        | 0.15.x
  5.0.x/5.1.x  | 1.0.x
- 5.2.x-5.4.x (PHP 7 not required)  | 1.2.x
- 5.2.x-5.8.x (PHP version >= 7 required) | 1.3.x
+ 5.2.x-5.4.x (PHP 7 not required)  | 1.2.
  5.2.0-6.x (PHP version >= 7 required) | 1.4.x
- 5.2.0-9.x (PHP version >= 7 required) | 1.7.x
+ 6.x-10.x (PHP version >= 7 required) | 1.8.x
 
 ## Installation
 
@@ -89,7 +88,7 @@ class Kernel extends HttpKernel {
     *
     * @var array
     */
-    protected $routeMiddleware = [
+    protected $middlewareAliases = [
         /**** OTHER MIDDLEWARE ****/
         'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
         'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
@@ -245,6 +244,13 @@ Returns a route, [localized](#translated-routes) to the desired locale. If the t
 ```php
 // Returns /es/acerca
 {{ LaravelLocalization::getURLFromRouteNameTranslated('es', 'routes.about') }}
+```
+**Example of a localized link using routes with attributes**
+
+```php
+// An array of attributes can be provided.
+// Returns /en/archive/ghosts, /fr/archive/fantômes, /pt/arquivo/fantasmas, etc.
+<a href="{{ LaravelLocalization::getURLFromRouteNameTranslated( App::currentLocale(), 'routes.archive', array('category' => 'ghosts')) }}">Ghost Stories</a>
 ```
 
 
