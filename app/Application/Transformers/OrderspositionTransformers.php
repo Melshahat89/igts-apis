@@ -13,7 +13,7 @@ class OrderspositionTransformers extends AbstractTransformer
         return [
             "id" => $modelOrCollection->id,
             "title" => ($modelOrCollection->type == Ordersposition::TYPE_Course)?($modelOrCollection->courses ? $modelOrCollection->courses['title_lang'] : ''):null,
-            "image" => ($modelOrCollection->type == Ordersposition::TYPE_Course)?($modelOrCollection->courses ? $modelOrCollection->courses['image'] : '' ):null,
+            "image" => ($modelOrCollection->type == Ordersposition::TYPE_Course)?($modelOrCollection->courses ? 'https://igtsservice.com/uploads/files/medium/'.$modelOrCollection->courses['image'] : '' ):null,
             "original_price" =>  ($modelOrCollection->type == Ordersposition::TYPE_Course)?($modelOrCollection->courses ?  $modelOrCollection->courses['priceBase'] : ''):null,
             "rating" =>  ($modelOrCollection->type == Ordersposition::TYPE_Course)?($modelOrCollection->courses ? $modelOrCollection->courses['CourseRating'] : ''):null,
             "courseCountRating" =>  ($modelOrCollection->type == Ordersposition::TYPE_Course)?($modelOrCollection->courses ? $modelOrCollection->courses['CourseCountRating'] : ''):null,
