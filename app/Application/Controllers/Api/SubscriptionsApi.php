@@ -7,6 +7,8 @@ use App\Application\Controllers\Controller;
 use App\Application\Requests\Website\Subscriptions\VerifyRequestSubscriptions;
 use Imdhemy\Purchases\Facades\Subscription;
 
+use Illuminate\Support\Facades\Log;
+
 
 class SubscriptionsApi extends Controller
 {
@@ -14,12 +16,14 @@ class SubscriptionsApi extends Controller
 
 
     public function verify(VerifyRequestSubscriptions $validation) {
+
         $request = $this->validateRequest($validation);
         if (!is_array($request)) {
             return $request;
         }
 
         $receipt = $request['receipt'];
+
 
         if (!base64_decode($receipt, true)) {
             return response(['status' => false, 'message' => 'Invalid receipt format'], 400);
@@ -41,12 +45,16 @@ class SubscriptionsApi extends Controller
                 $data['transactionId'] = $receiptInfo->getTransactionId();
                 $data['originalTransactionId'] = $receiptInfo->getOriginalTransactionId();
                 $data['expiresDate'] = $receiptInfo->getExpiresDate();
+
+                Log::info('Verified iOS Receipt', $data);
                 // And so on...
                 return response(apiReturn($data), 200);
             } else {
+                Log::warning('Invalid iOS Receipt', ['receipt' => $receipt]);
                 return response(['status' => false, 'message' => 'Receipt is not valid'], 400);
             }
         } catch (\Exception $e) {
+            Log::error('Receipt verification failed', ['error' => $e->getMessage()]);
             return response(['status' => false, 'message' => 'Verification failed. Please try again later.'], 500);
         }
     }
