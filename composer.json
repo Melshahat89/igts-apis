@@ -17,6 +17,7 @@
         "firebase/php-jwt": "^6.10.0",
         "fruitcake/laravel-cors": "^2.2",
         "guzzlehttp/guzzle": "^7.9",
+        "imdhemy/appstore-iap": "^1.6",
         "imdhemy/laravel-purchases": "1.x-dev",
         "inertiajs/inertia-laravel": "^0.5",
         "intervention/image": "^2.7",

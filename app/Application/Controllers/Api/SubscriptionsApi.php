@@ -5,9 +5,19 @@ namespace App\Application\Controllers\Api;
 
 use App\Application\Controllers\Controller;
 use App\Application\Requests\Website\Subscriptions\VerifyRequestSubscriptions;
+use Firebase\JWT\JWT;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use Imdhemy\AppStore\ClientFactory;
+use Imdhemy\AppStore\Jws\JwsGenerator;
+use Imdhemy\AppStore\ServerNotifications\TestNotificationService;
 use Imdhemy\Purchases\Facades\Subscription;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Imdhemy\AppStore\ServerNotifications\ServerNotification;
+
+use Imdhemy\Purchases\Product;
 
 
 class SubscriptionsApi extends Controller
@@ -59,6 +69,85 @@ class SubscriptionsApi extends Controller
         }
     }
 
+    public function notifications(Request $request)
+    {
+        try {
+            // استقبال البيانات الخام من Apple
+            $rawBody = $request->getContent();
+
+            // تحليل الإشعار باستخدام مكتبة Imdhemy
+//            $notification = ServerNotification::toArray();
+
+            // استخراج نوع الإشعار
+//            $type = $notification->getNotificationType(); // مثال: INITIAL_BUY, CANCEL, DID_RENEW, etc.
+
+            // استخراج بيانات الاشتراك
+//            $latestReceiptInfo = $notification->getLatestReceiptInfo();
+
+            // مثال: استخراج transactionId و productId
+//            $transactionId = $latestReceiptInfo?->getTransactionId();
+//            $productId = $latestReceiptInfo?->getProductId();
+
+            // تسجيل الإشعار في اللوج
+            Log::info('Apple Notification Received', [
+//                'type' => $type,
+//                'transaction_id' => $transactionId,
+//                'product_id' => $productId,
+                'notification' => $rawBody,
+            ]);
+
+            // هنا تقدر تضيف لوجيك التحديث في قاعدة البيانات حسب نوع الإشعار
+            // مثل: إلغاء اشتراك، تجديد، ترقية، إلخ
+
+            return response()->json(['status' => true], 200);
+        } catch (\Exception $e) {
+            Log::error('Apple Notification Error', ['error' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Invalid notification'], 400);
+        }
+    }
+
+
+
+    public function test_example(): void
+    {
+
+
+        // Create the expected body
+        $responseBody = [
+            'environment' => 'Sandbox',
+            'status' => 0,
+            'latest_receipt_info' => [
+                [
+                    'product_id' => 'fake_product_id',
+                    'quantity' => '1',
+                    'transaction_id' => 'fake_transaction_id',
+                    'original_transaction_id' => 'original_transaction_id',
+                    // other fields omitted
+                ],
+            ],
+            // other fields omitted
+        ];
+
+        // Create the response instance. It requires to JSON encode the body.
+        $responseMock = new Response(200, [], json_encode($responseBody, JSON_THROW_ON_ERROR));
+
+        // Use the client factory to mock the response.
+        $client = ClientFactory::mock($responseMock);
+
+        // --------------------------------------------------------------
+        // The created client could be injected into a service
+        // --------------------------------------------------------------
+        // The part is up to you as a developer.
+        //
+        // Inside that service you can use the client as follows
+        $verifyResponse = Subscription::appStore($client)->receiptData('fake_receipt_data')->verifyReceipt();
+
+        $latestReceiptInfo = $verifyResponse->getLatestReceiptInfo();
+
+        dd($latestReceiptInfo);
+
+        // The returned response will contain the data from the response body you provided in the first line.
+    }
 
     protected function checkLanguageBeforeReturn($data , $status_code = 200, $paginate = [])
     {

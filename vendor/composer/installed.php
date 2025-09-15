@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'meduo/igts',
-        'pretty_version' => '8.x-dev',
-        'version' => '8.9999999.9999999.9999999-dev',
-        'reference' => '49e0958eac3b1cc109ee8f3fc9e6824a2e05bb81',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '25d719be48226ab0ebddb5621df7d5a8b25c46be',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1196,9 +1196,9 @@
             'dev_requirement' => false,
         ),
         'meduo/igts' => array(
-            'pretty_version' => '8.x-dev',
-            'version' => '8.9999999.9999999.9999999-dev',
-            'reference' => '49e0958eac3b1cc109ee8f3fc9e6824a2e05bb81',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '25d719be48226ab0ebddb5621df7d5a8b25c46be',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1610,8 +1610,8 @@
         'psr/simple-cache-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psy/psysh' => array(

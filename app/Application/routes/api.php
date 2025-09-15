@@ -106,6 +106,8 @@ Route::middleware("localization")->group(function () {
 
         Route::prefix('subscriptions')->group(function () {
             Route::post('/verify', 'SubscriptionsApi@verify');
+            Route::post('/test_example', 'SubscriptionsApi@test_example');
+            Route::post('/liap/notifications?provider=app-store', 'SubscriptionsApi@notifications');
         });
 
 
