@@ -206,19 +206,22 @@ class AccountControllerApi extends Controller
         return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);
     }
     public function notificationsCount(){
-        $userId = Auth::guard('api')->user()->id;
-        $factory = (new Factory)
-            ->withServiceAccount(__DIR__.'/../../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
-            ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
-        $database = $factory->createDatabase();
-        $reference = $database->getReference('notifications/'.$userId)
 
-            ->orderByChild('is_read')
-            // returns all persons being exactly 1.98 (meters) tall
-            ->equalTo(0)
-            ->getSnapshot();
-        $data = $reference->getValue();
-        return response(apiReturn(['count' => count($data)]), 200);
+        return 0;
+
+//        $userId = Auth::guard('api')->user()->id;
+//        $factory = (new Factory)
+//            ->withServiceAccount(__DIR__.'/../../../../../public/igts-17eb7-firebase-adminsdk-xf52q-4331e0c95c.json')
+//            ->withDatabaseUri('https://igts-17eb7.firebaseio.com');
+//        $database = $factory->createDatabase();
+//        $reference = $database->getReference('notifications/'.$userId)
+//
+//            ->orderByChild('is_read')
+//            // returns all persons being exactly 1.98 (meters) tall
+//            ->equalTo(0)
+//            ->getSnapshot();
+//        $data = $reference->getValue();
+//        return response(apiReturn(['count' => count($data)]), 200);
     }
 
     public function generalSettings(Request $request){
