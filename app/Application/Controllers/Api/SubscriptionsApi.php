@@ -4,10 +4,15 @@ namespace App\Application\Controllers\Api;
 
 
 use App\Application\Controllers\Controller;
+use App\Application\Model\Homesettings;
+use App\Application\Model\Orders;
+use App\Application\Model\Subscriptionuser;
 use App\Application\Requests\Website\Subscriptions\VerifyRequestSubscriptions;
+use Carbon\Carbon;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Auth;
 use Imdhemy\AppStore\ClientFactory;
 use Imdhemy\AppStore\Jws\JwsGenerator;
 use Imdhemy\AppStore\ServerNotifications\TestNotificationService;
@@ -54,9 +59,68 @@ class SubscriptionsApi extends Controller
                 $data['productId'] = $receiptInfo->getProductId();
                 $data['transactionId'] = $receiptInfo->getTransactionId();
                 $data['originalTransactionId'] = $receiptInfo->getOriginalTransactionId();
-                $data['expiresDate'] = $receiptInfo->getExpiresDate();
+                $data['expiresDate'] = $receiptInfo->getExpiresDate()?->toDateTime()->format('Y-m-d');
 
                 Log::info('Verified iOS Receipt', $data);
+
+                // Here you can add your logic to update the user's subscription status in your database
+
+                //Init New Order
+
+                $order = new Orders();
+                $order->subscription_type = ($data['productId'] == 'monthly_subscription') ? Orders::SUBSCRIPTON_MONTHLY : Orders::SUBSCRIPTION_ANNUAL;
+                $order->type = Orders::TYPE_B2C;
+                $order->status = Orders::STATUS_PENDING;
+                $order->user_id = auth()->guard('api')->user()->id;
+                $order->emp_id = null;
+                $order->currency = "USD";
+                $order->save();
+
+
+                $homeSettings = Homesettings::where('id', 1)->first();
+
+                if( $data['productId'] == 'monthly_subscription'){
+                    $price = round($homeSettings->MonthlyB2cSubscriptionPrice);
+                    if($price <= 0){
+                        $subscriptionuser = new Subscriptionuser();
+                        $subscriptionuser->user_id = Auth::user()->id;
+                        $subscriptionuser->subscription_id = 1;
+                        $subscriptionuser->start_date = Carbon::now()->format('Y-m-d');
+                        $subscriptionuser->end_date =  $data['expiresDate'];
+                        $subscriptionuser->amount = null;
+                        $subscriptionuser->b_type = 4;
+                        $subscriptionuser->is_active = 1;
+                        $subscriptionuser->orders_id = $order->id;
+                        $subscriptionuser->save();
+
+                        alert()->success("Subscription Done", "Done");
+                        return redirect('account/mySubscriptions');
+                    }
+
+                }elseif( $data['productId'] == 'yearly_subscription'){
+                    $price = round($homeSettings->YearlyB2cSubscriptionPrice);
+                    if($price <= 0){
+                        $subscriptionuser = new Subscriptionuser();
+                        $subscriptionuser->user_id = Auth::user()->id;
+                        $subscriptionuser->subscription_id = 1;
+                        $subscriptionuser->start_date = Carbon::now()->format('Y-m-d');
+                        $subscriptionuser->end_date =  $data['expiresDate'];
+                        $subscriptionuser->amount = null;
+                        $subscriptionuser->b_type = 4;
+                        $subscriptionuser->is_active = 1;
+                        $subscriptionuser->orders_id = $order->id;
+                        $subscriptionuser->save();
+
+                        alert()->success("Subscription Done", "Done");
+                        return redirect('account/mySubscriptions');
+                    }
+                }
+
+                dd(auth()->guard('api')->user());
+
+
+
+
                 // And so on...
                 return response(apiReturn($data), 200);
             } else {
