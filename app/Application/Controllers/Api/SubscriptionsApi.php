@@ -174,6 +174,7 @@ class SubscriptionsApi extends Controller
 
         $latestReceiptInfo = $verifyResponse->getLatestReceiptInfo();
 
+
         dd($latestReceiptInfo);
 
         // The returned response will contain the data from the response body you provided in the first line.
