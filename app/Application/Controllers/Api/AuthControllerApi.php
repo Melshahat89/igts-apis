@@ -42,7 +42,7 @@ class AuthControllerApi extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'mobile' => 'max:15',
+            //     'mobile' => 'required|max:15',
 //            'categories' => 'required',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6',
