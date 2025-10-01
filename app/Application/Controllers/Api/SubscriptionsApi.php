@@ -10,7 +10,7 @@ use App\Application\Model\Subscriptionuser;
 use App\Application\Requests\Website\Subscriptions\VerifyRequestSubscriptions;
 use Carbon\Carbon;
 use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
+//use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Auth;
 use Imdhemy\AppStore\ClientFactory;
@@ -30,8 +30,8 @@ class SubscriptionsApi extends Controller
     use ApiTrait;
 
 
-    public function verify(VerifyRequestSubscriptions $validation) {
-
+    public function verify(VerifyRequestSubscriptions $validation)
+    {
         $request = $this->validateRequest($validation);
         if (!is_array($request)) {
             return $request;
@@ -39,92 +39,58 @@ class SubscriptionsApi extends Controller
 
         $receipt = $request['receipt'];
 
-
         if (!base64_decode($receipt, true)) {
             return response(['status' => false, 'message' => 'Invalid receipt format'], 400);
         }
 
         try {
-            // Verifiy the receipt on App Store servers.
+            // تحقق أولًا من بيئة الإنتاج
             $receiptResponse = Subscription::appStore()->receiptData($receipt)->verifyReceipt();
+            $status = $receiptResponse->getStatus()->getCode();
 
-            // Get the receipt status
-            $receiptStatus = $receiptResponse->getStatus();
+            // لو الإيصال من بيئة Sandbox داخل تطبيق إنتاجي
+            if ($status === 21007) {
+                $sandboxClient = ClientFactory::createSandbox(); // ✅ الطريقة الرسمية
+                $receiptResponse = Subscription::appStore()->receiptData($receipt)->verifyReceipt($sandboxClient);
+                $status = $receiptResponse->getStatus()->getCode();
+            }
 
-            if ($receiptStatus->isValid()) {
+            if ($status === 0) {
                 $latestReceiptInfo = $receiptResponse->getLatestReceiptInfo();
-                // You can loop all of them or either get the first one (recently purchased).
                 $receiptInfo = $latestReceiptInfo[0];
 
                 $data['productId'] = $receiptInfo->getProductId();
                 $data['transactionId'] = $receiptInfo->getTransactionId();
                 $data['originalTransactionId'] = $receiptInfo->getOriginalTransactionId();
-                $data['expiresDate'] = $receiptInfo->getExpiresDate()?->toDateTime()->format('Y-m-d');
+                $data['purchaseDate'] = $receiptInfo->getPurchaseDate()?->toDateTime()->format('Y-m-d');
 
                 Log::info('Verified iOS Receipt', $data);
 
-                // Here you can add your logic to update the user's subscription status in your database
-
-                //Init New Order
-
+                // إنشاء الطلب وتفعيل الاشتراك حسب نوع المنتج
                 $order = new Orders();
                 $order->subscription_type = ($data['productId'] == 'monthly_subscription') ? Orders::SUBSCRIPTON_MONTHLY : Orders::SUBSCRIPTION_ANNUAL;
                 $order->type = Orders::TYPE_B2C;
                 $order->status = Orders::STATUS_PENDING;
                 $order->user_id = auth()->guard('api')->user()->id;
-                $order->emp_id = null;
                 $order->currency = "USD";
                 $order->save();
 
+                $subscriptionuser = new Subscriptionuser();
+                $subscriptionuser->user_id = auth()->guard('api')->user()->id;
+                $subscriptionuser->subscription_id = 1;
+                $subscriptionuser->start_date = now()->format('Y-m-d');
+                $subscriptionuser->end_date = ($data['productId'] == 'monthly_subscription')
+                    ? now()->addMonth()->format('Y-m-d')
+                    : now()->addYear()->format('Y-m-d');
+                $subscriptionuser->amount = null;
+                $subscriptionuser->b_type = 4;
+                $subscriptionuser->is_active = 1;
+                $subscriptionuser->orders_id = $order->id;
+                $subscriptionuser->save();
 
-                $homeSettings = Homesettings::where('id', 1)->first();
-
-                if( $data['productId'] == 'monthly_subscription'){
-                    $price = round($homeSettings->MonthlyB2cSubscriptionPrice);
-                    if($price <= 0){
-                        $subscriptionuser = new Subscriptionuser();
-                        $subscriptionuser->user_id = Auth::user()->id;
-                        $subscriptionuser->subscription_id = 1;
-                        $subscriptionuser->start_date = Carbon::now()->format('Y-m-d');
-                        $subscriptionuser->end_date =  $data['expiresDate'];
-                        $subscriptionuser->amount = null;
-                        $subscriptionuser->b_type = 4;
-                        $subscriptionuser->is_active = 1;
-                        $subscriptionuser->orders_id = $order->id;
-                        $subscriptionuser->save();
-
-                        alert()->success("Subscription Done", "Done");
-                        return redirect('account/mySubscriptions');
-                    }
-
-                }elseif( $data['productId'] == 'yearly_subscription'){
-                    $price = round($homeSettings->YearlyB2cSubscriptionPrice);
-                    if($price <= 0){
-                        $subscriptionuser = new Subscriptionuser();
-                        $subscriptionuser->user_id = Auth::user()->id;
-                        $subscriptionuser->subscription_id = 1;
-                        $subscriptionuser->start_date = Carbon::now()->format('Y-m-d');
-                        $subscriptionuser->end_date =  $data['expiresDate'];
-                        $subscriptionuser->amount = null;
-                        $subscriptionuser->b_type = 4;
-                        $subscriptionuser->is_active = 1;
-                        $subscriptionuser->orders_id = $order->id;
-                        $subscriptionuser->save();
-
-                        alert()->success("Subscription Done", "Done");
-                        return redirect('account/mySubscriptions');
-                    }
-                }
-
-                dd(auth()->guard('api')->user());
-
-
-
-
-                // And so on...
                 return response(apiReturn($data), 200);
             } else {
-                Log::warning('Invalid iOS Receipt', ['receipt' => $receipt]);
+                Log::warning('Invalid iOS Receipt', ['receipt' => $receipt, 'status' => $status]);
                 return response(['status' => false, 'message' => 'Receipt is not valid'], 400);
             }
         } catch (\Exception $e) {
