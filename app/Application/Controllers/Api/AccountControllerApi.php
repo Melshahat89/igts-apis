@@ -159,6 +159,7 @@ class AccountControllerApi extends Controller
         if(request()->has('delete_account') && request()->post('delete_account') == 1){
             $user->verified = 0;
             $user->activated = 0;
+            $user->banned = 1;
         }
         $user->save();
         return response(apiReturn(trans('website.Your data has been successfully updated'), '', ''), 200);

@@ -69,7 +69,7 @@ class AuthControllerApi extends Controller
     }
     public function login(Request $request){
         $this->validatorLogin($request->all())->validate();
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'banned' => 0])){
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password'), 'banned' => 0 , 'activated' => 1 , 'verified' => 1])){
             $user = Auth::user();
             if ($user) {
                 Auth::logoutOtherDevices(request('password'));
