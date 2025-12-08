@@ -747,10 +747,25 @@ class Courses extends Model
         }
         return $totalCost;
     }
-    public function getCourseCountStudentsAttribute()
+    public function getCourseCountStudentsAttribute($id=null)
     {
-        return Transactions::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->where('price', '>', 0)->count();
+
+        return Transactions::where('courses_id', $this->id)->where('user_id', $id ? $id : Auth::guard('api')->user()->id)->where('price', '>', 0)->count();
+
+
     }
+
+
+    public function courseCountStudents($userId = null)
+    {
+        $userId = $userId ?? Auth::guard('api')->id();
+
+        return Transactions::where('courses_id', $this->id)
+            ->where('user_id', $userId)
+            ->where('price', '>', 0)
+            ->count();
+    }
+
 
     public function getCourseCountStudentsFromTo($from, $to){
         return Transactions::where('courses_id', $this->id)->where('user_id', Auth::guard('api')->user()->id)->where('price', '>', 0)->whereBetween('date', [$from, $to])->count();

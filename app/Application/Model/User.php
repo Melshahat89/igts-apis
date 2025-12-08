@@ -331,10 +331,13 @@ use Laravel\Passport\HasApiTokens;
     }
      public function getEnrolledCountStudentsAttribute()
     {
+        $userId = $this->id;
+        return $this->instructorCourses->sum(function ($course) use ($userId) {
+            return $course->courseCountStudents($userId);
+        });
 
-        return 23;  //ToDO
 
-        return $this->instructorCourses->sum('CourseCountStudents');
+
     }
     public function getinstructorCoursesViewsAttribute()
     {
