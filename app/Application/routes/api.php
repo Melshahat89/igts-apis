@@ -28,10 +28,12 @@ Route::middleware("localization")->group(function () {
             Route::post('/resetPasswordConfirm', 'AuthControllerApi@resetPasswordConfirm');
 
             Route::post('/resendotp',  'AuthControllerApi@resendotp');
+
         });
 
         Route::middleware('authApi:api')->group( function () {
             Route::get('cart', 'UserApi@cart');
+            Route::post('payments/checkout/visa', 'PaymentsApi@checkoutPayVisa');
             Route::get('whishlist', 'UserApi@whishlist');
             Route::post('addToCart', 'UserApi@addToCart');
             Route::post('removeFromCart', 'UserApi@removeFromCart');

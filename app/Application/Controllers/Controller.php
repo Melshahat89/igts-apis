@@ -22,7 +22,7 @@ class Controller extends BaseController
         // Check if profile completed
         $this->middleware(function ($request, $next) {
             // if($request->route()->getActionMethod() != 'otp' AND $request->route()->getActionMethod() != 'sendOtp'){
-            //     if(Auth::check()){
+            //     if(Auth::guard('api')->check()){
             //         // if(Auth::user()->group_id == 2 AND (is_null(Cookie::get('MeduoCookie')) ) AND (Cookie::get('MeduoCookie') != Auth::user()->otp) ){
 
             //         if(Auth::user()->group_id == 2 AND (is_null(Cookie::get('MeduoCookie')) ) ){

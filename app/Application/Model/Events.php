@@ -181,7 +181,7 @@ class Events extends Model
     }
      public static function isEnrolledEvent($id, $userId = null)
     {
-        if (!Auth::check()) {
+        if (!Auth::guard('api')->check()) {
             return false;
         }
         $userId = ($userId) ? $userId : Auth::user()->id;
@@ -193,7 +193,7 @@ class Events extends Model
     }
     public static function inShoppingCart($id, $userId = null)
     {
-        if (!Auth::check()) {
+        if (!Auth::guard('api')->check()) {
             return false;
         }
         $userId = ($userId) ? $userId : Auth::user()->id;

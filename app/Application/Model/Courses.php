@@ -332,7 +332,7 @@ class Courses extends Model
     }
     public function getMasterRequestApproveAttribute()
     {
-        if (Auth::check()) {
+        if (Auth::guard('api')->check()) {
             $Masterrequest = $this->hasMany(Masterrequest::class, "courses_id")->where('user_id', auth()->user()->id)->where('status', 1)->first();
             return is_null($Masterrequest) ? false : true;
         } else {
@@ -424,7 +424,7 @@ class Courses extends Model
             }
         }
         //Check Additional Discounts
-//        if(Auth::check() && getAdditionalDiscount()){
+//        if(Auth::guard('api')->check() && getAdditionalDiscount()){
 //            $discountValue = (getCurrency() == "EGP") ? getAdditionalDiscount()->egp_disc : getAdditionalDiscount()->usd_disc;
 //            $discountPrice = $discountValue * $promoPrice / 100;
 //            $promoPrice = $promoPrice - $discountPrice;

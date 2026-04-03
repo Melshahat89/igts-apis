@@ -138,7 +138,7 @@ use Illuminate\Support\Facades\DB;
  }
  public function getUserTalklikeAttribute($userId=null)
  {
-    if(!Auth::check()){
+    if(!Auth::guard('api')->check()){
         return false;
     }   
         $userId = ($userId) ? $userId : Auth::user()->id;

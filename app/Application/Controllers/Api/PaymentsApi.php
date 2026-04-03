@@ -8,6 +8,7 @@ use App\Application\Model\Businesscourses;
 use App\Application\Model\Businessdata;
 use App\Application\Model\Courseenrollment;
 use App\Application\Model\Courses;
+use App\Application\Model\Currencies;
 use App\Application\Model\Events;
 use App\Application\Model\Eventsenrollment;
 use App\Application\Model\Eventstickets;
@@ -23,8 +24,11 @@ use App\Application\Transformers\PaymentsTransformers;
 use App\Application\Requests\Website\Payments\ApiAddRequestPayments;
 use App\Application\Requests\Website\Payments\ApiUpdateRequestPayments;
 use App\Mail\OrderConfirm;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use App\Application\Model\AcceptPaymentsIntegration;
+
 
 class PaymentsApi extends Controller
 {
@@ -36,6 +40,7 @@ class PaymentsApi extends Controller
         $this->model = $model;
         /// send header Authorization Bearer token
         /// $this->middleware('authApi')->only();
+        $this->middleware('authApi')->only('checkoutPayVisa');
     }
 
     public function add(ApiAddRequestPayments $validation){
@@ -457,6 +462,83 @@ class PaymentsApi extends Controller
 
         var_dump($result);
 
+    }
+
+
+
+    public function checkoutPayVisa(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+        
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $orderID = $request->input('order_id');
+
+        if (!$orderID && count(getShoppingCart($user->id)) < 1) {
+            return response()->json(['success' => false, 'type' => 'visa', 'message' => 'Cart is empty'], 400);
+        }
+
+        if ($orderID) {
+            $order = Orders::findOrFail($orderID);
+        } else {
+            $order = getCurrentOrder($user->id);
+        }
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+
+        if ($order->accept_status) {
+            // Duplicate order positions for a new attempt
+            $oldOrder = $order;
+            $newOrder = $oldOrder->replicate();
+            $newOrder->accept_status = 0;
+            $newOrder->accept_order_id = null;
+            $newOrder->save();
+
+            $oldOrder->load('ordersposition');
+            foreach ($oldOrder->ordersposition as $position) {
+                $newPosition = $position->replicate();
+                $newPosition->orders_id = $newOrder->id;
+                $newPosition->push();
+            }
+
+            $oldOrder->status = Orders::STATUS_FAILED;
+            $oldOrder->save();
+
+            $order = $newOrder;
+        }
+
+        if ($orderID) {
+            $currency = Currencies::getCurrencyCodeByID($order->payments->currency_id);
+            $amount_cents = $order->payments->amount * 100;
+        } else {
+            $currency = getCurrency();
+            $amount_cents = ceil(getShoppingCartCost($user->id, $order)) * 100;
+        }
+
+
+        $amount_cents = Currencies::getAmountcentsByCurrencyID($currency, Currencies::DEFUALT_CURRENCY, $amount_cents);
+
+        $visa = new AcceptPaymentsIntegration();
+        $payment_token = $visa->init($order, $amount_cents);
+
+        if (!isset($payment_token)) {
+            return response()->json(['success' => false, 'type' => 'visa', 'message' => 'Payment initialization failed'], 400);
+        }
+
+        $order->accept_status = 1;
+        $order->save();
+
+        return response()->json([
+            'success'    => true,
+            'type'       => 'visa',
+            'public_key' => AcceptPaymentsIntegration::ACCEPT_Public_key,
+            'token'      => $payment_token,
+            'order'      => $order,
+        ], 200);
     }
 
 }

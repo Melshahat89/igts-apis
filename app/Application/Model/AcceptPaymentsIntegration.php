@@ -6,15 +6,31 @@ use Illuminate\Support\Facades\Auth;
 
 class AcceptPaymentsIntegration extends PaymentIntegrations{
 
-    const ACCEPT_AUTH_URL = "https://accept.paymobsolutions.com/api/auth/tokens";
-    const ACCEPT_ORDER_URL = "https://accept.paymobsolutions.com/api/ecommerce/orders";
-    const ACCEPT_PAYMENT_KEY_URL = "https://accept.paymobsolutions.com/api/acceptance/payment_keys";
-    const ACCEPT_PAY_URL = "https://accept.paymobsolutions.com/api/acceptance/payments/pay";
-    
-    const ACCEPT_INTEGRATION_ID = '5976';  //   card integration_id test = 5976  live = 15187 will be provided upon signing up, test
+
+    const URL_ACCEPT_EGYPT  = 'https://accept.paymobsolutions.com';
+    const URL_ACCEPT_UAE  = 'https://uae.paymob.com';
+
+    const ACCEPT_AUTH_URL = self::URL_ACCEPT_UAE . "/api/auth/tokens";
+    const ACCEPT_ORDER_URL = self::URL_ACCEPT_UAE ."/api/ecommerce/orders";
+    const ACCEPT_PAYMENT_KEY_URL = self::URL_ACCEPT_UAE ."/api/acceptance/payment_keys";
+    const ACCEPT_PAY_URL = self::URL_ACCEPT_UAE ."/api/acceptance/payments/pay";
+
+    const ACCEPT_INTEGRATION_ID = 14469;
+    //   card integration_id test = 14012  live = 14469 will be provided upon signing up, test  UAE_Test = 14012
+    const ACCEPT_INTEGRATION_ID_APPLE = '65861';
+    const ACCEPT_INTEGRATION_ID_GOOGLE = '65860';
+
+
+    const SECRET_KEY = "are_sk_live_364fd9cd04d9c38823f8ffd4dd6018e56179013d05bf6e085d00d19854fe940b";
+    //live = are_sk_live_364fd9cd04d9c38823f8ffd4dd6018e56179013d05bf6e085d00d19854fe940b  test = are_sk_test_124a8359b6f8e4e643f2b0803c94e22815437662a10365d8d91c94b265d6e204
+
+    const ACCEPT_Public_key = 'are_pk_live_cg4lEUsvX3vbpJfCalnHJIGYs796IKwq';
+    //live = are_pk_live_cg4lEUsvX3vbpJfCalnHJIGYs796IKwq  test =are_pk_test_LnlrFPQo2GnXRxd3zsIglqHsbARGdYfM
+
     const ACCEPT_INTEGRATION_ID_KOISK = '19022';   //test = 19022 , live = 15360 , live = 14927
-    const ACCEPT_INTEGRATION_ID_MOBILEWALLET = '132169'; //test = 129400 , live = 132169
-    const ACCEPT_API_KEY = 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnVZVzFsSWpvaWFXNXBkR2xoYkNJc0luQnliMlpwYkdWZmNHc2lPak0zTnpFc0ltTnNZWE56SWpvaVRXVnlZMmhoYm5RaWZRLmZ4ZmZwSmpmbGJTd1FKQXhwT216aHpUcVhrV3ZxNFlINnpkUDFfRmxISlZQLTJiR2ZVX3UtUGJDaWhxQUlPU2RBREhtQTJXZDBqNEJyYjRIaVBfQmV3';
+    const ACCEPT_INTEGRATION_ID_MOBILEWALLET = '129400'; //test = 129400 , live = 132169
+    //UAE //const ACCEPT_API_KEY = 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnVZVzFsSWpvaWFXNXBkR2xoYkNJc0luQnliMlpwYkdWZmNHc2lPak0zTnpFc0ltTnNZWE56SWpvaVRXVnlZMmhoYm5RaWZRLmZ4ZmZwSmpmbGJTd1FKQXhwT216aHpUcVhrV3ZxNFlINnpkUDFfRmxISlZQLTJiR2ZVX3UtUGJDaWhxQUlPU2RBREhtQTJXZDBqNEJyYjRIaVBfQmV3';
+    const ACCEPT_API_KEY = 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRBek1qSXNJbTVoYldVaU9pSnBibWwwYVdGc0luMC5WUlVESkdVSEsxQW9TX0VqeUhLMDgteFA4V3g3cWd5bDI1d3RLdUtFbmR4ekFLcGE3RGJWSjZHSGxmX2NHWmpzTlgtOW1Talh4Z1dJdk5RVVBtUnI4Zw==';
 
 
     protected function callAPI($postdata, $URL, $token=null)
@@ -58,12 +74,12 @@ class AcceptPaymentsIntegration extends PaymentIntegrations{
             ));
 
         }
-        
+
         $response = curl_exec($curl);
         curl_close($curl);
         $result = json_decode($response, true);
         return $result ;
-        
+
     }
 
     function acceptAuthentication()
@@ -75,10 +91,10 @@ class AcceptPaymentsIntegration extends PaymentIntegrations{
         $postdata = json_encode($data);
 
         $acceptAuthentication = $this->callAPI($postdata, AcceptPaymentsIntegration::ACCEPT_AUTH_URL);
-        
+
+
         if (!isset($acceptAuthentication['token'])) {
-            alert()->info(trans('website.Wrong'), trans('website.Error Message'));
-            return redirect()->back();
+            return null;
         }
         return $acceptAuthentication['token'];
 
@@ -90,55 +106,52 @@ class AcceptPaymentsIntegration extends PaymentIntegrations{
         $data = array(
             "auth_token" => $token,
             "delivery_needed" => "false",
-            "merchant_id" => "3771",
+            "merchant_id" => "10322",
             "merchant_order_id" => $order->id,
             "amount_cents" => $amount_cents,
-            "currency" => "EGP",
+            "currency" => "AED",   //Egypt EGP - Emirates AED
             "items" => [],
         );
         $postdata = json_encode($data);
 
         $acceptOrderCreation = $this->callAPI($postdata, AcceptPaymentsIntegration::ACCEPT_ORDER_URL, $token);
+
         if(isset($acceptOrderCreation['message']) &&  $acceptOrderCreation['message'] == "duplicate"){
 
-           
-                $oldOrder = Orders::where('user_id', Auth::user()->id)->where('id', $order->id)->with('ordersposition')->orderBy('id', 'DESC')->first();
-                $oldOrder->load('ordersposition');
-            
-                $newOrder = $oldOrder->replicate();
-                $newOrder->accept_status = 0;
-                $newOrder->accept_order_id = null;
-                $newOrder->save();
-            
-            
-            
-                foreach ($oldOrder->ordersposition as $option) {
-                    $new_option = $option->replicate();
-                    $new_option->orders_id = $newOrder->id;
-                    $new_option->push();
-                }
-                // dd($newOrder);
-                $oldOrder->status = Orders::STATUS_FAILED;
-                $oldOrder->save();
 
-                $this->acceptOrderCreation($token, $newOrder, $amount_cents);
-            
+            $oldOrder = Orders::where('user_id', Auth::guard('api')->user()->id)->where('id', $order->id)->with('ordersposition')->orderBy('id', 'DESC')->first();
+            $oldOrder->load('ordersposition');
+
+            $newOrder = $oldOrder->replicate();
+            $newOrder->accept_status = 0;
+            $newOrder->accept_order_id = null;
+            $newOrder->save();
+
+
+
+            foreach ($oldOrder->ordersposition as $option) {
+                $new_option = $option->replicate();
+                $new_option->orders_id = $newOrder->id;
+                $new_option->push();
+            }
+            // dd($newOrder);
+            $oldOrder->status = Orders::STATUS_FAILED;
+            $oldOrder->save();
+
+            return $this->acceptOrderCreation($token, $newOrder, $amount_cents);
+
         }
 
         if (!isset($acceptOrderCreation['id'])) {
-
-            alert()->info(trans('website.Wrong'), trans('website.Error Message'));
-            //return redirect('/cart');
-            return;
+            return null;
         }
-        
+
         // save accept_order_id in order
-        
         $order->accept_order_id = $acceptOrderCreation['id'];
         $order->save();
 
         return $order->accept_order_id;
-        
+
     }
 
 
@@ -149,34 +162,32 @@ class AcceptPaymentsIntegration extends PaymentIntegrations{
             "amount_cents" => $amount_cents,
             "expiration" => 3600,
             "order_id" => $acceptOrderId, // id obtained in step 2
-            "currency" => "EGP",
+            "currency" => "AED",
             "integration_id" => AcceptPaymentsIntegration::ACCEPT_INTEGRATION_ID, // card integration_id test = 13972  live = 15187 will be provided upon signing up, test
             "lock_order_when_paid" => "false", // optional field (*)
             "billing_data" => array(
                 "apartment" => "NA",
-                "email" => (Auth::user()->email) ? Auth::user()->email : 'NA',
+                "email" => (Auth::guard('api')->user()->email) ? Auth::guard('api')->user()->email : 'NA',
                 "floor" => "NA",
-                "first_name" => (Auth::user()->name) ? Auth::user()->name : 'NA',
+                "first_name" => (Auth::guard('api')->user()->name) ? Auth::guard('api')->user()->name : 'NA',
                 "street" => "NA",
                 "building" => "NA",
-                "phone_number" => (Auth::user()->mobile) ? Auth::user()->mobile : 'NA',
+                "phone_number" => (Auth::guard('api')->user()->mobile) ? Auth::guard('api')->user()->mobile : 'NA',
                 "shipping_method" => "PKG",
                 "postal_code" => "NA",
                 "city" => "NA",
                 "country" => "NA",
-                "last_name" => " NA",
+                "last_name" => (Auth::guard('api')->user()->name) ? Auth::guard('api')->user()->name : 'NA',
                 "state" => "NA",
             ),
         );
         $postdata = json_encode($data);
 
         $acceptPaymentKeyGeneration = $this->callAPI($postdata, AcceptPaymentsIntegration::ACCEPT_PAYMENT_KEY_URL);
-        
-        if (!isset($acceptPaymentKeyGeneration['token'])) {
-            alert()->info(trans('website.Wrong'), trans('website.Error Message'));
-            return redirect()->back();
-        }
 
+        if (!isset($acceptPaymentKeyGeneration['token'])) {
+            return null;
+        }
         return $acceptPaymentKeyGeneration['token'];
     }
 
@@ -203,47 +214,94 @@ class AcceptPaymentsIntegration extends PaymentIntegrations{
         //STEP 1 - Accept Authentication
         $token = $this->acceptAuthentication();
 
-        if($order->kiosk_id){
-
-            $payment_data = $order->kiosk_id;
-
+        if (!$token) {
+            return null;
+        }
+        if ($order->accept_order_id) {
+            $acceptOrderId = $order->accept_order_id;
         }else{
-
-            if ($order->accept_order_id) {
-                $acceptOrderId = $order->accept_order_id;
-            }else{
-
-                //STEP 2 - Accept Order Creation
-                
-                $acceptOrderId = $this->acceptOrderCreation($token, $order, $amount_cents);
-                if(!$acceptOrderId){
-                    alert()->info(trans('website.Wrong'), trans('website.Error Message'));
-                   
-                    return;
-                }
+            //STEP 2 - Accept Order Creation
+            $acceptOrderId = $this->acceptOrderCreation($token, $order, $amount_cents);
+            if(!$acceptOrderId){
+                return null;
             }
-
-            //STEP 3 - Accept Payment Key Generation
-            $result = $this->acceptPaymentKeyGeneration($token, $amount_cents, $acceptOrderId);
-            if(!$result){
-                alert()->info(trans('website.Wrong'), trans('website.Error Message'));
-               
-                return;
-            }
-            // Go to step 4 if payment is not visa/mastercard
-            if(isset($paymentType)){
+        }
+        //STEP 3 - Accept Payment Key Generation
+        $result = $this->acceptPaymentKeyGeneration($token, $amount_cents, $acceptOrderId);
+        if(!$result){
+            return null;
+        }
+        // Go to step 4 if payment is not visa/mastercard
+        if(($paymentType)){
 
             //STEP 4 - Accept Pay Request
-
             $result = $this->acceptPayRequest($result, $paymentType, $identifier);
-
-            }
-            
         }
-
         return $result;
+    }
 
+    public function intention($order, $amount_cents, $paymentType=null, $identifier=null)
+    {
+        $data = array(
+            "amount" => $amount_cents ,
+            "currency" => "AED",
+            "payment_methods" => [self::ACCEPT_INTEGRATION_ID,self::ACCEPT_INTEGRATION_ID_APPLE,self::ACCEPT_INTEGRATION_ID_GOOGLE],
+            "billing_data" => array(
+                "apartment" => "NA",
+                "first_name" => (Auth::guard('api')->user()->name) ? Auth::guard('api')->user()->name : 'NA',
+                "last_name" => (Auth::guard('api')->user()->name) ? Auth::guard('api')->user()->name : 'NA',
+                "street" => "NA",
+                "building" => "NA",
+                "phone_number" => (Auth::guard('api')->user()->mobile) ? Auth::guard('api')->user()->mobile : 'NA',
+                "city" => "NA",
+                "country" => "NA",
+                "email" => (Auth::guard('api')->user()->email) ? Auth::guard('api')->user()->email : 'NA',
+                "floor" => "NA",
+                "state" => "NA"
+            ),
+            "items" => array(
+                array(
+                    "name" => "Course",
+                    "amount" => $amount_cents ,
+                    "description" => "description",
+                    "quantity" => 1
+                )
+            ),
+            "extras" => array(
+                "order_id" => $order->id // id obtained in step 2
+            ),
+
+
+            "special_reference" => $order->id,
+            "notification_url" => url('api/site/applepay/acceptConfirmationCallback'),
+            "redirection_url" => url('api/site/applepay/acceptConfirmationCallback') // id obtained in step 2
+
+        );
+        $postdata = json_encode($data);
+
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://uae.paymob.com/v1/intention/",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $postdata,
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Token ". self::SECRET_KEY,
+                "Content-Type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $result = json_decode($response, true);
+
+        return $result['client_secret'] ;
 
     }
-    
+
 }

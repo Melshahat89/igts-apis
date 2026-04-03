@@ -40,7 +40,7 @@ class Certificates extends Model
     }
 
     public static function isBoughtCertificate($courses_id, $certificate_id){
-        if(!Auth::check())
+        if(!Auth::guard('api')->check())
             return false;
         
         $certificate = Certificatesenrollment::where('courses_id', $courses_id)->where('certificate_id', $certificate_id)->where('user_id', Auth::user()->id)->first();

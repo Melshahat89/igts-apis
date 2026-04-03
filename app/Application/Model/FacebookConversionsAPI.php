@@ -47,7 +47,7 @@ class FacebookConversionsAPI{
             return "Missing Data";
         }
 
-        if(Auth::check()){
+        if(Auth::guard('api')->check()){
         $data = array(
             "data" => array(
                 0 => array(
@@ -57,8 +57,8 @@ class FacebookConversionsAPI{
                     "action_source" => "website",
                     "event_source_url" => $currentPage,
                     "user_data" => array(
-                        "em" => hash("SHA256",(Auth::check() ? Auth::user()->email : null)),
-                        "ph" => hash("SHA256",(Auth::check() && Auth::user()->phone) ? Auth::user()->mobile : null),
+                        "em" => hash("SHA256",(Auth::guard('api')->check() ? Auth::user()->email : null)),
+                        "ph" => hash("SHA256",(Auth::guard('api')->check() && Auth::user()->phone) ? Auth::user()->mobile : null),
                         "client_user_agent" => $_SERVER["HTTP_USER_AGENT"],
                         'client_ip_address' => null,
                     ),
@@ -91,8 +91,8 @@ class FacebookConversionsAPI{
                     "action_source" => "website",
                     "event_source_url" => $currentPage,
                     "user_data" => array(
-                        "em" => hash("SHA256",(Auth::check() ? Auth::user()->email : null)),
-                        "ph" => hash("SHA256",(Auth::check() && Auth::user()->phone) ? Auth::user()->mobile : null),
+                        "em" => hash("SHA256",(Auth::guard('api')->check() ? Auth::user()->email : null)),
+                        "ph" => hash("SHA256",(Auth::guard('api')->check() && Auth::user()->phone) ? Auth::user()->mobile : null),
                         "client_user_agent" => $_SERVER["HTTP_USER_AGENT"],
                         'client_ip_address' => null,
                     ),
@@ -122,8 +122,8 @@ class FacebookConversionsAPI{
                     "action_source" => "website",
                     "event_source_url" => $currentPage,
                     "user_data" => array(
-                        "em" => hash("SHA256",(Auth::check() ? Auth::user()->email : null)),
-                        "ph" => hash("SHA256",(Auth::check() && Auth::user()->phone) ? Auth::user()->mobile : null),
+                        "em" => hash("SHA256",(Auth::guard('api')->check() ? Auth::user()->email : null)),
+                        "ph" => hash("SHA256",(Auth::guard('api')->check() && Auth::user()->phone) ? Auth::user()->mobile : null),
                         "client_user_agent" => $_SERVER["HTTP_USER_AGENT"],
                         'client_ip_address' => null,
                     ),
@@ -152,8 +152,8 @@ class FacebookConversionsAPI{
                     "action_source" => "website",
                     "event_source_url" => $currentPage,
                     "user_data" => array(
-                        "em" => hash("SHA256",(Auth::check() ? Auth::user()->email : null)),
-                        "ph" => hash("SHA256",(Auth::check() && Auth::user()->phone) ? Auth::user()->mobile : null),
+                        "em" => hash("SHA256",(Auth::guard('api')->check() ? Auth::user()->email : null)),
+                        "ph" => hash("SHA256",(Auth::guard('api')->check() && Auth::user()->phone) ? Auth::user()->mobile : null),
                         "client_user_agent" => $_SERVER["HTTP_USER_AGENT"],
                         'client_ip_address' => null,
                     ),

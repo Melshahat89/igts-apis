@@ -804,7 +804,7 @@ class HomeController extends Controller
         
         $order = Orders::findOrFail($orderID);
         $errorMessage = null;
-        if(Auth::check() && $order->user_id != Auth::user()->id){
+        if(Auth::guard('api')->check() && $order->user_id != Auth::user()->id){
             return redirect('/');
         }
 
@@ -812,7 +812,7 @@ class HomeController extends Controller
             $errorMessage = trans('orders.This order had already been paid');
         }
 
-        if(!Auth::check()){
+        if(!Auth::guard('api')->check()){
             $errorMessage = trans('orders.You must sign-in in order to view this page');
         }
 
