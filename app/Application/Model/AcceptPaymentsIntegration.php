@@ -273,8 +273,8 @@ class AcceptPaymentsIntegration extends PaymentIntegrations{
 
 
             "special_reference" => $order->id,
-            "notification_url" => 'https://igtsservice.com/api/site/applepay/acceptConfirmationCallback',
-            "redirection_url" => 'https://igtsservice.com/api/site/applepay/acceptConfirmationCallback' // id obtained in step 2
+            "notification_url" => 'https://igtsservice.com/site/applepay/acceptConfirmationCallback',
+            "redirection_url" => 'https://igtsservice.com/site/applepay/acceptConfirmationCallback' // id obtained in step 2
 
         );
         $postdata = json_encode($data);
