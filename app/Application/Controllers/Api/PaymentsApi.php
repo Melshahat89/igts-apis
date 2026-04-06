@@ -523,7 +523,7 @@ class PaymentsApi extends Controller
         $amount_cents = Currencies::getAmountcentsByCurrencyID($currency, Currencies::DEFUALT_CURRENCY, $amount_cents);
 
         $visa = new AcceptPaymentsIntegration();
-        $payment_token = $visa->init($order, $amount_cents);
+        $payment_token = $visa->intention($order, $amount_cents);
 
         if (!isset($payment_token)) {
             return response()->json(['success' => false, 'type' => 'visa', 'message' => 'Payment initialization failed'], 400);
@@ -536,7 +536,7 @@ class PaymentsApi extends Controller
             'success'    => true,
             'type'       => 'visa',
             'public_key' => AcceptPaymentsIntegration::ACCEPT_Public_key,
-            'token'      => $payment_token,
+            'client_secret'      => $payment_token,
             'order'      => $order,
         ], 200);
     }
