@@ -20,6 +20,7 @@ class CourselecturesTransformers extends AbstractTransformer
 			"vid_playbackInfo" => $modelOrCollection->vid_playbackInfo,
 //			"vid_otp" =>  $response =  Courses::getVdoCipherOTP( $modelOrCollection->vdocipher_id),
 			"vdocipher_id" => $modelOrCollection->vdocipher_id,
+			"hasProgressed" => $modelOrCollection->hasProgressed,
 			"courses_id" => $modelOrCollection->courses_id,
         ];
     }

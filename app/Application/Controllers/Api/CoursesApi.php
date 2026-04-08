@@ -18,6 +18,7 @@ use App\Application\Model\Lecturequestions;
 use App\Application\Model\Orders;
 use App\Application\Model\Ordersposition;
 use App\Application\Model\Payments;
+use App\Application\Model\Progress;
 use App\Application\Model\Quiz;
 use App\Application\Model\Quizstudentsanswers;
 use App\Application\Model\Quizstudentsstatus;
@@ -182,19 +183,52 @@ class CoursesApi extends Controller
             return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
         }
 
-
-
 //        $course = $this->model->where('id',$request->course_id)->first();
         $lecture = Courselectures::where('id',$request->lecture_id)->first();
 
         if (Auth::guard('api')->check()){
             $user = Auth::guard('api')->user();
-            $user->last_lecture_id = $request->lecture_id;
+            $user->last_lecture_id = $lecture->id;
             $user->save();
+
+            $enrolled = Courses::isEnrolledCourse($lecture->courses->id);
+
+            if($enrolled){
+                $progress = Progress::where('user_id',Auth::guard('api')->user())->where('courselectures_id',$lecture->id)->first();
+                if(!$progress){
+                    //Save Progress
+                    $newProgress = new Progress();
+                    $newProgress->user_id = Auth::guard('api')->user();
+                    $newProgress->courselectures_id =  $lecture->id;
+                    $newProgress->courses_id = $lecture->courses_id;
+                    $newProgress->percentage = 1;
+                    $newProgress->save();
+                }
+                }
+
+
+
+
         }
 
         if($lecture){
             return response(apiReturn(CourselectureTransformers::transform($lecture)), 200);
+        }else{
+            return response(apiReturn('', '', trans('website.No Data Found')), 401);
+        }
+
+    }
+    public function hasProgressed(Request $request){
+        $validator = Validator::make($request->all(), [
+            'lecture_id' => 'required|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(apiReturn(['error'=>$validator->errors()], '', ['error'=>$validator->errors()]), 401);
+        }
+        $Check = hasProgressed(Auth::guard('api')->user(), $request->lecture_id);
+        $lecture = Courselectures::where('id',$request->lecture_id)->first();
+        if($lecture){
+            return response(apiReturn(['Check'=>$Check]), 200);
         }else{
             return response(apiReturn('', '', trans('website.No Data Found')), 401);
         }

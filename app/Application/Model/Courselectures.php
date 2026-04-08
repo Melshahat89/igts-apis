@@ -1,6 +1,7 @@
 <?php
  namespace App\Application\Model;
  use Illuminate\Database\Eloquent\Model;
+ use Illuminate\Support\Facades\Auth;
 
  class Courselectures extends Model
 {
@@ -51,4 +52,27 @@
  public function getDescriptionArAttribute(){
   return is_json($this->description) && is_object(json_decode($this->description)) ?  json_decode($this->description)->ar  : $this->description;
  }
+
+
+
+     public function gethasProgressedAttribute(){
+         if (Auth::guard('api')->check()){
+         $progress = Progress::where('user_id', Auth::guard('api')->user())->where('courselectures_id', $this->id)->first();
+
+         if($this->event_id) {
+             return 1;
+         } else {
+             if($progress) {
+                 return 1;
+             } else {
+                 return 0;
+             }
+         }
+     }else {
+             return 0;
+         }
+     }
+
+
+
   }
